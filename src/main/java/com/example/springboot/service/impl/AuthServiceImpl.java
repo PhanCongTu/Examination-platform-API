@@ -1,12 +1,12 @@
 package com.example.springboot.service.impl;
 
 import com.example.springboot.dto.TokenDetails;
+import com.example.springboot.dto.request.LoginRequestDTO;
 import com.example.springboot.security.CustomUserDetailsService;
 import com.example.springboot.security.JwtTokenProvider;
 import com.example.springboot.security.JwtUserDetails;
 import com.example.springboot.security.UserAuthenticationToken;
 import com.example.springboot.service.AuthService;
-import com.example.springboot.dto.view_model.LoginVM;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
@@ -24,18 +24,23 @@ public class AuthServiceImpl implements AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    /**
+     * Get {@link TokenDetails} object by username and password
+     *
+     * @param loginRequestDTO : The {@link LoginRequestDTO} object
+     * @return : The {@link TokenDetails} object response
+     */
     @Override
-    public TokenDetails authenticate(LoginVM loginVM){
+    public TokenDetails authenticate(LoginRequestDTO loginRequestDTO){
         UserAuthenticationToken authenticationToken = new UserAuthenticationToken(
-                loginVM.getLoginName(),
-                loginVM.getPassword(),
+                loginRequestDTO.getLoginName(),
+                loginRequestDTO.getPassword(),
                 true
         );
         authenticationManager.authenticate(authenticationToken);
         final JwtUserDetails userDetails = customUserDetailsService
-                .loadUserByUsername(loginVM.getLoginName());
+                .loadUserByUsername(loginRequestDTO.getLoginName());
 
-        final TokenDetails result = jwtTokenProvider.getTokenDetails(userDetails, null);
-        return result;
+        return jwtTokenProvider.getTokenDetails(userDetails);
     }
 }

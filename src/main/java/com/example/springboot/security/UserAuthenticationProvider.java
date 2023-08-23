@@ -1,5 +1,6 @@
 package com.example.springboot.security;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,8 +12,9 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class UserAuthenticationProvider implements AuthenticationProvider {
-    @Autowired
+
     private CustomUserDetailsService customUserDetailsService;
 
     @Override
@@ -23,13 +25,13 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         boolean verifyCredentials = Boolean.parseBoolean(token.isVerifyCredentials().toString());
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
         if (!userDetails.isEnabled())
-            throw new BadCredentialsException("Tài khoản đã bị khóa, vui lòng liên hệ quản trị viên");
+            throw new BadCredentialsException("The account has been locked, please contact the administrator");
         if (verifyCredentials) {
             assert password != null;
             if (password.equals(userDetails.getPassword())) {
                 return new UserAuthenticationToken(email, password, verifyCredentials, userDetails.getAuthorities());
             } else {
-                throw new BadCredentialsException("Mật khẩu không chính xác, vui lòng kiểm tra lại");
+                throw new BadCredentialsException("Password is incorrect, please check again");
             }
         } else {
             return new UserAuthenticationToken(email, "N/A", verifyCredentials, userDetails.getAuthorities());

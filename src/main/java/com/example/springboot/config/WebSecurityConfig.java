@@ -3,6 +3,8 @@ package com.example.springboot.config;
 import com.example.springboot.security.JwtAuthenticationEntryPoint;
 import com.example.springboot.security.JwtTokenFilter;
 import com.example.springboot.security.UserAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,26 +25,29 @@ import java.util.List;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @Autowired
+    private  JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private final JwtTokenFilter jwtTokenFilter;
+    @Autowired
+    private  UserAuthenticationProvider userAuthenticationProvider;
 
-    private final UserAuthenticationProvider userAuthenticationProvider;
+    @Qualifier("handlerExceptionResolver")
+    @Autowired
+    private HandlerExceptionResolver exceptionResolver;
+
+    @Bean
+    public JwtTokenFilter jwtTokenFilter(){
+        return new JwtTokenFilter(exceptionResolver);
+    }
 
     private final List<String> pattern = Arrays.asList(
             "/login/**",
             "/signup/**",
             "/files/**",
-            "/password/**"
+            "/password/**",
+            "/refresh_token"
     );
 
-
-    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtTokenFilter jwtTokenFilter,
-                             UserAuthenticationProvider userAuthenticationProvider) {
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtTokenFilter = jwtTokenFilter;
-        this.userAuthenticationProvider = userAuthenticationProvider;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -65,7 +71,7 @@ public class WebSecurityConfig {
         http.headers().cacheControl();
 
         // Add a filter to validate the tokens with every request
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

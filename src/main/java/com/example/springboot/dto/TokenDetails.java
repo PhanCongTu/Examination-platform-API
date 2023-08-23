@@ -16,9 +16,9 @@ public class TokenDetails {
 
     private String displayName;
 
-    private String token;
+    private String accessToken;
 
-    private String avatar;
+    private String emailAddress;
 
     private long expired;
 

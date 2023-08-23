@@ -13,19 +13,24 @@ public class JwtUserDetails implements UserDetails {
 
     private final String password;
 
+    private final String emailAddress;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
-    private final boolean isDisable;
+    private final boolean isEnable;
 
-    public JwtUserDetails(String displayName, String username,
-                          String password, Collection<? extends GrantedAuthority> authorities, boolean isDisable) {
+    public JwtUserDetails(String displayName, String username, String password, String emailAddress, Collection<? extends GrantedAuthority> authorities, boolean isEnable) {
         this.displayName = displayName;
         this.username = username;
         this.password = password;
+        this.emailAddress = emailAddress;
         this.authorities = authorities;
-        this.isDisable = isDisable;
+        this.isEnable = isEnable;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,7 +59,7 @@ public class JwtUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isDisable;
+        return isEnable;
     }
 
     @Override
@@ -64,6 +69,6 @@ public class JwtUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !isDisable;
+        return isEnable;
     }
 }

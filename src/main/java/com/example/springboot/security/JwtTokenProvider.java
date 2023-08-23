@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider implements Serializable {
 
-    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    @Value("${jwt.access-token-expiration}")
+    private long JWT_TOKEN_VALIDITY;
 
     // Đoạn secret bí mật, chỉ phía server biết
     @Value("${jwt.secret}")
@@ -60,7 +61,7 @@ public class JwtTokenProvider implements Serializable {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
     }
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    public String doGenerateToken(Map<String, Object> claims, String subject) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         Key key = Keys.hmacShaKeyFor(keyBytes);
         Date now = new Date(System.currentTimeMillis());
@@ -74,11 +75,11 @@ public class JwtTokenProvider implements Serializable {
                 .compact();
     }
 
-    public TokenDetails getTokenDetails(JwtUserDetails userDetails, String avatar) {
+    public TokenDetails getTokenDetails(JwtUserDetails userDetails) {
         TokenDetails tokenDetails = new TokenDetails();
         tokenDetails.setDisplayName(userDetails.getDisplayName());
-        tokenDetails.setAvatar(avatar);
-        tokenDetails.setToken(generateToken(userDetails));
+        tokenDetails.setAccessToken(generateToken(userDetails));
+        tokenDetails.setEmailAddress(userDetails.getEmailAddress());
         tokenDetails.setExpired(JWT_TOKEN_VALIDITY);
         tokenDetails.setRoles(userDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()));
         return tokenDetails;
@@ -88,5 +89,4 @@ public class JwtTokenProvider implements Serializable {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
 }

@@ -5,20 +5,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignupResponseDTO {
-
+public class JwtResponseDTO {
     private String displayName;
 
     private String loginName;
 
     private String emailAddress;
 
-    private String token;
+    private String accessToken;
 
     private String refreshToken;
+
+    private List<String> roles;
+
+    private Long expired_in;
 
 }

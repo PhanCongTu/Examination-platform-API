@@ -1,8 +1,8 @@
 package com.example.springboot.service;
 
 import com.example.springboot.dto.TokenDetails;
-import com.example.springboot.dto.view_model.LoginVM;
+import com.example.springboot.dto.request.LoginRequestDTO;
 
 public interface AuthService {
-    TokenDetails authenticate(LoginVM loginVM);
+    TokenDetails authenticate(LoginRequestDTO loginVM);
 }

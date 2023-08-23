@@ -1,15 +1,17 @@
-package com.example.springboot.dto.view_model;
+package com.example.springboot.dto.request;
 
-import com.example.springboot.validate.ValidateSignupVM;
+import com.example.springboot.validate.ValidateSignUpRequest;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
-@ValidateSignupVM
-public class SignupVM {
+@ValidateSignUpRequest
+public class SignUpRequestDTO {
 
     private String loginName;
 

@@ -25,23 +25,33 @@ import java.time.Instant;
 public abstract class AbstractAuditingEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
+
+    private static final String IS_ENABLE = "is_enable";
+    private static final String CREATED_BY = "created_by";
+    private static final String CREATED_DATE = "created_date";
+    private static final String UPDATE_BY = "update_by";
+    private static final String UPDATE_DATE = "update_date";
+
+    @Column(name = IS_ENABLE)
+    private Boolean isEnable = Boolean.TRUE;
+
     @CreatedBy
-    @Column(name = Constants.CREATED_BY,nullable = false, length = 50, updatable = false)
+    @Column(name = CREATED_BY,nullable = false, length = 50, updatable = false)
     @JsonIgnore
     private String createdBy = Constants.ANONYMOUS_USER;
 
     @CreatedDate
-    @Column(name = Constants.CREATED_DATE, updatable = false)
+    @Column(name = CREATED_DATE, updatable = false)
     @JsonIgnore
     private Instant createdDate = Instant.now();
 
     @LastModifiedBy
-    @Column(name = Constants.UPDATE_BY, length = 50)
+    @Column(name = UPDATE_BY, length = 50)
     @JsonIgnore
     private String updateBy = Constants.ANONYMOUS_USER;
 
     @LastModifiedDate
-    @Column(name = Constants.UPDATE_DATE)
+    @Column(name = UPDATE_DATE)
     @JsonIgnore
     private Instant updateDate = Instant.now();
 }

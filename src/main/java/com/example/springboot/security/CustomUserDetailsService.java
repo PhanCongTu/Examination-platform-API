@@ -1,7 +1,8 @@
 package com.example.springboot.security;
 
+import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.entity.UserProfile;
-import com.example.springboot.repository.UserRepository;
+import com.example.springboot.repository.UserProfileRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,17 +15,17 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UserProfileRepository userProfileRepository) {
+        this.userProfileRepository = userProfileRepository;
     }
 
     @Override
     public JwtUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserProfile user = userRepository.findOneByLoginName(username).orElse(null);
+        UserProfile user = userProfileRepository.findOneByLoginName(username).orElse(null);
         if (user==null){
-            log.error("Can not find user with login name {}", username);
+            log.error(String.format(ErrorMessage.LOGIN_NAME_NOT_FOUND.getMessage(), username));
             throw new UsernameNotFoundException(username);
         }
         return getUserDetails(user);
@@ -35,8 +36,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getDisplayName(),
                 user.getLoginName(),
                 user.getHashPassword(),
+                user.getEmailAddress(),
                 user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()),
-                user.getIsDisable()
+                user.getIsEnable()
         );
     }
 }
