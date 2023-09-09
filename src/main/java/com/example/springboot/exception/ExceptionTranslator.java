@@ -6,9 +6,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,10 +29,25 @@ public class ExceptionTranslator {
     private static final String MESSAGE_KEY = "message";
 
     /**
+     * Exception handling when the json body in request is malformed
+     *
+     * @param exception : HttpMessageNotReadableException
+     * @return : The response entity
+     */
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(ERROR_CODE_KEY, ErrorMessage.COMMON_JSON_BODY_MALFORMED.getErrorCode());
+        response.put(MESSAGE_KEY, ErrorMessage.COMMON_JSON_BODY_MALFORMED.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+    /**
      * Exception handling when input request parameter is invalid.
      *
      * @param ex: MethodArgumentNotValidException
-     * @return : response entity
+     * @return : The response entity
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleAMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
@@ -69,9 +86,9 @@ public class ExceptionTranslator {
      * Exception handling when username was not found.
      *
      * @param exception: UsernameNotFoundException
-     * @return : response entity
+     * @return : The response entity
      */
-    @ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler({UsernameNotFoundException.class})
     public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException exception) {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(ERROR_CODE_KEY, ErrorMessage.LOGIN_NAME_NOT_FOUND.getErrorCode());
@@ -81,10 +98,19 @@ public class ExceptionTranslator {
                 .body(response);
     }
 
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<?> handleUsernameNotFoundException(UserNotFoundException exception) {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(ERROR_CODE_KEY, ErrorMessage.COMMON_USER_NOT_FOUND.getErrorCode());
+        response.put(MESSAGE_KEY, String.format(ErrorMessage.COMMON_USER_NOT_FOUND.getMessage(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
     /**
-     * Exception handling when refresh token and
+     * Exception handling when refresh token and access token expired
      *
-     * @return
+     * @return : The response entity
      */
     @ExceptionHandler({RefreshTokenExpiredException.class, ExpiredJwtException.class})
     public ResponseEntity<?> handleRefreshTokenExpiredException() {
@@ -96,36 +122,69 @@ public class ExceptionTranslator {
                 .body(response);
     }
 
+    /**
+     * Exception handling when the login name and password are wrong.
+     *
+     * @param exception : The BadCredentialsException
+     * @return : The response entity
+     */
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException exception) {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(ERROR_CODE_KEY, ErrorMessage.LOGIN_BAD_CREDENTIALS.getErrorCode());
-        response.put(MESSAGE_KEY, String.format(ErrorMessage.LOGIN_BAD_CREDENTIALS.getMessage(), exception.getMessage()));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        response.put(MESSAGE_KEY, ErrorMessage.LOGIN_BAD_CREDENTIALS.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
 
+    /**
+     * Exception handling when the user does not have permissions to access the source.
+     *
+     * @param exception : AccessDeniedException
+     * @return : The response entity
+     */
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception) {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(ERROR_CODE_KEY, ErrorMessage.LOGIN_ACCESS_DENIED.getErrorCode());
-        response.put(MESSAGE_KEY, String.format(ErrorMessage.LOGIN_ACCESS_DENIED.getMessage(), exception.getMessage()));
+        response.put(MESSAGE_KEY, ErrorMessage.LOGIN_ACCESS_DENIED.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
 
+    /**
+     * Exception handling when The JWT access token is Malformed
+     *
+     * @param exception : MalformedJwtException
+     * @return : The response entity
+     */
     @ExceptionHandler({SignatureException.class, MalformedJwtException.class})
     public ResponseEntity<?> handleSignatureException(SignatureException exception) {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(ERROR_CODE_KEY, ErrorMessage.LOGIN_WRONG_TOKEN.getErrorCode());
-        response.put(MESSAGE_KEY, String.format(ErrorMessage.LOGIN_WRONG_TOKEN.getMessage(), exception.getMessage()));
+        response.put(MESSAGE_KEY, ErrorMessage.LOGIN_WRONG_TOKEN.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
 
+    /**
+     * Exception handling when the verification code is not valid or expired.
+     *
+     * @param exception : The VerificationException
+     * @return : The response entity
+     */
+    @ExceptionHandler(VerificationException.class)
+    public ResponseEntity<?> handleVerificationException(VerificationException exception) {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(ERROR_CODE_KEY, ErrorMessage.VERIFY_NOT_ACCEPTABLE.getErrorCode());
+        response.put(MESSAGE_KEY, ErrorMessage.VERIFY_NOT_ACCEPTABLE.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
     // Uncomment bên dưới khi project hoàn thành
 
 //    @ExceptionHandler(Exception.class)

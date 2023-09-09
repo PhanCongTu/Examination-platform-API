@@ -26,3 +26,12 @@ jwt:
   access-token-expiration: 18000 #second #5 hours
   refresh-token-expiration: 604800 #second #7 days
   secret: 1FE05E1FA7968F51E4A20A127CC2A16881CB909CD1A75C57C1A96C151C2B42AB
+config:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: phancongtu25032002@gmail.com
+    password: udvepsndgybmyzye
+send-by-mail:
+  verification-code-time: 30 #minutes
+  reset-password-code-time: 5 #minutes

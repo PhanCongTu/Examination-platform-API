@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,16 +56,16 @@ public class UserProfile extends AbstractAuditingEntity implements Serializable 
     private Boolean emailAddressVerified = Boolean.FALSE;
 
     @Column(name = VERIFY_CODE)
-    private String verifyCode;
+    private String verificationCode;
 
     @Column(name = VERIFY_EXPIRED_CODE_TIME)
-    private String verifyExpiredCodeTime;
+    private Instant verificationExpiredCodeTime;
 
     @Column(name = RESET_PASSWORD_CODE)
     private String resetPasswordCode;
 
     @Column(name = RESET_PASSWORD_EXPIRED_CODE_TIME)
-    private String resetPasswordExpiredCodeTime;
+    private Instant resetPasswordExpiredCodeTime;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = ROLES)
