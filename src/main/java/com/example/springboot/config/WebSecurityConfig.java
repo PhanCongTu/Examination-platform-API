@@ -3,6 +3,7 @@ package com.example.springboot.config;
 import com.example.springboot.security.JwtAuthenticationEntryPoint;
 import com.example.springboot.security.JwtTokenFilter;
 import com.example.springboot.security.UserAuthenticationProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -24,12 +27,13 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig {
     @Autowired
     private  JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Autowired
-    private  UserAuthenticationProvider userAuthenticationProvider;
+
+    private final UserAuthenticationProvider userAuthenticationProvider;
 
     @Qualifier("handlerExceptionResolver")
     @Autowired
@@ -40,12 +44,13 @@ public class WebSecurityConfig {
         return new JwtTokenFilter(exceptionResolver);
     }
 
+
     private final List<String> pattern = Arrays.asList(
             "/login/**",
             "/signup/**",
             "/files/**",
-            "/password/**",
-            "/refresh_token"
+            "/refresh_token/**",
+            "/api/password/**"
     );
 
 
@@ -54,10 +59,6 @@ public class WebSecurityConfig {
         http.cors();
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers("/v2/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/files/**").permitAll()

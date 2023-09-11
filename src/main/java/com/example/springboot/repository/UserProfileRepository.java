@@ -15,7 +15,9 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     @Query(value = "SELECT * FROM user_profile where login_name = :loginName and hash_password = :hasPassword",
             nativeQuery = true)
     Optional<UserProfile> findOneByLoginNameAndHashPassword(String loginName, String hasPassword);
-    @Query(value = "SELECT * FROM user_profile where email_address = :emailAddress and email_address_verified = true",
+    @Query(value = "SELECT * FROM user_profile where email_address = :emailAddress and is_email_address_verified = true",
             nativeQuery = true)
     Optional<UserProfile> findOneByEmailAddressVerified(String emailAddress);
+
+
 }

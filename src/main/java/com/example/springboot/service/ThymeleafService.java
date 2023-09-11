@@ -54,4 +54,10 @@ public class ThymeleafService {
         context.setVariable("code", code);
         return templateEngine.process(VERIFY_MAIL_TEMPLATE_NAME, context);
     }
+
+    public Object getResetPasswordMailContent(String resetPasswordCode) {
+        final Context context = new Context();
+        context.setVariable("code", resetPasswordCode);
+        return templateEngine.process(RESET_PASSWORD_TEMPLATE_NAME, context);
+    }
 }

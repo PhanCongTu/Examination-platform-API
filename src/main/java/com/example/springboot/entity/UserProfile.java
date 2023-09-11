@@ -25,7 +25,7 @@ public class UserProfile extends AbstractAuditingEntity implements Serializable 
     private static final String DISPLAY_NAME = "display_name";
     private static final String EMAIL_ADDRESS = "email_address";
     private static final String NEW_EMAIL_ADDRESS = "new_email_address";
-    private static final String EMAIL_ADDRESS_VERIFIED = "email_address_verified";
+    private static final String IS_EMAIL_ADDRESS_VERIFIED = "is_email_address_verified";
     private static final String VERIFY_CODE = "verify_code";
     private static final String VERIFY_EXPIRED_CODE_TIME = "verify_expired_code_time";
     private static final String RESET_PASSWORD_CODE = "reset_password_code";
@@ -52,8 +52,8 @@ public class UserProfile extends AbstractAuditingEntity implements Serializable 
     @Column(name = NEW_EMAIL_ADDRESS)
     private String newEmailAddress;
 
-    @Column(name = EMAIL_ADDRESS_VERIFIED)
-    private Boolean emailAddressVerified = Boolean.FALSE;
+    @Column(name = IS_EMAIL_ADDRESS_VERIFIED)
+    private Boolean isEmailAddressVerified = Boolean.FALSE;
 
     @Column(name = VERIFY_CODE)
     private String verificationCode;

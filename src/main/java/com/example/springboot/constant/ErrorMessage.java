@@ -20,10 +20,12 @@ public enum ErrorMessage {
     LOGIN_NAME_NOT_FOUND(Constants.NOT_FOUND, "Can not find user with login name %s."),
     LOGIN_BAD_CREDENTIALS(Constants.BAD_REQUEST, "Wrong username or password."),
     LOGIN_ACCESS_DENIED(Constants.FORBIDDEN, "Not authorized."),
-    LOGIN_WRONG_TOKEN(Constants.FORBIDDEN, "Wrong JWT access token."),
-    LOGIN_TOKEN_EXPIRED(Constants.FORBIDDEN, "JWT token already expired."),
+    LOGIN_TOKEN_INVALID(Constants.FORBIDDEN, "Access token or refresh token is invalid or expired."),
 
     VERIFY_NOT_ACCEPTABLE(Constants.NOT_ACCEPTABLE, "Your verification code is not valid."),
+    VERIFY_INVALID_STATUS(Constants.BAD_REQUEST, "User status is not enable to verify."),
+
+    RESET_PASSWORD_NOT_ACCEPTABLE(Constants.NOT_ACCEPTABLE, "Your reset code is not valid."),
 
     ;
 

@@ -18,6 +18,8 @@ public class JwtResponseDTO {
 
     private String emailAddress;
 
+    private Boolean isEmailAddressVerified;
+
     private String accessToken;
 
     private String refreshToken;

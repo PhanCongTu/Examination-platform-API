@@ -1,6 +1,8 @@
 package com.example.springboot.constant;
 
 public final class Constants {
+    public static final String ERROR_CODE_KEY = "errorCode";
+    public static final String MESSAGE_KEY = "message";
     public static final String ANONYMOUS_USER = "anonymousUser";
     public static final String REQUIRED_PARAMETER = "REQUIRED_PARAMETER";
     public static final String INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";

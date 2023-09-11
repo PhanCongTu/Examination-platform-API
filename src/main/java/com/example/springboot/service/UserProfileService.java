@@ -1,9 +1,6 @@
 package com.example.springboot.service;
 
-import com.example.springboot.dto.request.LoginRequestDTO;
-import com.example.springboot.dto.request.RefreshTokenRequestDTO;
-import com.example.springboot.dto.request.SignUpRequestDTO;
-import com.example.springboot.dto.request.VerificationEmailDTO;
+import com.example.springboot.dto.request.*;
 import org.springframework.http.ResponseEntity;
 
 public interface UserProfileService {
@@ -14,4 +11,6 @@ public interface UserProfileService {
     ResponseEntity<?> refreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO);
 
     ResponseEntity<?> verifyEmail(Long userID, VerificationEmailDTO verificationEmailDTO);
+
+    ResponseEntity<?> resetPassword(String emailAddress, ResetPasswordDTO resetPasswordDTO);
 }
