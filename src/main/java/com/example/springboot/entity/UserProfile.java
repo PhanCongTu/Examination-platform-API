@@ -33,7 +33,7 @@ public class UserProfile extends AbstractAuditingEntity implements Serializable 
     private static final String ROLES = "roles";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = USER_ID)
     private Long userID;
 

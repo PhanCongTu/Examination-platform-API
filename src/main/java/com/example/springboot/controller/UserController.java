@@ -3,6 +3,7 @@ package com.example.springboot.controller;
 import com.example.springboot.dto.request.ResetPasswordDTO;
 import com.example.springboot.exception.UserNotFoundException;
 import com.example.springboot.service.MailService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,12 +23,11 @@ import com.example.springboot.service.UserProfileService;
 @RestController
 @RequestMapping("/api")
 @Slf4j
+@AllArgsConstructor
 public class UserController {
-    @Autowired
+
     private UserProfileService userProfileService;
-    @Autowired
     private MailService mailService;
-    @Autowired
     private UserProfileRepository userProfileRepository;
 
     @PostMapping(value = "/email/send-verification")

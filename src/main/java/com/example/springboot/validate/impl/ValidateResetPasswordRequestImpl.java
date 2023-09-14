@@ -33,7 +33,7 @@ public class ValidateResetPasswordRequestImpl implements ConstraintValidator<Val
     }
 
     private boolean validateResetPasswordCode(ResetPasswordDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getPassword()) || value.getPassword().isEmpty()){
+        if(Objects.isNull(value.getCode()) || value.getCode().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(CODE)
                     .addConstraintViolation();
@@ -43,7 +43,7 @@ public class ValidateResetPasswordRequestImpl implements ConstraintValidator<Val
     }
 
     private boolean validatePassword(ResetPasswordDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getPassword()) || value.getPassword().isEmpty()){
+        if(Objects.isNull(value.getPassword())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(PASSWORD)
                     .addConstraintViolation();

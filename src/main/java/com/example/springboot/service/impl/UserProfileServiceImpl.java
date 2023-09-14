@@ -8,6 +8,7 @@ import com.example.springboot.dto.response.JwtResponseDTO;
 import com.example.springboot.dto.response.RefreshTokenResponseDTO;
 import com.example.springboot.entity.RefreshToken;
 import com.example.springboot.entity.UserProfile;
+import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
 import com.example.springboot.exception.InValidUserStatusException;
 import com.example.springboot.exception.RefreshTokenNotFoundException;
 import com.example.springboot.exception.UserNotFoundException;
@@ -53,7 +54,7 @@ public class UserProfileServiceImpl implements UserProfileService {
      */
     @Override
     @Transactional
-    public ResponseEntity<?> createUser(SignUpRequestDTO signupVM) {
+    public ResponseEntity<?> createUser(SignUpRequestDTO signupVM, Boolean isTeacher) {
         log.info("Start createUser()");
         UserProfile newUserProfile = new UserProfile();
 
@@ -64,7 +65,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         newUserProfile.setLoginName(signupVM.getLoginName());
         newUserProfile.setIsEmailAddressVerified(false);
         newUserProfile.setIsEnable(true);
-        newUserProfile.setRoles(Arrays.asList(EnumRole.ROLE_USER.name()));
+        String role = isTeacher ? EnumRole.ROLE_TEACHER.name() : EnumRole.ROLE_STUDENT.name();
+        newUserProfile.setRoles(List.of(role));
         newUserProfile = userProfileRepository.save(newUserProfile);
 
         // create response information to user
@@ -96,9 +98,9 @@ public class UserProfileServiceImpl implements UserProfileService {
         log.info("Start login");
 
         // Delete the old refresh before add the new refresh
-        Optional<UserProfile> userProfile = userProfileRepository.findOneByLoginName(loginVM.getLoginName());
-        if (!userProfile.isPresent() || !passwordEncoder.matches(loginVM.getPassword(), userProfile.get().getHashPassword())) {
-            throw new BadCredentialsException("Wrong username or password.");
+        Optional<UserProfile> userProfile = userProfileRepository.findOneByLoginNameOrEmailAddressAndIsEmailAddressVerified(loginVM.getLoginName(),loginVM.getLoginName(), true);
+        if (userProfile.isEmpty() || !passwordEncoder.matches(loginVM.getPassword(), userProfile.get().getHashPassword())) {
+            throw new BadCredentialsException("Wrong login or password.");
         }
         // Delete old refresh token
         refreshTokenService.deleteByUserProfile(userProfile.get());
@@ -106,6 +108,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userProfile.get().getUserID());
 
         // get authentication information
+        // set login name to loginVm to start create authenticate
+        loginVM.setLoginName(userProfile.get().getLoginName());
         TokenDetails tokenDetails = authService.authenticate(loginVM);
         log.info("End login");
         return ResponseEntity.ok(new JwtResponseDTO(
@@ -155,13 +159,37 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public ResponseEntity<?> verifyEmail(Long userID, VerificationEmailDTO verificationEmailDTO) {
         log.info("Start verify email by verification code");
-        UserProfile userProfile = userProfileRepository.findById(userID).orElseThrow(UserNotFoundException::new);
+        UserProfile userProfile = userProfileRepository.findById(userID)
+                .orElseThrow(UserNotFoundException::new);
+        String checkEmailAddress = userProfile.getEmailAddress();
 
-        if (Objects.isNull(userProfile.getEmailAddress())
+        // If email address of current logged-in user is null
+        // or email address has been verified without value of new_email_address column
+        if (Objects.isNull(checkEmailAddress)
                 || (Objects.isNull(userProfile.getNewEmailAddress()) && userProfile.getIsEmailAddressVerified())) {
             throw new InValidUserStatusException();
         }
 
+        // Make sure that current email address has not been verified by another user
+        // If new email address is not null, make sure that this email has not been verified by another user
+        if(Objects.nonNull(userProfile.getNewEmailAddress()) && userProfile.getIsEmailAddressVerified()){
+            checkEmailAddress = userProfile.getNewEmailAddress();
+            // if new email address equals to old verified email address
+            //Just for testing, we do not allow users to update the new email address
+            // to the same as the old verified email address
+            if(userProfile.getEmailAddress().equals(checkEmailAddress)){
+                log.error("New email address is the same as value with verified email address : " + checkEmailAddress);
+                return ResponseEntity.noContent().build();
+            }
+        }
+        // check email address before verifying
+        Optional<UserProfile> value = userProfileRepository
+                .findOneByEmailAddressVerified(checkEmailAddress);
+        if (value.isPresent()){
+            throw new EmailAddressVerifiedByAnotherUser(checkEmailAddress);
+        }
+
+        // Check code and update user info.
         if (userProfile.getVerificationCode().equals(verificationEmailDTO.getCode())
                 && Instant.now().isBefore(userProfile.getVerificationExpiredCodeTime())) {
             updateVerifiedEmail(userProfile);
@@ -186,6 +214,10 @@ public class UserProfileServiceImpl implements UserProfileService {
         userProfile.setIsEmailAddressVerified(true);
         userProfile.setVerificationCode(null);
         userProfile.setVerificationExpiredCodeTime(null);
+        if (Objects.nonNull(userProfile.getNewEmailAddress())){
+            userProfile.setEmailAddress(userProfile.getNewEmailAddress());
+        }
+        userProfile.setNewEmailAddress(null);
         userProfileRepository.save(userProfile);
     }
 

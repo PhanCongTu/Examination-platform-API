@@ -24,6 +24,7 @@ public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSi
     public static final String PASSWORD = "password";
     public static final String DISPLAY_NAME = "displayName";
     public static final String EMAIL_ADDRESS = "emailAddress";
+    public static final String IS_TEACHER = "isTeacher";
 
     public final UserProfileRepository userProfileRepository;
     /**
@@ -37,7 +38,6 @@ public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSi
      */
     @Override
     public boolean isValid(SignUpRequestDTO value, ConstraintValidatorContext context) {
-        log.info("Start validate SignUpRequestDTO");
         context.disableDefaultConstraintViolation();
         boolean checkLoginName = validateLoginName(value, context);
         boolean checkPassword = validatePassword(value, context);
@@ -64,7 +64,7 @@ public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSi
      *  - False if any validate is false
      */
     private boolean validateEmailAddress(SignUpRequestDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getEmailAddress()) || value.getEmailAddress().isEmpty()){
+        if(Objects.isNull(value.getEmailAddress())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(EMAIL_ADDRESS)
                     .addConstraintViolation();
@@ -97,7 +97,7 @@ public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSi
      *  - False if any validate is false
      */
     private boolean validateDisplayName(SignUpRequestDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getDisplayName()) || value.getDisplayName().isEmpty()){
+        if(Objects.isNull(value.getDisplayName()) || value.getDisplayName().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(DISPLAY_NAME)
                     .addConstraintViolation();
@@ -118,7 +118,7 @@ public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSi
      *  - False if any validate is false
      */
     private boolean validatePassword(SignUpRequestDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getPassword()) || value.getPassword().isEmpty()){
+        if(Objects.isNull(value.getPassword())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(PASSWORD)
                     .addConstraintViolation();
@@ -146,7 +146,7 @@ public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSi
      *  - False if any validate is false
      */
     private boolean validateLoginName(SignUpRequestDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getLoginName()) || value.getLoginName().isEmpty()){
+        if(Objects.isNull(value.getLoginName())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(LOGIN_NAME)
                     .addConstraintViolation();

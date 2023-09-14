@@ -20,4 +20,6 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     Optional<UserProfile> findOneByEmailAddressVerified(String emailAddress);
 
 
+    Optional<UserProfile> findOneByLoginNameOrEmailAddressAndIsEmailAddressVerified(String loginName, String emailAddress, Boolean isEmailAddressVerified);
+
 }

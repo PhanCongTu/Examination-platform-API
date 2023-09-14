@@ -3,6 +3,7 @@ package com.example.springboot.exception;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.SignUpRequestDTO;
+import com.sun.mail.util.MailConnectException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -157,13 +158,26 @@ public class ExceptionTranslator {
     /**
      * Exception handling when The JWT access token is Malformed
      *
-     * @param signatureException : SignatureException
-     * @param malformedJwtException : MalformedJwtException
+     * @param malformedJwtException : malformedJwtException
      * @return : The response entity
      */
-    @ExceptionHandler({SignatureException.class, MalformedJwtException.class})
-    public ResponseEntity<?> handleSignatureException(SignatureException signatureException,
-                                                      MalformedJwtException malformedJwtException) {
+    @ExceptionHandler({MalformedJwtException.class})
+    public ResponseEntity<?> handleSignatureException(MalformedJwtException malformedJwtException) {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+    /**
+     * Exception handling when The JWT access token is about Signature
+     *
+     * @param SignatureException : SignatureException
+     * @return : The response entity
+     */
+    @ExceptionHandler({SignatureException.class})
+    public ResponseEntity<?> handleSignatureException(SignatureException SignatureException) {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(Constants.ERROR_CODE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getErrorCode());
         response.put(Constants.MESSAGE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getMessage());
@@ -177,6 +191,16 @@ public class ExceptionTranslator {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(Constants.ERROR_CODE_KEY, ErrorMessage.VERIFY_INVALID_STATUS.getErrorCode());
         response.put(Constants.MESSAGE_KEY, ErrorMessage.VERIFY_INVALID_STATUS.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    @ExceptionHandler({EmailAddressVerifiedByAnotherUser.class})
+    public ResponseEntity<?> handleEmailAddressVerifiedByAnotherUserException(EmailAddressVerifiedByAnotherUser ex) {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.VERIFY_EMAIL_VERIFIED_BY_ANOTHER_USER.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, String.format(ErrorMessage.VERIFY_EMAIL_VERIFIED_BY_ANOTHER_USER.getMessage(), ex.getMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);

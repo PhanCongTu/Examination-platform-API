@@ -1,6 +1,7 @@
 package com.example.springboot.util;
 
 public enum EnumRole {
-    ROLE_USER,
+    ROLE_STUDENT,
+    ROLE_TEACHER,
     ROLE_ADMIN
 }

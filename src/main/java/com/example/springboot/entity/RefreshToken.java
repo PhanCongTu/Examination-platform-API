@@ -22,7 +22,7 @@ public class RefreshToken {
     private static final String EXPIRED_DATE = "expired_date";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = REFRESH_TOKEN_ID)
     private long refreshTokenId;
 

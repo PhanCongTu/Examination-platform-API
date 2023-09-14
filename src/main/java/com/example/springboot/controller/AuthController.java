@@ -26,9 +26,13 @@ public class AuthController {
     @Autowired
     private UserProfileService userProfileService;
 
-    @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> Signup(@Valid @RequestBody SignUpRequestDTO signupVM){
-        return userProfileService.createUser(signupVM);
+    @PostMapping(value = "/signup/student", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> studentSignup(@Valid @RequestBody SignUpRequestDTO signupVM){
+        return userProfileService.createUser(signupVM, false);
+    }
+    @PostMapping(value = "/signup/teacher", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> teacherSignup(@Valid @RequestBody SignUpRequestDTO signupVM){
+        return userProfileService.createUser(signupVM, true);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,14 +45,20 @@ public class AuthController {
         return userProfileService.refreshToken(refreshTokenRequestDTO);
     }
 
-    @GetMapping("/api/check-role-user")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> checkRoleUser() {
+    @GetMapping("/check/student")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<String> checkRoleStudent() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return new ResponseEntity<>(String.format("Hello USER %s", auth.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(String.format("Hello STUDENT %s", auth.getName()), HttpStatus.OK);
     }
 
-    @GetMapping("/api/check-role-admin")
+    @GetMapping("/check/teacher")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ResponseEntity<String> checkRoleTeacher() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity<>(String.format("Hello TEACHER %s", auth.getName()), HttpStatus.OK);
+    }
+    @GetMapping("/check/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> checkRoleAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

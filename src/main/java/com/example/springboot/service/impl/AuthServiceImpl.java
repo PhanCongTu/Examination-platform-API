@@ -7,10 +7,12 @@ import com.example.springboot.security.JwtTokenProvider;
 import com.example.springboot.security.JwtUserDetails;
 import com.example.springboot.security.UserAuthenticationToken;
 import com.example.springboot.service.AuthService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
@@ -32,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public TokenDetails authenticate(LoginRequestDTO loginRequestDTO){
+        log.info("Start create authenticate");
         UserAuthenticationToken authenticationToken = new UserAuthenticationToken(
                 loginRequestDTO.getLoginName(),
                 loginRequestDTO.getPassword(),
@@ -40,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         authenticationManager.authenticate(authenticationToken);
         final JwtUserDetails userDetails = customUserDetailsService
                 .loadUserByUsername(loginRequestDTO.getLoginName());
-
+        log.info("End create authenticate");
         return jwtTokenProvider.getTokenDetails(userDetails);
     }
 }

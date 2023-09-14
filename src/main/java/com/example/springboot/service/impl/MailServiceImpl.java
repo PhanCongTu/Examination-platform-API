@@ -1,14 +1,20 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.constant.Constants;
+import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.entity.UserProfile;
+import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
 import com.example.springboot.exception.InValidUserStatusException;
 import com.example.springboot.exception.UserNotFoundException;
 import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.service.MailService;
 import com.example.springboot.service.ThymeleafService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +27,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Service
+@Slf4j
 public class MailServiceImpl implements MailService {
     private static final String CONTENT_TYPE_TEXT_HTML = "text/html;charset=\"utf-8\"";
 
@@ -79,10 +86,30 @@ public class MailServiceImpl implements MailService {
         UserProfile userProfile = userProfileRepository.findOneByLoginName(loginName).orElseThrow(
                 () -> new UsernameNotFoundException(loginName)
         );
-        // return nothing if email has been verified
-        if (Objects.isNull(userProfile.getEmailAddress())
+        String checkEmailAddress = userProfile.getEmailAddress();
+
+        // If email address of current logged-in user is null
+        // or email address has been verified without value of new_email_address column
+        if (Objects.isNull(checkEmailAddress)
                 || (Objects.isNull(userProfile.getNewEmailAddress()) && userProfile.getIsEmailAddressVerified())) {
             throw new InValidUserStatusException();
+        }
+
+        // If new email address is not null, make sure that this email has not been verified by another user
+        if(Objects.nonNull(userProfile.getNewEmailAddress()) && userProfile.getIsEmailAddressVerified()){
+            checkEmailAddress = userProfile.getNewEmailAddress();
+            // if new email address equals to old verified email address
+            // Just for testing, we do not allow users to update the new email address
+            // to the same as the old verified email address
+            if(userProfile.getEmailAddress().equals(checkEmailAddress)){
+                log.error("New email address is the same as value with verified email address : " + checkEmailAddress);
+                userProfile.setNewEmailAddress(null);
+                return ResponseEntity.noContent().build();
+            }
+        }
+        Optional<UserProfile> value = userProfileRepository.findOneByEmailAddressVerified(checkEmailAddress);
+        if (value.isPresent()){
+            throw new EmailAddressVerifiedByAnotherUser(checkEmailAddress);
         }
         // update verification code and expired time into database
         updateVerificationCode(verificationCode, userProfile);
@@ -129,7 +156,7 @@ public class MailServiceImpl implements MailService {
         String resetPasswordCode = RandomStringUtils.random(length, useLetters, useNumbers);
 
         Optional<UserProfile> value = userProfileRepository.findOneByEmailAddressVerified(emailAddress);
-        if (!value.isPresent()) {
+        if (value.isEmpty()) {
             throw new UserNotFoundException();
         }
         UserProfile userProfile = value.get();

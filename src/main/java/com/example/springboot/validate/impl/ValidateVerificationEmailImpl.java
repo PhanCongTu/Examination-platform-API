@@ -27,7 +27,7 @@ public class ValidateVerificationEmailImpl implements ConstraintValidator<Valida
     }
 
     private Boolean validateCode(VerificationEmailDTO verificationEmailDTO, ConstraintValidatorContext context) {
-        if (verificationEmailDTO.getCode() == null || verificationEmailDTO.getCode().isEmpty()){
+        if (verificationEmailDTO.getCode() == null || verificationEmailDTO.getCode().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(CODE)
                     .addConstraintViolation();
