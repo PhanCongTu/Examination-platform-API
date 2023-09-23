@@ -28,6 +28,7 @@ public enum ErrorMessage {
 
     RESET_PASSWORD_NOT_ACCEPTABLE(Constants.NOT_ACCEPTABLE, "Your reset code is not valid."),
 
+    CHANGE_PASSWORD_WRONG_OLD_PASSWORD(Constants.BAD_REQUEST, "Old password is incorrect.")
     ;
 
     private String errorCode;

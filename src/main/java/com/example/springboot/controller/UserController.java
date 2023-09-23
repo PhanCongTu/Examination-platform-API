@@ -1,6 +1,8 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.request.ChangePasswordDTO;
 import com.example.springboot.dto.request.ResetPasswordDTO;
+import com.example.springboot.dto.request.UpdateUserProfileRequestDTO;
 import com.example.springboot.exception.UserNotFoundException;
 import com.example.springboot.service.MailService;
 import lombok.AllArgsConstructor;
@@ -54,5 +56,13 @@ public class UserController {
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO,
                                            @PathVariable(value = "email-address") String emailAddress){
         return userProfileService.resetPassword(emailAddress,resetPasswordDTO);
+    }
+    @PostMapping(value = "/change-password", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO changePassword){
+        return userProfileService.changePassword(changePassword);
+    }
+    @PostMapping(value = "/user/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateUserprofile(@Valid @RequestBody UpdateUserProfileRequestDTO DTO){
+        return userProfileService.updateUserProfile(DTO);
     }
 }

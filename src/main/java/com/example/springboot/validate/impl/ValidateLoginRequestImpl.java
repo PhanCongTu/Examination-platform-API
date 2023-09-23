@@ -50,7 +50,7 @@ public class ValidateLoginRequestImpl implements ConstraintValidator<ValidateLog
      *  - False if any validate is false
      */
     private boolean validatePassword(LoginRequestDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getPassword()) || value.getPassword().isEmpty()){
+        if(Objects.isNull(value.getPassword()) || value.getPassword().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(PASSWORD)
                     .addConstraintViolation();
@@ -70,7 +70,7 @@ public class ValidateLoginRequestImpl implements ConstraintValidator<ValidateLog
      *  - False if any validate is false
      */
     private boolean validateLoginName(LoginRequestDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getLoginName()) || value.getLoginName().isEmpty()){
+        if(Objects.isNull(value.getLoginName()) || value.getLoginName().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(LOGIN_NAME)
                     .addConstraintViolation();

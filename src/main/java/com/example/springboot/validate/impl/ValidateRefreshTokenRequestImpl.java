@@ -47,7 +47,7 @@ public class ValidateRefreshTokenRequestImpl implements ConstraintValidator<Vali
      *  - False if any validate is false
      */
     private boolean checkRefreshToken(RefreshTokenRequestDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getRefreshToken()) || value.getRefreshToken().isEmpty()){
+        if(Objects.isNull(value.getRefreshToken()) || value.getRefreshToken().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(REFRESH_TOKEN)
                     .addConstraintViolation();

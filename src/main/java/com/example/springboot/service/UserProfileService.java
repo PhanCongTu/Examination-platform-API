@@ -13,4 +13,8 @@ public interface UserProfileService {
     ResponseEntity<?> verifyEmail(Long userID, VerificationEmailDTO verificationEmailDTO);
 
     ResponseEntity<?> resetPassword(String emailAddress, ResetPasswordDTO resetPasswordDTO);
+
+    ResponseEntity<?> changePassword(ChangePasswordDTO changePassword);
+
+    ResponseEntity<?> updateUserProfile(UpdateUserProfileRequestDTO dto);
 }

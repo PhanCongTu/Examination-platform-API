@@ -1,7 +1,5 @@
 package com.example.springboot.service.impl;
 
-import com.example.springboot.constant.Constants;
-import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
 import com.example.springboot.exception.InValidUserStatusException;
@@ -13,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -88,10 +84,8 @@ public class MailServiceImpl implements MailService {
         );
         String checkEmailAddress = userProfile.getEmailAddress();
 
-        // If email address of current logged-in user is null
-        // or email address has been verified without value of new_email_address column
-        if (Objects.isNull(checkEmailAddress)
-                || (Objects.isNull(userProfile.getNewEmailAddress()) && userProfile.getIsEmailAddressVerified())) {
+        // If email address has been verified without value of new_email_address column
+        if (Objects.isNull(userProfile.getNewEmailAddress()) && userProfile.getIsEmailAddressVerified()) {
             throw new InValidUserStatusException();
         }
 
@@ -147,7 +141,6 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-
     public ResponseEntity<?> sendResetPasswordEmail(String emailAddress) {
 
         int length = 6;
