@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -26,6 +29,6 @@ public class JwtResponseDTO {
 
     private List<String> roles;
 
-    private Long expired_in;
+    private ZonedDateTime expired_in;
 
 }

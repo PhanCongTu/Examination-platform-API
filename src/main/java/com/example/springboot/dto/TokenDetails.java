@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -22,7 +25,7 @@ public class TokenDetails {
 
     private String emailAddress;
 
-    private long expired;
+    private ZonedDateTime expired;
 
     private List<String> roles = new ArrayList<>();
 }
