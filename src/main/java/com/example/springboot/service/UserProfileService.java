@@ -8,7 +8,7 @@ public interface UserProfileService {
 
     ResponseEntity<?> login(LoginRequestDTO loginVM);
 
-    ResponseEntity<?> refreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO);
+    ResponseEntity<?> refreshToken(RefreshTokenDTO refreshTokenDTO);
 
     ResponseEntity<?> verifyEmail(Long userID, VerificationEmailDTO verificationEmailDTO);
 
@@ -16,5 +16,5 @@ public interface UserProfileService {
 
     ResponseEntity<?> changePassword(ChangePasswordDTO changePassword);
 
-    ResponseEntity<?> updateUserProfile(UpdateUserProfileRequestDTO dto);
+    ResponseEntity<?> updateUserProfile(UpdateUserProfileDTO dto);
 }

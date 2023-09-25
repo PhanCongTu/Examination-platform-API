@@ -50,7 +50,8 @@ public class WebSecurityConfig {
             "/signup/**",
             "/files/**",
             "/refresh_token/**",
-            "/api/password/**"
+            "/api/password/**",
+            "/api/v1/exam/**"
     );
 
 

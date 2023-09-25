@@ -2,12 +2,11 @@ package com.example.springboot.controller;
 
 import com.example.springboot.dto.request.ChangePasswordDTO;
 import com.example.springboot.dto.request.ResetPasswordDTO;
-import com.example.springboot.dto.request.UpdateUserProfileRequestDTO;
+import com.example.springboot.dto.request.UpdateUserProfileDTO;
 import com.example.springboot.exception.UserNotFoundException;
 import com.example.springboot.service.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -62,7 +61,7 @@ public class UserController {
         return userProfileService.changePassword(changePassword);
     }
     @PostMapping(value = "/user/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateUserprofile(@Valid @RequestBody UpdateUserProfileRequestDTO DTO){
+    public ResponseEntity<?> updateUserprofile(@Valid @RequestBody UpdateUserProfileDTO DTO){
         return userProfileService.updateUserProfile(DTO);
     }
 }

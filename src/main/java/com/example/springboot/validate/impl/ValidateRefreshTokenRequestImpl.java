@@ -1,7 +1,7 @@
 package com.example.springboot.validate.impl;
 
 import com.example.springboot.constant.ErrorMessage;
-import com.example.springboot.dto.request.RefreshTokenRequestDTO;
+import com.example.springboot.dto.request.RefreshTokenDTO;
 import com.example.springboot.validate.ValidateRefreshTokenRequest;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
@@ -14,21 +14,21 @@ import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateRefreshTokenRequestImpl implements ConstraintValidator<ValidateRefreshTokenRequest, RefreshTokenRequestDTO> {
+public class ValidateRefreshTokenRequestImpl implements ConstraintValidator<ValidateRefreshTokenRequest, RefreshTokenDTO> {
 
     public static final String REFRESH_TOKEN = "refreshToken";
 
     /**
-     * Check validate of {@link RefreshTokenRequestDTO}
+     * Check validate of {@link RefreshTokenDTO}
      *
-     * @param value : The {@link RefreshTokenRequestDTO} object
+     * @param value : The {@link RefreshTokenDTO} object
      * @param context : The context
      * @return :
      *  - True if all validate is true,
      *  - False if any validate is false
      */
     @Override
-    public boolean isValid(RefreshTokenRequestDTO value, ConstraintValidatorContext context) {
+    public boolean isValid(RefreshTokenDTO value, ConstraintValidatorContext context) {
         log.info("Start validate RefreshTokenRequestDTO");
         context.disableDefaultConstraintViolation();
         return ValidateUtils.isAllTrue(List.of(
@@ -40,13 +40,13 @@ public class ValidateRefreshTokenRequestImpl implements ConstraintValidator<Vali
      * Check validate refresh token:
      *  - Do not null or empty
      *
-     * @param value : The {@link RefreshTokenRequestDTO} object
+     * @param value : The {@link RefreshTokenDTO} object
      * @param context : The context
      * @return :
      *  - True if all validate is true,
      *  - False if any validate is false
      */
-    private boolean checkRefreshToken(RefreshTokenRequestDTO value, ConstraintValidatorContext context) {
+    private boolean checkRefreshToken(RefreshTokenDTO value, ConstraintValidatorContext context) {
         if(Objects.isNull(value.getRefreshToken()) || value.getRefreshToken().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(REFRESH_TOKEN)

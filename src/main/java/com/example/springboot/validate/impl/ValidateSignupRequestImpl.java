@@ -2,7 +2,7 @@ package com.example.springboot.validate.impl;
 
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
-import com.example.springboot.dto.request.RefreshTokenRequestDTO;
+import com.example.springboot.dto.request.RefreshTokenDTO;
 import com.example.springboot.dto.request.SignUpRequestDTO;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.repository.UserProfileRepository;
@@ -28,7 +28,7 @@ public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSi
 
     public final UserProfileRepository userProfileRepository;
     /**
-     * check validate of {@link RefreshTokenRequestDTO}
+     * check validate of {@link RefreshTokenDTO}
      *
      * @param value : The {@link SignUpRequestDTO} object
      * @param context : The context

@@ -1,7 +1,7 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.request.LoginRequestDTO;
-import com.example.springboot.dto.request.RefreshTokenRequestDTO;
+import com.example.springboot.dto.request.RefreshTokenDTO;
 import com.example.springboot.dto.request.SignUpRequestDTO;
 import com.example.springboot.service.UserProfileService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 @Validated
 @RestController
@@ -41,8 +40,8 @@ public class AuthController {
     }
 
     @PostMapping(value = "/refresh_token", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> RefreshToken(@Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO){
-        return userProfileService.refreshToken(refreshTokenRequestDTO);
+    public ResponseEntity<?> RefreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO){
+        return userProfileService.refreshToken(refreshTokenDTO);
     }
 
     @GetMapping("/check/student")

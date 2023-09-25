@@ -21,7 +21,6 @@ import com.example.springboot.service.UserProfileService;
 import com.example.springboot.util.EnumRole;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -131,13 +130,13 @@ public class UserProfileServiceImpl implements UserProfileService {
     /**
      * Renew the old token by the refresh token
      *
-     * @param refreshTokenRequestDTO : The {@link RefreshTokenRequestDTO} object
+     * @param refreshTokenDTO : The {@link RefreshTokenDTO} object
      * @return : The {@link RefreshTokenResponseDTO} responseEntity
      */
     @Override
-    public ResponseEntity<?> refreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO) {
+    public ResponseEntity<?> refreshToken(RefreshTokenDTO refreshTokenDTO) {
         log.info("Start refresh token");
-        String requestRefreshToken = refreshTokenRequestDTO.getRefreshToken();
+        String requestRefreshToken = refreshTokenDTO.getRefreshToken();
         Map<String, Object> claims = new HashMap<>();
 
         Optional<RefreshToken> refreshToken = refreshTokenService.findByRefreshToken(requestRefreshToken);
@@ -306,7 +305,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public ResponseEntity<?> updateUserProfile(UpdateUserProfileRequestDTO dto) {
+    public ResponseEntity<?> updateUserProfile(UpdateUserProfileDTO dto) {
         // Get current logged in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserProfile userProfile = userProfileRepository.findOneByLoginName(auth.getName()).orElseThrow(

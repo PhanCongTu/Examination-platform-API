@@ -56,18 +56,22 @@ public class ExceptionTranslator {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         String errorMessageName = result.getAllErrors().get(0).getDefaultMessage();
         String errorField = ((FieldError) result.getAllErrors().get(0)).getField();
-
+        String errorCode = "";
+        String message = "";
         if (ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.name().equals(errorMessageName)) {
             String loginName = ((SignUpRequestDTO) Objects.requireNonNull(result.getTarget())).getLoginName();
-            response.put(Constants.ERROR_CODE_KEY, ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.getErrorCode());
-            response.put(Constants.MESSAGE_KEY, String.format(ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.getMessage(), loginName));
+            errorCode = ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.getErrorCode();
+            message = String.format(ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.getMessage(), loginName);
         } else if (ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.name().equals(errorMessageName)) {
             String emailAddress = ((SignUpRequestDTO) Objects.requireNonNull(result.getTarget())).getEmailAddress();
-            response.put(Constants.ERROR_CODE_KEY, ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.getErrorCode());
-            response.put(Constants.MESSAGE_KEY, String.format(ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.getMessage(), emailAddress));
+            errorCode = ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.getErrorCode();
+            message = String.format(ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.getMessage(), emailAddress);
         } else if (ErrorMessage.COMMON_FIELD_REQUIRED.name().equals(errorMessageName)) {
-            response.put(Constants.ERROR_CODE_KEY, ErrorMessage.COMMON_FIELD_REQUIRED.getErrorCode());
-            response.put(Constants.MESSAGE_KEY, String.format(ErrorMessage.COMMON_FIELD_REQUIRED.getMessage(), errorField));
+            errorCode = ErrorMessage.COMMON_FIELD_REQUIRED.getErrorCode();
+            message = String.format(ErrorMessage.COMMON_FIELD_REQUIRED.getMessage(), errorField);
+        } else if (ErrorMessage.CREATE_EXAM_DATE_INVALID.name().equals(errorMessageName)) {
+            errorCode = ErrorMessage.CREATE_EXAM_DATE_INVALID.getErrorCode();
+            message = String.format(ErrorMessage.CREATE_EXAM_DATE_INVALID.getMessage(), errorField);
         } else {
             // Message of ErrorMessage do not have any argument
             Arrays.asList(ErrorMessage.values()).forEach(
@@ -79,6 +83,8 @@ public class ExceptionTranslator {
                     })
             );
         }
+        response.put(Constants.ERROR_CODE_KEY, errorCode);
+        response.put(Constants.MESSAGE_KEY, message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
