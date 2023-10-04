@@ -2,8 +2,8 @@ package com.example.springboot.exception;
 
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
+import com.example.springboot.dto.request.CreateTopicDTO;
 import com.example.springboot.dto.request.SignUpRequestDTO;
-import com.sun.mail.util.MailConnectException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -20,7 +20,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import com.example.springboot.exception.UserNotFoundException;
 
 import java.util.*;
 
@@ -72,7 +71,13 @@ public class ExceptionTranslator {
         } else if (ErrorMessage.CREATE_EXAM_DATE_INVALID.name().equals(errorMessageName)) {
             errorCode = ErrorMessage.CREATE_EXAM_DATE_INVALID.getErrorCode();
             message = String.format(ErrorMessage.CREATE_EXAM_DATE_INVALID.getMessage(), errorField);
+        } else if (ErrorMessage.CREATE_TOPIC_CODE_DUPLICATE.name().equals(errorMessageName)) {
+            String code = ((CreateTopicDTO) Objects.requireNonNull(result.getTarget())).getCode();
+            errorCode = ErrorMessage.CREATE_TOPIC_CODE_DUPLICATE.getErrorCode();
+            message = String.format(ErrorMessage.CREATE_TOPIC_CODE_DUPLICATE.getMessage(), code);
         } else {
+
+
             // Message of ErrorMessage do not have any argument
             Arrays.asList(ErrorMessage.values()).forEach(
                     (errorMessage -> {

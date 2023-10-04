@@ -30,7 +30,9 @@ public enum ErrorMessage {
 
     CHANGE_PASSWORD_WRONG_OLD_PASSWORD(Constants.BAD_REQUEST, "Old password is incorrect."),
 
-    CREATE_EXAM_DATE_INVALID(Constants.BAD_REQUEST, "%s value is invalid.")
+    CREATE_EXAM_DATE_INVALID(Constants.BAD_REQUEST, "%s value is invalid."),
+
+    CREATE_TOPIC_CODE_DUPLICATE(Constants.BAD_REQUEST, "Topic with code %s already exists.")
     ;
 
     private String errorCode;

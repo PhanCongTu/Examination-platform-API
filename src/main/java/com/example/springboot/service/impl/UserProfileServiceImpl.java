@@ -58,7 +58,7 @@ public class UserProfileServiceImpl implements UserProfileService {
      */
     @Override
     @Transactional
-    public ResponseEntity<?> createUser(SignUpRequestDTO signupVM, Boolean isTeacher) {
+    public ResponseEntity<?> createUser(SignUpRequestDTO signupVM, Boolean isTeacher, Boolean isAdmin) {
         log.info("Start createUser()");
         UserProfile newUserProfile = new UserProfile();
 
@@ -69,7 +69,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         newUserProfile.setLoginName(signupVM.getLoginName());
         newUserProfile.setIsEmailAddressVerified(false);
         newUserProfile.setIsEnable(true);
-        String role = isTeacher ? EnumRole.ROLE_TEACHER.name() : EnumRole.ROLE_STUDENT.name();
+        String role = EnumRole.ROLE_STUDENT.name();
+        if(isAdmin){
+            role = EnumRole.ROLE_ADMIN.name();
+        } else if (isTeacher) {
+            role = EnumRole.ROLE_TEACHER.name();
+        }
         newUserProfile.setRoles(List.of(role));
         newUserProfile = userProfileRepository.save(newUserProfile);
 

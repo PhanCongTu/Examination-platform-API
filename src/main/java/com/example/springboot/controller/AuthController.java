@@ -27,11 +27,16 @@ public class AuthController {
 
     @PostMapping(value = "/signup/student", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> studentSignup(@Valid @RequestBody SignUpRequestDTO signupVM){
-        return userProfileService.createUser(signupVM, false);
+        return userProfileService.createUser(signupVM, false, false);
     }
     @PostMapping(value = "/signup/teacher", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> teacherSignup(@Valid @RequestBody SignUpRequestDTO signupVM){
-        return userProfileService.createUser(signupVM, true);
+        return userProfileService.createUser(signupVM, true, false);
+    }
+    @PostMapping(value = "/add/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> addAdmin(@Valid @RequestBody SignUpRequestDTO signupVM){
+        return userProfileService.createUser(signupVM, false, true);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
