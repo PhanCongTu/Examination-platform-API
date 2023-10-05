@@ -10,7 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +32,20 @@ public class TopicController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createTopic(@Valid @RequestBody CreateTopicDTO topicDTO){
-        log.info("vao");
         return topicService.createTopic(topicDTO);
+    }
+    @DeleteMapping(value = "/delete/{topicId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteTopic(@PathVariable(name = "topicId") Long topicId){
+        return topicService.switchTopicStatus(topicId, false);
+    }
+    @PutMapping(value = "/active/{topicId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> activeTopic(@PathVariable(name = "topicId") Long topicId){
+        return topicService.switchTopicStatus(topicId, true);
+    }
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllTopics(){
+        return topicService.getAllTopics();
     }
 }

@@ -19,6 +19,7 @@ import com.example.springboot.service.MailService;
 import com.example.springboot.service.RefreshTokenService;
 import com.example.springboot.service.UserProfileService;
 import com.example.springboot.util.EnumRole;
+import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,16 +41,12 @@ import java.util.*;
 public class UserProfileServiceImpl implements UserProfileService {
 
     private final UserProfileRepository userProfileRepository;
-
     private final RefreshTokenService refreshTokenService;
-
     private final AuthService authService;
-
     private final MailService mailService;
-
     private final JwtTokenProvider jwtTokenProvider;
-
     private PasswordEncoder passwordEncoder;
+    private final WebUtils webUtils;
     /**
      * Create a new user profile and save it into database
      *
@@ -272,10 +269,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePassword) {
         // Get current logged in user
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserProfile userProfile = userProfileRepository.findOneByLoginName(auth.getName()).orElseThrow(
-                UserNotFoundException::new
-        );
+        UserProfile userProfile = webUtils.getCurrentLogedInUser();
 
         // If the old password is not correct.
         if(!passwordEncoder.matches(changePassword.getOldPassword(), userProfile.getHashPassword())){
@@ -312,10 +306,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public ResponseEntity<?> updateUserProfile(UpdateUserProfileDTO dto) {
         // Get current logged in user
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserProfile userProfile = userProfileRepository.findOneByLoginName(auth.getName()).orElseThrow(
-                UserNotFoundException::new
-        );
+        UserProfile userProfile = webUtils.getCurrentLogedInUser();
         // Update display name
         if (Objects.nonNull(dto.getDisplayName())){
             userProfile.setDisplayName(dto.getDisplayName());

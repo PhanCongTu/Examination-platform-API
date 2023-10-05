@@ -17,6 +17,7 @@ import java.util.Objects;
 public class ValidateCreateExaminationRequestImpl implements ConstraintValidator<ValidateCreateExaminationRequest, CreateExaminationDTO> {
 
     public static final String EXAM_NAME = "examName";
+    public static final String TOPIC_ID = "topicId";
     public static final String START_DATE = "startDate";
     public static final String END_DATE = "endDate";
 
@@ -26,13 +27,25 @@ public class ValidateCreateExaminationRequestImpl implements ConstraintValidator
         log.info("Start validate CreateExaminationDTO");
         context.disableDefaultConstraintViolation();
         boolean checkExamName = validateExamName(value, context);
+        boolean checkTopicID = validateTopicID(value, context);
         boolean checkStartDate = validateStartDate(value, context);
         boolean checkEndDate = validateEndDate(value, context);
         return ValidateUtils.isAllTrue(List.of(
                 checkExamName,
+                checkTopicID,
                 checkStartDate,
                 checkEndDate
         ));
+    }
+
+    private boolean validateTopicID(CreateExaminationDTO value, ConstraintValidatorContext context) {
+        if(Objects.isNull(value.getTopicId())){
+            context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
+                    .addPropertyNode(TOPIC_ID)
+                    .addConstraintViolation();
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     private boolean validateExamName(CreateExaminationDTO value, ConstraintValidatorContext context) {

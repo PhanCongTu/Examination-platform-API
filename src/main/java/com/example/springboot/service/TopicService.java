@@ -5,4 +5,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface TopicService {
     ResponseEntity<?> createTopic(CreateTopicDTO topicDTO);
+
+    ResponseEntity<?> switchTopicStatus(Long topicId, Boolean newStatus);
+
+    ResponseEntity<?> getAllTopics();
 }

@@ -23,6 +23,8 @@ public class CreateExaminationDTO {
 
     private String examName;
 
+    private Long topicId;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = Constants.EXAM_DATE_PATTERN)
     private LocalDateTime startDate;
