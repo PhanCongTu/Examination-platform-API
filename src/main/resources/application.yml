@@ -1,13 +1,16 @@
 server:
-  port: 8080
+  port: 5000
   error:
     include-message: always
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: rootpassword
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/spring_boot?useUnicode=yes&characterEncoding=UTF-8
+#    url: jdbc:mysql://examination-db.cmyab7tnjyi1.ap-southeast-1.rds.amazonaws.com:3306/examination?useUnicode=yes&characterEncoding=UTF-8&createDatabaseIfNotExist=true&useSSL=true
+    url: jdbc:mysql://${RDS_HOST_NAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:examination-platform}?useUnicode=yes&characterEncoding=UTF-8&createDatabaseIfNotExist=true&useSSL=true
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false

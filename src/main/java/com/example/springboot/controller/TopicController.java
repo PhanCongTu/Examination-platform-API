@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @Validated
 @RestController
@@ -44,8 +45,8 @@ public class TopicController {
     public ResponseEntity<?> activeTopic(@PathVariable(name = "topicId") Long topicId){
         return topicService.switchTopicStatus(topicId, true);
     }
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllTopics(){
-        return topicService.getAllTopics();
+    @GetMapping(value = "/page/{page-number}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllEnableTopics(@PathVariable(value = "page-number", required = false) Integer pageNumber){
+        return topicService.getAllEnableTopics(pageNumber);
     }
 }

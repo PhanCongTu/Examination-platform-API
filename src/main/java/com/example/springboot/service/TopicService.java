@@ -8,5 +8,5 @@ public interface TopicService {
 
     ResponseEntity<?> switchTopicStatus(Long topicId, Boolean newStatus);
 
-    ResponseEntity<?> getAllTopics();
+    ResponseEntity<?> getAllEnableTopics(Integer pageNumber);
 }

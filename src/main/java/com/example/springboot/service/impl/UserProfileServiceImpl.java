@@ -5,7 +5,7 @@ import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.TokenDetails;
 import com.example.springboot.dto.request.*;
 import com.example.springboot.dto.response.JwtResponseDTO;
-import com.example.springboot.dto.response.RefreshTokenResponseDTO;
+import com.example.springboot.dto.response.TokenResponseDTO;
 import com.example.springboot.entity.RefreshToken;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
@@ -26,8 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,7 +131,7 @@ public class UserProfileServiceImpl implements UserProfileService {
      * Renew the old token by the refresh token
      *
      * @param refreshTokenDTO : The {@link RefreshTokenDTO} object
-     * @return : The {@link RefreshTokenResponseDTO} responseEntity
+     * @return : The {@link TokenResponseDTO} responseEntity
      */
     @Override
     public ResponseEntity<?> refreshToken(RefreshTokenDTO refreshTokenDTO) {
@@ -148,7 +146,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                 .map(userProfile -> {
                     String token = jwtTokenProvider.doGenerateToken(claims, userProfile.getLoginName());
                     log.info("End refresh token");
-                    return ResponseEntity.ok(new RefreshTokenResponseDTO(token, requestRefreshToken));
+                    return ResponseEntity.ok(new TokenResponseDTO(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new RefreshTokenNotFoundException(requestRefreshToken,
                         "Refresh token is not in database!"));
@@ -263,9 +261,17 @@ public class UserProfileServiceImpl implements UserProfileService {
         userProfile.setHashPassword(passwordEncoder.encode(resetPasswordDTO.getPassword()));
         userProfile.setResetPasswordCode(null);
         userProfile.setResetPasswordExpiredCodeTime(null);
+        userProfile.setUpdateBy(userProfile.getLoginName());
+        userProfile.setUpdateDate(Instant.now());
         userProfileRepository.save(userProfile);
     }
 
+    /**
+     * Change password of current logged-in user
+     *
+     * @param changePassword : The {@link ChangePasswordDTO}
+     * @return : The {@link TokenResponseDTO}
+     */
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePassword) {
         // Get current logged in user
@@ -282,27 +288,27 @@ public class UserProfileServiceImpl implements UserProfileService {
         }
         // Update password
         userProfile.setHashPassword(passwordEncoder.encode(changePassword.getNewPassword()));
+        userProfile.setUpdateBy(userProfile.getLoginName());
+        userProfile.setUpdateDate(Instant.now());
         userProfileRepository.save(userProfile);
         // Delete old refresh token
         refreshTokenService.deleteByUserProfile(userProfile);
         // Add new refresh token
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userProfile.getUserID());
 
-        // get authentication information
-        // set login name to loginVm to start create authenticate
-        TokenDetails tokenDetails = authService.authenticate(new LoginRequestDTO(userProfile.getLoginName(), changePassword.getNewPassword()));
-        log.info("End login");
-        return ResponseEntity.ok(new JwtResponseDTO(
-                tokenDetails.getDisplayName(),
-                userProfile.getLoginName(),
-                tokenDetails.getEmailAddress(),
-                userProfile.getIsEmailAddressVerified(),
-                tokenDetails.getAccessToken(),
-                refreshToken.getRefreshToken(),
-                tokenDetails.getRoles(),
-                tokenDetails.getExpired()));
+        // generate a new access token
+        Map<String, Object> claims = new HashMap<>();
+        String token = jwtTokenProvider.doGenerateToken(claims, userProfile.getLoginName());
+        log.info("End refresh token");
+        return ResponseEntity.ok(new TokenResponseDTO(token, refreshToken.getRefreshToken()));
     }
 
+    /**
+     * Update information of current logged-in user
+     *
+     * @param dto : the DTO from request
+     * @return : no content response
+     */
     @Override
     public ResponseEntity<?> updateUserProfile(UpdateUserProfileDTO dto) {
         // Get current logged in user
@@ -326,6 +332,8 @@ public class UserProfileServiceImpl implements UserProfileService {
             else {
                 userProfile.setEmailAddress(newEmailAddress);
             }
+            userProfile.setUpdateBy(userProfile.getLoginName());
+            userProfile.setUpdateDate(Instant.now());
             userProfileRepository.save(userProfile);
             mailService.sendVerificationEmail(userProfile.getLoginName());
         }

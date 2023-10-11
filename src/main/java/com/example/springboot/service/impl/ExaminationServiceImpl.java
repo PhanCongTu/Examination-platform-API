@@ -3,6 +3,7 @@ package com.example.springboot.service.impl;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateExaminationDTO;
+import com.example.springboot.dto.response.ExaminationResponseDTO;
 import com.example.springboot.entity.Examination;
 import com.example.springboot.entity.Topic;
 import com.example.springboot.entity.UserProfile;
@@ -33,6 +34,13 @@ public class ExaminationServiceImpl implements ExaminationService {
     private final UserProfileRepository userProfileRepository;
     private final TopicRepository topicRepository;
     private final WebUtils webUtils;
+
+    /**
+     * Create examination
+     *
+     * @param value : The DTO from the request
+     * @return : the {@link ExaminationResponseDTO} object
+     */
     @Override
     public ResponseEntity<?> createExamination(CreateExaminationDTO value) {
         // Get current logged in user
@@ -54,7 +62,13 @@ public class ExaminationServiceImpl implements ExaminationService {
                 .topic(topic.get())
                 .build();
         examination.setCreatedBy(userProfile.getLoginName());
-        examinationRepository.save(examination);
-        return ResponseEntity.noContent().build();
+        Examination saved = examinationRepository.save(examination);
+        ExaminationResponseDTO response = ExaminationResponseDTO.builder()
+                .id(saved.getId())
+                .examName(saved.getExamName())
+                .startDate(saved.getEndDate())
+                .topic(null)
+                .build();;
+        return ResponseEntity.ok(response);
     }
 }

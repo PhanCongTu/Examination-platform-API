@@ -60,7 +60,7 @@ public class WebSecurityConfig {
         http.cors();
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/files/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()

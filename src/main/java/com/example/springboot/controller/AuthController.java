@@ -21,6 +21,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:5000")
 public class AuthController {
     @Autowired
     private UserProfileService userProfileService;
@@ -67,6 +68,14 @@ public class AuthController {
     public ResponseEntity<String> checkRoleAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return new ResponseEntity<>(String.format("Hello ADMIN %s", auth.getName()), HttpStatus.OK);
+    }
+    @GetMapping("")
+    public ResponseEntity<String> hello() {
+        return new ResponseEntity<>(String.format("Hello world! "), HttpStatus.OK);
+    }
+    @GetMapping("/{name}")
+    public ResponseEntity<String> helloThere(@PathVariable(name = "name") String name) {
+        return new ResponseEntity<>(String.format("Hello world! %s", name), HttpStatus.OK);
     }
 
 }
