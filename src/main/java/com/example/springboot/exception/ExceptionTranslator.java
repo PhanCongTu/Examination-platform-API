@@ -120,16 +120,31 @@ public class ExceptionTranslator {
                 .body(response);
     }
     /**
-     * Exception handling when refresh token and access token is wrong or expired
+     * Exception handling when refresh token is wrong or expired
      *
      * @return : The response entity
      */
-    @ExceptionHandler({RefreshTokenExpiredException.class, ExpiredJwtException.class, RefreshTokenNotFoundException.class})
-    public ResponseEntity<?> handleTokenException() {
+    @ExceptionHandler({RefreshTokenExpiredException.class, RefreshTokenNotFoundException.class})
+    public ResponseEntity<?> handleRefreshTokenException() {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(Constants.ERROR_CODE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getErrorCode());
         response.put(Constants.MESSAGE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    /**
+     * Exception handling when refresh token is wrong or expired
+     *
+     * @return : The response entity
+     */
+    @ExceptionHandler({ExpiredJwtException.class})
+    public ResponseEntity<?> handleTokenException() {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.LOGIN_TOKEN_INVALID.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }

@@ -47,6 +47,7 @@ public class AuthController {
 
     @PostMapping(value = "/refresh_token", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> RefreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO){
+        System.out.println(refreshTokenDTO.getRefreshToken());
         return userProfileService.refreshToken(refreshTokenDTO);
     }
 
@@ -73,9 +74,4 @@ public class AuthController {
     public ResponseEntity<String> hello() {
         return new ResponseEntity<>(String.format("Hello world! "), HttpStatus.OK);
     }
-    @GetMapping("/{name}")
-    public ResponseEntity<String> helloThere(@PathVariable(name = "name") String name) {
-        return new ResponseEntity<>(String.format("Hello world! %s", name), HttpStatus.OK);
-    }
-
 }
