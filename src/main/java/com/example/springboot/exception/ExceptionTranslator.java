@@ -2,7 +2,6 @@ package com.example.springboot.exception;
 
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
-import com.example.springboot.dto.request.CreateTopicDTO;
 import com.example.springboot.dto.request.SignUpRequestDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -68,13 +67,6 @@ public class ExceptionTranslator {
         } else if (ErrorMessage.COMMON_FIELD_REQUIRED.name().equals(errorMessageName)) {
             errorCode = ErrorMessage.COMMON_FIELD_REQUIRED.getErrorCode();
             message = String.format(ErrorMessage.COMMON_FIELD_REQUIRED.getMessage(), errorField);
-        } else if (ErrorMessage.CREATE_EXAM_DATE_INVALID.name().equals(errorMessageName)) {
-            errorCode = ErrorMessage.CREATE_EXAM_DATE_INVALID.getErrorCode();
-            message = String.format(ErrorMessage.CREATE_EXAM_DATE_INVALID.getMessage(), errorField);
-        } else if (ErrorMessage.CREATE_TOPIC_CODE_DUPLICATE.name().equals(errorMessageName)) {
-            String code = ((CreateTopicDTO) Objects.requireNonNull(result.getTarget())).getCode();
-            errorCode = ErrorMessage.CREATE_TOPIC_CODE_DUPLICATE.getErrorCode();
-            message = String.format(ErrorMessage.CREATE_TOPIC_CODE_DUPLICATE.getMessage(), code);
         } else {
 
 
