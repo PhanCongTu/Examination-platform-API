@@ -1,6 +1,6 @@
 package com.example.springboot.dto.request;
 
-import com.example.springboot.validate.ValidateCreateTopic;
+import com.example.springboot.validate.ValidateUpdateClassroom;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,8 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ValidateCreateTopic
-public class CreateTopicDTO {
-    private String code;
-    private String topicName;
+@ValidateUpdateClassroom
+public class UpdateClassroomDTO {
+    private String classCode;
+    private String className;
+    private Boolean isPrivate;
 }

@@ -33,8 +33,8 @@ public enum ErrorMessage {
     CREATE_EXAM_DATE_INVALID(Constants.BAD_REQUEST, "%s value is invalid."),
     CREATE_EXAM_TOPIC_ID_INVALID(Constants.BAD_REQUEST, "Can not found the topic."),
 
-    CREATE_TOPIC_CODE_DUPLICATE(Constants.BAD_REQUEST, "Topic with code %s already exists."),
-    TOPIC_NOT_FOUND(Constants.NOT_FOUND, "Can not found topic with id %s")
+    CREATE_CLASS_CODE_DUPLICATE(Constants.BAD_REQUEST, "Classroom with class code %s already exists."),
+    CLASSROOM_NOT_FOUND(Constants.NOT_FOUND, "Can not found classroom with id %s")
     ;
 
     private String errorCode;

@@ -1,8 +1,8 @@
 package com.example.springboot.validate.impl;
 
 import com.example.springboot.constant.ErrorMessage;
-import com.example.springboot.dto.request.CreateExaminationDTO;
-import com.example.springboot.validate.ValidateCreateExaminationRequest;
+import com.example.springboot.dto.request.CreateObjectiveTestDTO;
+import com.example.springboot.validate.ValidateCreateObjectiveTest;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,51 +14,65 @@ import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateCreateExaminationRequestImpl implements ConstraintValidator<ValidateCreateExaminationRequest, CreateExaminationDTO> {
+public class ValidateCreateObjectiveTestRequestImpl implements ConstraintValidator<ValidateCreateObjectiveTest, CreateObjectiveTestDTO> {
 
-    public static final String EXAM_NAME = "examName";
-    public static final String TOPIC_ID = "topicId";
+    public static final String OBJECTIVE_TEST_NAME = "objectiveTestName";
+    public static final String CLASS_ROOM_ID = "classRoomId";
+    public static final String TESTING_TIME = "testingTime";
     public static final String START_DATE = "startDate";
     public static final String END_DATE = "endDate";
 
 
     @Override
-    public boolean isValid(CreateExaminationDTO value, ConstraintValidatorContext context) {
-        log.info("Start validate CreateExaminationDTO");
+    public boolean isValid(CreateObjectiveTestDTO value, ConstraintValidatorContext context) {
+        log.info("Start validate CreateObjectiveTestDTO");
         context.disableDefaultConstraintViolation();
-        boolean checkExamName = validateExamName(value, context);
-        boolean checkTopicID = validateTopicID(value, context);
+        boolean checkObjectiveTestName = validateObjectiveTestName(value, context);
+        boolean checkClassRoomId = validateClassRoomId(value, context);
+        boolean checkTestingTime = validateTestingTime(value, context);
         boolean checkStartDate = validateStartDate(value, context);
         boolean checkEndDate = validateEndDate(value, context);
         return ValidateUtils.isAllTrue(List.of(
-                checkExamName,
-                checkTopicID,
+                checkObjectiveTestName,
+                checkClassRoomId,
                 checkStartDate,
-                checkEndDate
+                checkEndDate,
+                checkTestingTime
         ));
     }
 
-    private boolean validateTopicID(CreateExaminationDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getTopicId())){
+    private boolean validateTestingTime(CreateObjectiveTestDTO value, ConstraintValidatorContext context) {
+        if(Objects.isNull(value.getTestingTime())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
-                    .addPropertyNode(TOPIC_ID)
+                    .addPropertyNode(TESTING_TIME)
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
     }
 
-    private boolean validateExamName(CreateExaminationDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getExamName()) || value.getExamName().isBlank()){
+    private boolean validateClassRoomId(CreateObjectiveTestDTO value, ConstraintValidatorContext context) {
+        if(Objects.isNull(value.getClassRoomId())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
-                    .addPropertyNode(EXAM_NAME)
+                    .addPropertyNode(CLASS_ROOM_ID)
+                    .addConstraintViolation();
+            return Boolean.FALSE;
+        }
+        // Tim class room
+        return Boolean.TRUE;
+    }
+
+    private boolean validateObjectiveTestName(CreateObjectiveTestDTO value, ConstraintValidatorContext context) {
+        if(Objects.isNull(value.getObjectiveTestName()) || value.getObjectiveTestName().isBlank()){
+            context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
+                    .addPropertyNode(OBJECTIVE_TEST_NAME)
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
     }
 
-    private boolean validateEndDate(CreateExaminationDTO value, ConstraintValidatorContext context) {
+    private boolean validateEndDate(CreateObjectiveTestDTO value, ConstraintValidatorContext context) {
         if(Objects.isNull(value.getEndDate())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(START_DATE)
@@ -73,7 +87,7 @@ public class ValidateCreateExaminationRequestImpl implements ConstraintValidator
         return Boolean.TRUE;
     }
 
-    private boolean validateStartDate(CreateExaminationDTO value, ConstraintValidatorContext context) {
+    private boolean validateStartDate(CreateObjectiveTestDTO value, ConstraintValidatorContext context) {
         if(Objects.isNull(value.getStartDate())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(START_DATE)

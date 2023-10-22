@@ -21,20 +21,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "examination")
-public class Examination extends AbstractAuditingEntity {
+@Table(name = "objective_test")
+public class ObjectiveTest extends AbstractAuditingEntity {
     private static final long serialVersionUID = 1L;
-    private static final String EXAM_NAME = "exam_name";
+    private static final String OBJECTIVE_TEST_NAME = "objective_test_name";
     private static final String START_DATE = "start_date";
     private static final String END_DATE = "end_date";
+    private static final String TESTING_TIME = "testing_time";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = EXAM_NAME)
-    private String examName;
+    @Column(name = OBJECTIVE_TEST_NAME)
+    private String objectiveTestName;
 
     @Column(name = START_DATE)
     private LocalDateTime  startDate;
@@ -42,6 +43,9 @@ public class Examination extends AbstractAuditingEntity {
     @Column(name = END_DATE)
     private LocalDateTime endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Topic topic;
+    @Column(name = TESTING_TIME)
+    private Integer testing_time;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private ClassRoom classRoom;
 }

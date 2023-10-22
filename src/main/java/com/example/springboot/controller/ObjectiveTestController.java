@@ -1,7 +1,7 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.request.CreateExaminationDTO;
-import com.example.springboot.service.ExaminationService;
+import com.example.springboot.dto.request.CreateObjectiveTestDTO;
+import com.example.springboot.service.ObjectiveTestService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,13 @@ import javax.validation.Valid;
 @RestController
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("/api/v1/exam")
-public class ExaminationController {
+@RequestMapping("/api/v1/objective-test")
+public class ObjectiveTestController {
 
-    private ExaminationService examinationService;
+    private ObjectiveTestService objectiveTestService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createExamination(@Valid @RequestBody CreateExaminationDTO value) {
-        return examinationService.createExamination(value);
+    public ResponseEntity<?> createObjectiveTest(@Valid @RequestBody CreateObjectiveTestDTO value) {
+        return objectiveTestService.createExamination(value);
     }
 }

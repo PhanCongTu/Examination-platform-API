@@ -1,7 +1,7 @@
 package com.example.springboot.dto.request;
 
 import com.example.springboot.constant.Constants;
-import com.example.springboot.validate.ValidateCreateExaminationRequest;
+import com.example.springboot.validate.ValidateCreateObjectiveTest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -18,12 +18,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ValidateCreateExaminationRequest
-public class CreateExaminationDTO {
+@ValidateCreateObjectiveTest
+public class CreateObjectiveTestDTO {
 
-    private String examName;
+    private String objectiveTestName;
 
-    private Long topicId;
+    private Long classRoomId;
+
+    private Integer testingTime;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = Constants.EXAM_DATE_PATTERN)

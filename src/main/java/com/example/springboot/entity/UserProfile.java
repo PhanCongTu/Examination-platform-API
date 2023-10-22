@@ -89,6 +89,12 @@ public class UserProfile extends AbstractAuditingEntity implements Serializable 
     )
     private List<RefreshToken> refreshTokens;
 
+    @OneToMany(
+            mappedBy = "userProfile",
+            cascade = CascadeType.ALL
+    )
+    private List<ClassroomRegistration> ClassroomRegistrations;
+
     public UserProfile(String loginName, String hashPassword, String displayName, String emailAddress, List<String> roles) {
         this.loginName = loginName;
         this.hashPassword = hashPassword;

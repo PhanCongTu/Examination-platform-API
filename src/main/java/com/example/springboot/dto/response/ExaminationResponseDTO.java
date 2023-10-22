@@ -19,5 +19,5 @@ public class ExaminationResponseDTO {
 
     private LocalDateTime endDate;
 
-    private TopicResponseDTO topic;
+    private ClassroomResponseDTO topic;
 }

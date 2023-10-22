@@ -1,9 +1,9 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.Examination;
+import com.example.springboot.entity.ObjectiveTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ExaminationRepository extends JpaRepository<Examination, Long> {
+public interface ObjectiveTestRepository extends JpaRepository<ObjectiveTest, Long> {
 }
