@@ -28,7 +28,10 @@ public enum ErrorMessage {
 
     RESET_PASSWORD_NOT_ACCEPTABLE(Constants.NOT_ACCEPTABLE, "Your reset code is not valid."),
 
-    CHANGE_PASSWORD_WRONG_OLD_PASSWORD(Constants.BAD_REQUEST, "Old password is incorrect.")
+    CHANGE_PASSWORD_WRONG_OLD_PASSWORD(Constants.BAD_REQUEST, "Old password is incorrect."),
+
+    CREATE_CLASS_CODE_DUPLICATE(Constants.BAD_REQUEST, "Classroom with class code %s already exists."),
+    CLASSROOM_NOT_FOUND(Constants.NOT_FOUND, "Can not found classroom with id %s")
     ;
 
     private String errorCode;
