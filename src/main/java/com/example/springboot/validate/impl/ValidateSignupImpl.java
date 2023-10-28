@@ -6,7 +6,7 @@ import com.example.springboot.dto.request.RefreshTokenDTO;
 import com.example.springboot.dto.request.SignUpRequestDTO;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.repository.UserProfileRepository;
-import com.example.springboot.validate.ValidateSignUpRequest;
+import com.example.springboot.validate.ValidateSignUp;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateSignupRequestImpl implements ConstraintValidator<ValidateSignUpRequest, SignUpRequestDTO> {
+public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, SignUpRequestDTO> {
     public static final String LOGIN_NAME = "loginName";
     public static final String PASSWORD = "password";
     public static final String DISPLAY_NAME = "displayName";

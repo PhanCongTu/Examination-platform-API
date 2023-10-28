@@ -2,7 +2,7 @@ package com.example.springboot.validate.impl;
 
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.LoginRequestDTO;
-import com.example.springboot.validate.ValidateLoginRequest;
+import com.example.springboot.validate.ValidateLogin;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateLoginRequestImpl implements ConstraintValidator<ValidateLoginRequest, LoginRequestDTO> {
+public class ValidateLoginImpl implements ConstraintValidator<ValidateLogin, LoginRequestDTO> {
     public static final String LOGIN_NAME = "loginName";
     public static final String PASSWORD = "password";
 

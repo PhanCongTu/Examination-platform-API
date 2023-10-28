@@ -30,8 +30,10 @@ public enum ErrorMessage {
 
     CHANGE_PASSWORD_WRONG_OLD_PASSWORD(Constants.BAD_REQUEST, "Old password is incorrect."),
 
-    CREATE_CLASS_CODE_DUPLICATE(Constants.BAD_REQUEST, "Classroom with class code %s already exists."),
-    CLASSROOM_NOT_FOUND(Constants.NOT_FOUND, "Can not found classroom with id %s")
+    CLASS_CODE_DUPLICATE(Constants.BAD_REQUEST, "Classroom with class code %s already exists."),
+    CLASSROOM_NOT_FOUND(Constants.NOT_FOUND, "Can not find classroom."),
+
+    STUDENT_NOT_FOUND(Constants.NOT_FOUND, "Can not find student.")
     ;
 
     private String errorCode;

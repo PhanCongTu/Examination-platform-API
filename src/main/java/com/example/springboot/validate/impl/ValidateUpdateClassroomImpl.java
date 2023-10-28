@@ -2,7 +2,7 @@ package com.example.springboot.validate.impl;
 
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.UpdateClassroomDTO;
-import com.example.springboot.repository.ClassRoomRepository;
+import com.example.springboot.repository.ClassroomRepository;
 import com.example.springboot.validate.ValidateCreateClassroom;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Objects;
 @Slf4j
 @AllArgsConstructor
 public class ValidateUpdateClassroomImpl implements ConstraintValidator<ValidateCreateClassroom, UpdateClassroomDTO> {
-    private ClassRoomRepository classRoomRepository;
+    private ClassroomRepository classRoomRepository;
     private static final String CLASS_NAME = "className";
     private static final String CLASS_CODE = "classCode";
     private static final String IS_PRIVATE = "is_private";
@@ -32,7 +32,7 @@ public class ValidateUpdateClassroomImpl implements ConstraintValidator<Validate
 
     private boolean validateClassCode(UpdateClassroomDTO value, ConstraintValidatorContext context) {
         if(Objects.nonNull(value.getClassCode()) && classRoomRepository.findByClassCode(CODE_PREFIX + value.getClassCode()).isPresent()){
-            context.buildConstraintViolationWithTemplate(ErrorMessage.CREATE_CLASS_CODE_DUPLICATE.name())
+            context.buildConstraintViolationWithTemplate(ErrorMessage.CLASS_CODE_DUPLICATE.name())
                     .addPropertyNode(CLASS_CODE)
                     .addConstraintViolation();
             return Boolean.FALSE;

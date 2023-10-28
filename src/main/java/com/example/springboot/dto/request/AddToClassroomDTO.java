@@ -1,22 +1,20 @@
 package com.example.springboot.dto.request;
 
-import com.example.springboot.validate.ValidateLogin;
+
+import com.example.springboot.validate.ValidateAddToClassroom;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ValidateLogin
 @Builder
-public class LoginRequestDTO {
-
-    private String loginName;
-
-    private String password;
+@ValidateAddToClassroom
+public class AddToClassroomDTO {
+    private Long classroomId;
+    private Long studentId;
 }

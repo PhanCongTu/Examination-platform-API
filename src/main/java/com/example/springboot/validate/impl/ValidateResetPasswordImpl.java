@@ -3,7 +3,7 @@ package com.example.springboot.validate.impl;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.ResetPasswordDTO;
-import com.example.springboot.validate.ValidateResetPasswordRequest;
+import com.example.springboot.validate.ValidateResetPassword;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateResetPasswordRequestImpl implements ConstraintValidator<ValidateResetPasswordRequest, ResetPasswordDTO> {
+public class ValidateResetPasswordImpl implements ConstraintValidator<ValidateResetPassword, ResetPasswordDTO> {
 
     public static final String PASSWORD = "password";
     public static final String CODE = "code";

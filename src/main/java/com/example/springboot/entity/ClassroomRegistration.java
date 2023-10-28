@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Entity
 @Builder
 @Table(name = "classroom_registration")
-public class ClassroomRegistration {
+public class ClassroomRegistration extends AbstractAuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,4 +31,6 @@ public class ClassroomRegistration {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private UserProfile userProfile;
+
+
 }

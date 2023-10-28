@@ -7,11 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClassRoomRepository extends JpaRepository<ClassRoom,Long> {
+public interface ClassroomRepository extends JpaRepository<ClassRoom,Long> {
 
     Optional<ClassRoom> findByClassCode(String code);
 
@@ -26,4 +25,7 @@ public interface ClassRoomRepository extends JpaRepository<ClassRoom,Long> {
 
     @Query(value = "select * FROM class_room where class_code like %:classCode%", nativeQuery = true)
     Page<ClassRoom> findAllClassRoomsByClassCode(String classCode, Pageable pageable);
+
+    @Query(value = "select * FROM class_room where id :classroomId and is_enable = :isEnable", nativeQuery = true)
+    Optional<ClassRoom> findClassRoomsByIdAndStatus(Long classroomId, Boolean isEnable);
 }

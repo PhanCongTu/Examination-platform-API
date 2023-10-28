@@ -2,7 +2,7 @@ package com.example.springboot.validate.impl;
 
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.RefreshTokenDTO;
-import com.example.springboot.validate.ValidateRefreshTokenRequest;
+import com.example.springboot.validate.ValidateRefreshToken;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateRefreshTokenRequestImpl implements ConstraintValidator<ValidateRefreshTokenRequest, RefreshTokenDTO> {
+public class ValidateRefreshTokenImpl implements ConstraintValidator<ValidateRefreshToken, RefreshTokenDTO> {
 
     public static final String REFRESH_TOKEN = "refreshToken";
 

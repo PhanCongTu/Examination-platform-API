@@ -3,7 +3,7 @@ package com.example.springboot.validate.impl;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.ChangePasswordDTO;
-import com.example.springboot.validate.ValidateChangePasswordRequest;
+import com.example.springboot.validate.ValidateChangePassword;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateChangePasswordRequestImpl implements ConstraintValidator<ValidateChangePasswordRequest, ChangePasswordDTO> {
+public class ValidateChangePasswordImpl implements ConstraintValidator<ValidateChangePassword, ChangePasswordDTO> {
 
     public static final String OLD_PASSWORD = "oldPassword";
     public static final String NEW_PASSWORD = "newPassword";

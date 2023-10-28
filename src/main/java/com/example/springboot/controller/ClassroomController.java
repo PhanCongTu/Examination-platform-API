@@ -67,4 +67,15 @@ public class ClassroomController {
     ){
         return classroomService.getAllClassroomsByStatus(search, page, column, size, sortType, true);
     }
+    @GetMapping(value = "/disable", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllDisableClassroom(
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
+            @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType
+    ){
+        return classroomService.getAllClassroomsByStatus(search, page, column, size, sortType, false);
+    }
 }

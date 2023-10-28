@@ -1,6 +1,6 @@
 package com.example.springboot.dto.request;
 
-import com.example.springboot.validate.ValidateSignUpRequest;
+import com.example.springboot.validate.ValidateSignUp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Builder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ValidateSignUpRequest
+@ValidateSignUp
 @Builder
 public class SignUpRequestDTO {
 

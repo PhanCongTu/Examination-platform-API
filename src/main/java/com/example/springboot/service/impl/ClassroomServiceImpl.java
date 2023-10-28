@@ -2,21 +2,26 @@ package com.example.springboot.service.impl;
 
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
+import com.example.springboot.dto.request.AddToClassroomDTO;
 import com.example.springboot.dto.request.CreateClassroomDTO;
 import com.example.springboot.dto.request.UpdateClassroomDTO;
 import com.example.springboot.dto.response.ClassroomResponseDTO;
+import com.example.springboot.dto.response.UserProfileResponseDTO;
 import com.example.springboot.entity.ClassRoom;
+import com.example.springboot.entity.ClassroomRegistration;
 import com.example.springboot.entity.UserProfile;
-import com.example.springboot.repository.ClassRoomRepository;
+import com.example.springboot.repository.ClassroomRegistrationRepository;
+import com.example.springboot.repository.ClassroomRepository;
+import com.example.springboot.repository.StudentRepositoryRead;
+import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.service.ClassroomService;
+import com.example.springboot.util.Mapper;
 import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +38,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @AllArgsConstructor
 public class ClassroomServiceImpl implements ClassroomService {
+    private final UserProfileRepository userProfileRepository;
 
-    private final ClassRoomRepository classRoomRepository;
+    private final ClassroomRepository classRoomRepository;
+    private final StudentRepositoryRead studentRepositoryRead;
+    private final ClassroomRegistrationRepository classroomRegistrationRepository;
     private final WebUtils webUtils;
     private static final String CODE_PREFIX = "classroom_";
-    private static final Integer PAGE_SIZE = 1;
-    private static final String PAGE_SORT_BY = "class_code";
 
     /**
      * Create a new topic
@@ -160,5 +166,41 @@ public class ClassroomServiceImpl implements ClassroomService {
         classRoomRepository.save(classRoom);
         log.info("End update Classroom");
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<?> addStudentToClassroom(AddToClassroomDTO dto) {
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(dto.getClassroomId());
+        Optional<UserProfile> userProfile = studentRepositoryRead.findStudentByIdAndStatus(dto.getStudentId(), true);
+
+
+        ClassroomRegistration classroomRegistration =
+                ClassroomRegistration.builder()
+                        .classRoom(classRoom.get())
+                        .userProfile(userProfile.get())
+                        .build();
+        ClassroomRegistration savedClassroomRegistration =
+                classroomRegistrationRepository.save(classroomRegistration);
+        classRoom.get().getClassroomRegistrations().add(savedClassroomRegistration);
+        userProfile.get().getClassroomRegistrations().add(savedClassroomRegistration);
+        classRoomRepository.save(classRoom.get());
+        userProfileRepository.save(userProfile.get());
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @Override
+    public ResponseEntity<?> getAllStudentOfClassroom(Long classroomId, int page,String column,int size,String sortType) {
+        log.info("Start get all user of classroom by id");
+        Optional<ClassRoom> classRoom = classRoomRepository.findById(classroomId);
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        if (classRoom.isEmpty()){
+            return buildClassroomNotFound();
+        }
+        List<UserProfile> listStudentByClassroom =
+                studentRepositoryRead.findAllStudentByClassroomId(classroomId);
+        List<UserProfileResponseDTO> listStudentByClassroomDTO = listStudentByClassroom.stream().map(Mapper::mapUserProfileToDTO).collect(Collectors.toList());
+        log.info("End get all user of classroom by id");
+        return ResponseEntity.ok(PageUtils.convertListToPage(listStudentByClassroomDTO, pageable));
     }
 }
