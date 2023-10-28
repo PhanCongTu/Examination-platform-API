@@ -105,7 +105,8 @@ public class ClassroomServiceImpl implements ClassroomService {
     public ResponseEntity<?> getAllClassroomsByStatus(String search,int page,String column,int size,String sortType, Boolean isEnable) {
         log.info("Start get all enable Classroom (non-Admin)");
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        Page<ClassRoom> classRooms = classRoomRepository.findAllClassRoomsByClassNameAndStatus(search,isEnable, pageable);
+        String searchText = "%" + search + "%";
+        Page<ClassRoom> classRooms = classRoomRepository.findAllClassRoomsByClassNameAndStatus(searchText,isEnable, pageable);
         // Map topic to topic response DTO
         Page<ClassroomResponseDTO> response = classRooms.map(classRoom -> new ClassroomResponseDTO(
                 classRoom.getId(),
