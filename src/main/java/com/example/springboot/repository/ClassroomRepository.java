@@ -14,8 +14,8 @@ public interface ClassroomRepository extends JpaRepository<ClassRoom,Long> {
 
     Optional<ClassRoom> findByClassCode(String code);
 
-    @Query(value = "select * FROM class_room where class_name like  :className  and is_enable = :isEnable", nativeQuery = true)
-    Page<ClassRoom> findAllClassRoomsByClassNameAndStatus(String className, Boolean isEnable, Pageable pageable);
+    @Query(value = "select * FROM class_room where (class_name like  :searchText or class_code like :searchText)  and is_enable = :isEnable", nativeQuery = true)
+    Page<ClassRoom> findAllSearchedClassRoomsByStatus(String searchText, Boolean isEnable, Pageable pageable);
 
     @Query(value = "select * FROM class_room where class_name like :className ", nativeQuery = true)
     Page<ClassRoom> findAllClassRoomsByClassName(String className, Pageable pageable);

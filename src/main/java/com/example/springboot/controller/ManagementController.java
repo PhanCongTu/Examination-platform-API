@@ -44,7 +44,7 @@ public class ManagementController {
     @GetMapping(value = "/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllStudentOfClassroom(
-            @PathVariable(name = "classroomId")Long classroomId,
+            @PathVariable(name = "classroomId") Long classroomId,
             @RequestParam(defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = DEFAULT_COLUMN_STUDENT) String column,
             @RequestParam(defaultValue = DEFAULT_SIZE) int size,
