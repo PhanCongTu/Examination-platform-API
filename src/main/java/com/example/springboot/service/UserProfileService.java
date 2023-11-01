@@ -17,4 +17,6 @@ public interface UserProfileService {
     ResponseEntity<?> changePassword(ChangePasswordDTO changePassword);
 
     ResponseEntity<?> updateUserProfile(UpdateUserProfileDTO dto);
+
+    ResponseEntity<?> getAllStudentsByStatus(String search, int page, String column, int size, String sortType, boolean isActive);
 }

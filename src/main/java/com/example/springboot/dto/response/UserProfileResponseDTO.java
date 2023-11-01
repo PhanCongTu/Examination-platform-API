@@ -17,5 +17,6 @@ public class UserProfileResponseDTO {
     private String emailAddress;
     private String newEmailAddress;
     private Boolean isEmailAddressVerified;
+    private Boolean isEnable;
     private List<String> roles;
 }

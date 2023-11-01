@@ -10,10 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface StudentRepositoryRead extends JpaRepository<UserProfile, Long> {
-    @Query(value = "SELECT * FROM user_profile u \n" +
-            "\tinner join user_profile_roles ur \n" +
-            "\ton u.user_id = ur.user_profile_user_id\n" +
-            "where u.user_id = :userId and u.is_enable = :isActive and ur.roles = \"ROLE_STUDENT\";",
+    @Query(value = "Select * from user_profile u\n" +
+            "\twhere u.is_enable = :isActive and u.user_id in (\n" +
+            "    select user_profile_user_id from user_profile_roles ur\n" +
+            "\t\twhere ur.user_profile_user_id = :userId and ur.roles = \"ROLE_STUDENT\"\n" +
+            "    )",
             nativeQuery = true)
     Optional<UserProfile> findStudentByIdAndStatus(Long userId, Boolean isActive);
 
@@ -24,4 +25,13 @@ public interface StudentRepositoryRead extends JpaRepository<UserProfile, Long> 
             "    where class_room_id = :classroomId \n" +
             ")", nativeQuery = true)
     List<UserProfile> findAllStudentByClassroomId(Long classroomId);
+
+    @Query(value = "Select * from user_profile u\n" +
+            "\twhere (display_name like :searchText or email_address like :searchText) and u.is_enable = :isActive \n" +
+            "\t\tand u.user_id in (\n" +
+            "\t\tselect user_profile_user_id from user_profile_roles ur\n" +
+            "\t\t\twhere ur.roles = \"ROLE_STUDENT\"\n" +
+            "\t\t)",
+            nativeQuery = true)
+    List<UserProfile> findAllSeachedStudentsByStatus(String searchText, Boolean isActive);
 }

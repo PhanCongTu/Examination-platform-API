@@ -6,12 +6,14 @@ import com.example.springboot.dto.TokenDetails;
 import com.example.springboot.dto.request.*;
 import com.example.springboot.dto.response.JwtResponseDTO;
 import com.example.springboot.dto.response.TokenResponseDTO;
+import com.example.springboot.dto.response.UserProfileResponseDTO;
 import com.example.springboot.entity.RefreshToken;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
 import com.example.springboot.exception.InValidUserStatusException;
 import com.example.springboot.exception.RefreshTokenNotFoundException;
 import com.example.springboot.exception.UserNotFoundException;
+import com.example.springboot.repository.StudentRepositoryRead;
 import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.security.JwtTokenProvider;
 import com.example.springboot.service.AuthService;
@@ -19,9 +21,12 @@ import com.example.springboot.service.MailService;
 import com.example.springboot.service.RefreshTokenService;
 import com.example.springboot.service.UserProfileService;
 import com.example.springboot.util.EnumRole;
+import com.example.springboot.util.Mapper;
+import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -39,6 +45,7 @@ import java.util.*;
 public class UserProfileServiceImpl implements UserProfileService {
 
     private final UserProfileRepository userProfileRepository;
+    private final StudentRepositoryRead studentRepositoryRead;
     private final RefreshTokenService refreshTokenService;
     private final AuthService authService;
     private final MailService mailService;
@@ -338,5 +345,16 @@ public class UserProfileServiceImpl implements UserProfileService {
             mailService.sendVerificationEmail(userProfile.getLoginName());
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<?> getAllStudentsByStatus(String search, int page, String column, int size, String sortType, boolean isActive) {
+        log.info("Start get all active student searched by display name and email");
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search + "%";
+        List<UserProfile> listStudents = studentRepositoryRead.findAllSeachedStudentsByStatus(searchText, isActive);
+        List<UserProfileResponseDTO> listStudentsDTO = listStudents.stream().map(Mapper::mapUserProfileToDTO).collect(Collectors.toList());
+        log.info("Start get all active student searched by display name and email");
+        return ResponseEntity.ok(PageUtils.convertListToPage(listStudentsDTO, pageable));
     }
 }

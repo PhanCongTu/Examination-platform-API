@@ -12,6 +12,7 @@ public class Mapper {
                 .emailAddress(userProfile.getEmailAddress())
                 .roles(userProfile.getRoles())
                 .newEmailAddress(userProfile.getNewEmailAddress())
+                .isEnable(userProfile.getIsEnable())
                 .isEmailAddressVerified(userProfile.getIsEmailAddressVerified())
                 .loginName(userProfile.getLoginName())
                 .build();
