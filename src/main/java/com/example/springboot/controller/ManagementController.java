@@ -68,7 +68,7 @@ public class ManagementController {
         return userProfileService.getAllStudentsByStatus(search, page, column, size, sortType, true);
     }
 
-    @GetMapping(value = "/students/disable", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/students/unactive", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllDisableStudents(
             @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
