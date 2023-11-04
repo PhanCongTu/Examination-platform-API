@@ -4,13 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.util.List;
 
 @Setter
 @Getter
 @Builder
-public class UserProfileResponseDTO {
+public class UserProfileResponse {
     private Long userID;
     private String loginName;
     private String displayName;

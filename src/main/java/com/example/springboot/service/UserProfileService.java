@@ -4,9 +4,9 @@ import com.example.springboot.dto.request.*;
 import org.springframework.http.ResponseEntity;
 
 public interface UserProfileService {
-    ResponseEntity<?> createUser(SignUpRequestDTO signupVM, Boolean isTeacher, Boolean isAdmin);
+    ResponseEntity<?> createUser(SignUpDTO signupVM, Boolean isTeacher, Boolean isAdmin);
 
-    ResponseEntity<?> login(LoginRequestDTO loginVM);
+    ResponseEntity<?> login(LoginDTO loginVM);
 
     ResponseEntity<?> refreshToken(RefreshTokenDTO refreshTokenDTO);
 

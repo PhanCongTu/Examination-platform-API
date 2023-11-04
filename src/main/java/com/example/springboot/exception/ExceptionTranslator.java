@@ -2,7 +2,7 @@ package com.example.springboot.exception;
 
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
-import com.example.springboot.dto.request.SignUpRequestDTO;
+import com.example.springboot.dto.request.SignUpDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -57,11 +57,11 @@ public class ExceptionTranslator {
         String errorCode = "";
         String message = "";
         if (ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.name().equals(errorMessageName)) {
-            String loginName = ((SignUpRequestDTO) Objects.requireNonNull(result.getTarget())).getLoginName();
+            String loginName = ((SignUpDTO) Objects.requireNonNull(result.getTarget())).getLoginName();
             errorCode = ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.getErrorCode();
             message = String.format(ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.getMessage(), loginName);
         } else if (ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.name().equals(errorMessageName)) {
-            String emailAddress = ((SignUpRequestDTO) Objects.requireNonNull(result.getTarget())).getEmailAddress();
+            String emailAddress = ((SignUpDTO) Objects.requireNonNull(result.getTarget())).getEmailAddress();
             errorCode = ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.getErrorCode();
             message = String.format(ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.getMessage(), emailAddress);
         } else if (ErrorMessage.COMMON_FIELD_REQUIRED.name().equals(errorMessageName)) {
@@ -76,12 +76,15 @@ public class ExceptionTranslator {
                         if (errorMessage.name().equals(errorMessageName)) {
                             response.put(Constants.ERROR_CODE_KEY, errorMessage.getErrorCode());
                             response.put(Constants.MESSAGE_KEY, errorMessage.getMessage());
+
                         }
                     })
             );
         }
-        response.put(Constants.ERROR_CODE_KEY, errorCode);
-        response.put(Constants.MESSAGE_KEY, message);
+        if (response.isEmpty()){
+            response.put(Constants.ERROR_CODE_KEY, errorCode);
+            response.put(Constants.MESSAGE_KEY, message);
+        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 

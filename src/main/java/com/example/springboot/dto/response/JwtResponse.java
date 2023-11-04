@@ -5,16 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtResponseDTO {
+public class JwtResponse {
     private String displayName;
 
     private String loginName;

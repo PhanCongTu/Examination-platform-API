@@ -5,8 +5,8 @@ import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.AddToClassroomDTO;
 import com.example.springboot.dto.request.CreateClassroomDTO;
 import com.example.springboot.dto.request.UpdateClassroomDTO;
-import com.example.springboot.dto.response.ClassroomResponseDTO;
-import com.example.springboot.dto.response.UserProfileResponseDTO;
+import com.example.springboot.dto.response.ClassroomResponse;
+import com.example.springboot.dto.response.UserProfileResponse;
 import com.example.springboot.entity.ClassRoom;
 import com.example.springboot.entity.ClassroomRegistration;
 import com.example.springboot.entity.UserProfile;
@@ -15,7 +15,7 @@ import com.example.springboot.repository.ClassroomRepository;
 import com.example.springboot.repository.StudentRepositoryRead;
 import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.service.ClassroomService;
-import com.example.springboot.util.Mapper;
+import com.example.springboot.util.CustomBuilder;
 import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
@@ -50,7 +50,7 @@ public class ClassroomServiceImpl implements ClassroomService {
      * Create a new topic
      *
      * @param DTO : The DTO contains the data
-     * @return : The {@link ClassroomResponseDTO}
+     * @return : The {@link ClassroomResponse}
      */
     @Override
     public ResponseEntity<?> createClassroom(CreateClassroomDTO DTO) {
@@ -62,12 +62,12 @@ public class ClassroomServiceImpl implements ClassroomService {
         classRoom.setIsPrivate(DTO.getIsPrivate());
         classRoom.setCreatedBy(userProfile.getLoginName());
         ClassRoom savedClassRoom = classRoomRepository.save(classRoom);
-        ClassroomResponseDTO response = ClassroomResponseDTO.builder()
+        ClassroomResponse response = ClassroomResponse.builder()
                 .id(savedClassRoom.getId())
                 .className(savedClassRoom.getClassName())
                 .classCode(savedClassRoom.getClassCode())
                 .isPrivate(savedClassRoom.getIsPrivate())
-                .isActive(savedClassRoom.getIsEnable())
+                .isEnable(savedClassRoom.getIsEnable())
                 .build();
         log.info("End create Classroom");
         return ResponseEntity.ok(response);
@@ -86,7 +86,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         log.info("Start switch Classroom status to " + newStatus);
         Optional<ClassRoom> value = classRoomRepository.findById(classroomID);
         if (value.isEmpty()){
-            return buildClassroomNotFound();
+            return CustomBuilder.buildClassroomNotFoundResponseEntity();
         }
         ClassRoom classRoom = value.get();
         classRoom.setIsEnable(newStatus);
@@ -99,7 +99,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     /**
      * Get all the enable Classroom
      *
-     * @return the page of DTO response {@link ClassroomResponseDTO}
+     * @return the page of DTO response {@link ClassroomResponse}
      */
     @Override
     public ResponseEntity<?> getAllClassroomsByStatus(String search,int page,String column,int size,String sortType, Boolean isEnable) {
@@ -108,7 +108,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         String searchText = "%" + search + "%";
         Page<ClassRoom> classRooms = classRoomRepository.findAllSearchedClassRoomsByStatus(searchText,isEnable, pageable);
         // Map topic to topic response DTO
-        Page<ClassroomResponseDTO> response = classRooms.map(classRoom -> new ClassroomResponseDTO(
+        Page<ClassroomResponse> response = classRooms.map(classRoom -> new ClassroomResponse(
                 classRoom.getId(),
                 classRoom.getClassCode(),
                 classRoom.getClassName(),
@@ -130,26 +130,13 @@ public class ClassroomServiceImpl implements ClassroomService {
         classRoom.setUpdateDate(Instant.now());
     }
 
-    /**
-     * Build an error response when the Classroom is not found
-     *
-     * @return the response
-     */
-    private ResponseEntity<LinkedHashMap<String, String>> buildClassroomNotFound() {
-        LinkedHashMap<String, String> response = new LinkedHashMap<>();
-        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.CLASSROOM_NOT_FOUND.getErrorCode());
-        response.put(Constants.MESSAGE_KEY, ErrorMessage.CLASSROOM_NOT_FOUND.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(response);
-    }
 
     @Override
     public ResponseEntity<?> updateClassroom(Long classroomId, UpdateClassroomDTO DTO) {
         log.info("Start update Classroom");
         Optional<ClassRoom> value = classRoomRepository.findById(classroomId);
         if (value.isEmpty()){
-            return buildClassroomNotFound();
+            return CustomBuilder.buildClassroomNotFoundResponseEntity();
         }
         ClassRoom classRoom = value.get();
         if(Objects.nonNull(DTO.getIsPrivate())){
@@ -196,12 +183,13 @@ public class ClassroomServiceImpl implements ClassroomService {
         Optional<ClassRoom> classRoom = classRoomRepository.findById(classroomId);
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
         if (classRoom.isEmpty()){
-            return buildClassroomNotFound();
+            return CustomBuilder.buildClassroomNotFoundResponseEntity();
         }
-        List<UserProfile> listStudentByClassroom =
-                studentRepositoryRead.findAllStudentByClassroomId(classroomId);
-        List<UserProfileResponseDTO> listStudentByClassroomDTO = listStudentByClassroom.stream().map(Mapper::mapUserProfileToDTO).collect(Collectors.toList());
+        Page<UserProfile> listStudentByClassroom =
+                studentRepositoryRead.findAllStudentByClassroomId(classroomId, pageable);
+        Page<UserProfileResponse> response =
+                listStudentByClassroom.map(CustomBuilder::builtUserProfileResponse);
         log.info("End get all user of classroom by id");
-        return ResponseEntity.ok(PageUtils.convertListToPage(listStudentByClassroomDTO, pageable));
+        return ResponseEntity.ok(response);
     }
 }

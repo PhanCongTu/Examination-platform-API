@@ -3,7 +3,7 @@ package com.example.springboot.validate.impl;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.RefreshTokenDTO;
-import com.example.springboot.dto.request.SignUpRequestDTO;
+import com.example.springboot.dto.request.SignUpDTO;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.validate.ValidateSignUp;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, SignUpRequestDTO> {
+public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, SignUpDTO> {
     public static final String LOGIN_NAME = "loginName";
     public static final String PASSWORD = "password";
     public static final String DISPLAY_NAME = "displayName";
@@ -30,14 +30,14 @@ public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, S
     /**
      * check validate of {@link RefreshTokenDTO}
      *
-     * @param value : The {@link SignUpRequestDTO} object
+     * @param value : The {@link SignUpDTO} object
      * @param context : The context
      * @return :
      *  - True if all validate is true,
      *  - False if any validate is false
      */
     @Override
-    public boolean isValid(SignUpRequestDTO value, ConstraintValidatorContext context) {
+    public boolean isValid(SignUpDTO value, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
         boolean checkLoginName = validateLoginName(value, context);
         boolean checkPassword = validatePassword(value, context);
@@ -57,13 +57,13 @@ public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, S
      *  - Check format: ^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$
      *  - Check duplicate if this email address has been verified in the database
      *
-     * @param value : The {@link SignUpRequestDTO} object
+     * @param value : The {@link SignUpDTO} object
      * @param context : The context
      * @return :
      *  - True if all validate is true,
      *  - False if any validate is false
      */
-    private boolean validateEmailAddress(SignUpRequestDTO value, ConstraintValidatorContext context) {
+    private boolean validateEmailAddress(SignUpDTO value, ConstraintValidatorContext context) {
         if(Objects.isNull(value.getEmailAddress())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(EMAIL_ADDRESS)
@@ -90,13 +90,13 @@ public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, S
      * Check validate display name:
      *  - Do not null or empty
      *
-     * @param value : The {@link SignUpRequestDTO} object
+     * @param value : The {@link SignUpDTO} object
      * @param context : The context
      * @return :
      *  - True if all validate is true,
      *  - False if any validate is false
      */
-    private boolean validateDisplayName(SignUpRequestDTO value, ConstraintValidatorContext context) {
+    private boolean validateDisplayName(SignUpDTO value, ConstraintValidatorContext context) {
         if(Objects.isNull(value.getDisplayName()) || value.getDisplayName().isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(DISPLAY_NAME)
@@ -111,13 +111,13 @@ public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, S
      *  - Do not null or empty
      *  - Check format: ^[!-~]{8,20}$
      *
-     * @param value : The {@link SignUpRequestDTO} object
+     * @param value : The {@link SignUpDTO} object
      * @param context : The context
      * @return :
      *  - True if all validate is true,
      *  - False if any validate is false
      */
-    private boolean validatePassword(SignUpRequestDTO value, ConstraintValidatorContext context) {
+    private boolean validatePassword(SignUpDTO value, ConstraintValidatorContext context) {
         if(Objects.isNull(value.getPassword())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(PASSWORD)
@@ -139,13 +139,13 @@ public class ValidateSignupImpl implements ConstraintValidator<ValidateSignUp, S
      *  - Check format: ^([a-zA-Z0-9._-]{4,16}$)
      *  - Check duplicate login name in the database
      *
-     * @param value : The {@link SignUpRequestDTO} object
+     * @param value : The {@link SignUpDTO} object
      * @param context : The context
      * @return :
      *  - True if all validate is true,
      *  - False if any validate is false
      */
-    private boolean validateLoginName(SignUpRequestDTO value, ConstraintValidatorContext context) {
+    private boolean validateLoginName(SignUpDTO value, ConstraintValidatorContext context) {
         if(Objects.isNull(value.getLoginName())){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(LOGIN_NAME)

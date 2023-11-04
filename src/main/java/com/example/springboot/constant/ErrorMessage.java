@@ -33,7 +33,9 @@ public enum ErrorMessage {
     CLASS_CODE_DUPLICATE(Constants.BAD_REQUEST, "Classroom with class code %s already exists."),
     CLASSROOM_NOT_FOUND(Constants.NOT_FOUND, "Can not find classroom."),
 
-    STUDENT_NOT_FOUND(Constants.NOT_FOUND, "Can not find student.")
+    STUDENT_NOT_FOUND(Constants.NOT_FOUND, "Can not find student."),
+
+    QUESTION_GROUP_CODE_CLASS_CODE_DUPLICATE(Constants.BAD_REQUEST, "The code of question group already exists.")
     ;
 
     private String errorCode;

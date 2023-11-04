@@ -1,8 +1,8 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.request.LoginRequestDTO;
+import com.example.springboot.dto.request.LoginDTO;
 import com.example.springboot.dto.request.RefreshTokenDTO;
-import com.example.springboot.dto.request.SignUpRequestDTO;
+import com.example.springboot.dto.request.SignUpDTO;
 import com.example.springboot.service.UserProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +27,21 @@ public class AuthController {
     private UserProfileService userProfileService;
 
     @PostMapping(value = "/signup/student", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> studentSignup(@Valid @RequestBody SignUpRequestDTO signupVM){
+    public ResponseEntity<?> studentSignup(@Valid @RequestBody SignUpDTO signupVM){
         return userProfileService.createUser(signupVM, false, false);
     }
     @PostMapping(value = "/signup/teacher", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> teacherSignup(@Valid @RequestBody SignUpRequestDTO signupVM){
+    public ResponseEntity<?> teacherSignup(@Valid @RequestBody SignUpDTO signupVM){
         return userProfileService.createUser(signupVM, true, false);
     }
     @PostMapping(value = "/add/admin", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addAdmin(@Valid @RequestBody SignUpRequestDTO signupVM){
+    public ResponseEntity<?> addAdmin(@Valid @RequestBody SignUpDTO signupVM){
         return userProfileService.createUser(signupVM, false, true);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> Login(@Valid @RequestBody LoginRequestDTO loginVM){
+    public ResponseEntity<?> Login(@Valid @RequestBody LoginDTO loginVM){
         return userProfileService.login(loginVM);
     }
 

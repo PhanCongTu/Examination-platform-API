@@ -1,7 +1,6 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.request.AddToClassroomDTO;
-import com.example.springboot.dto.request.CreateClassroomDTO;
 import com.example.springboot.service.ClassroomService;
 import com.example.springboot.service.UserProfileService;
 import lombok.AllArgsConstructor;
@@ -22,10 +21,10 @@ import javax.validation.Valid;
 
 @Validated
 @RestController
-@RequestMapping("/api/v1/manage")
+@RequestMapping("/api/v1/student")
 @Slf4j
 @AllArgsConstructor
-public class ManagementController {
+public class StudentController {
 
     private static final String DEFAULT_SEARCH = "";
     private static final String DEFAULT_PAGE = "0";
@@ -45,7 +44,7 @@ public class ManagementController {
         return classroomService.addStudentToClassroom(DTO);
     }
 
-    @GetMapping(value = "/students/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllStudentsOfClassroom(
             @PathVariable(name = "classroomId") Long classroomId,
@@ -56,7 +55,7 @@ public class ManagementController {
         return classroomService.getAllStudentOfClassroom(classroomId, page, column, size, sortType);
     }
 
-    @GetMapping(value = "/students", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllActiveStudents(
             @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
@@ -68,7 +67,7 @@ public class ManagementController {
         return userProfileService.getAllStudentsByStatus(search, page, column, size, sortType, true);
     }
 
-    @GetMapping(value = "/students/unactive", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllDisableStudents(
             @RequestParam(defaultValue = DEFAULT_SEARCH) String search,

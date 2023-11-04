@@ -67,7 +67,7 @@ public class ClassroomController {
     ){
         return classroomService.getAllClassroomsByStatus(search, page, column, size, sortType, true);
     }
-    @GetMapping(value = "/unactive", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllDisableClassroom(
             @RequestParam(defaultValue = DEFAULT_SEARCH) String search,

@@ -1,16 +1,13 @@
 package com.example.springboot;
 
-import com.example.springboot.dto.request.SignUpRequestDTO;
+import com.example.springboot.dto.request.SignUpDTO;
 import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableAsync
@@ -27,7 +24,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (userProfileRepository.count() == 0) {
-            SignUpRequestDTO value = SignUpRequestDTO.builder()
+            SignUpDTO value = SignUpDTO.builder()
                     .loginName("admin")
                     .password("admin")
                     .displayName("ADMIN")

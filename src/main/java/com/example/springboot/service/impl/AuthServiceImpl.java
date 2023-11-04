@@ -1,7 +1,7 @@
 package com.example.springboot.service.impl;
 
 import com.example.springboot.dto.TokenDetails;
-import com.example.springboot.dto.request.LoginRequestDTO;
+import com.example.springboot.dto.request.LoginDTO;
 import com.example.springboot.security.CustomUserDetailsService;
 import com.example.springboot.security.JwtTokenProvider;
 import com.example.springboot.security.JwtUserDetails;
@@ -29,20 +29,20 @@ public class AuthServiceImpl implements AuthService {
     /**
      * Get {@link TokenDetails} object by username and password
      *
-     * @param loginRequestDTO : The {@link LoginRequestDTO} object
+     * @param loginDTO : The {@link LoginDTO} object
      * @return : The {@link TokenDetails} object response
      */
     @Override
-    public TokenDetails authenticate(LoginRequestDTO loginRequestDTO){
+    public TokenDetails authenticate(LoginDTO loginDTO){
         log.info("Start create authenticate");
         UserAuthenticationToken authenticationToken = new UserAuthenticationToken(
-                loginRequestDTO.getLoginName(),
-                loginRequestDTO.getPassword(),
+                loginDTO.getLoginName(),
+                loginDTO.getPassword(),
                 true
         );
         authenticationManager.authenticate(authenticationToken);
         final JwtUserDetails userDetails = customUserDetailsService
-                .loadUserByUsername(loginRequestDTO.getLoginName());
+                .loadUserByUsername(loginDTO.getLoginName());
         log.info("End create authenticate");
         return jwtTokenProvider.getTokenDetails(userDetails);
     }

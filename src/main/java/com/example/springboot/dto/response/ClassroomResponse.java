@@ -7,18 +7,18 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class ClassroomResponseDTO {
+public class ClassroomResponse {
     private Long id;
     private String className;
     private String classCode;
-    private Boolean isActive;
+    private Boolean isEnable;
     private Boolean isPrivate;
 
-    public ClassroomResponseDTO(Long id, String className, String classCode, Boolean isActive, Boolean isPrivate) {
+    public ClassroomResponse(Long id, String className, String classCode, Boolean isEnable, Boolean isPrivate) {
         this.id = id;
         this.className = className;
         this.classCode = classCode;
-        this.isActive = isActive;
+        this.isEnable = isEnable;
         this.isPrivate = isPrivate;
     }
 }

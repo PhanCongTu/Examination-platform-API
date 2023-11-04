@@ -1,6 +1,8 @@
 package com.example.springboot.repository;
 
 import com.example.springboot.entity.UserProfile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,7 +26,7 @@ public interface StudentRepositoryRead extends JpaRepository<UserProfile, Long> 
             "    from classroom_registration \n" +
             "    where class_room_id = :classroomId \n" +
             ")", nativeQuery = true)
-    List<UserProfile> findAllStudentByClassroomId(Long classroomId);
+    Page<UserProfile> findAllStudentByClassroomId(Long classroomId, Pageable pageable);
 
     @Query(value = "Select * from user_profile u\n" +
             "\twhere (display_name like :searchText or email_address like :searchText) and u.is_enable = :isActive \n" +
@@ -33,5 +35,5 @@ public interface StudentRepositoryRead extends JpaRepository<UserProfile, Long> 
             "\t\t\twhere ur.roles = \"ROLE_STUDENT\"\n" +
             "\t\t)",
             nativeQuery = true)
-    List<UserProfile> findAllSeachedStudentsByStatus(String searchText, Boolean isActive);
+    Page<UserProfile> findAllSeachedStudentsByStatus(String searchText, Boolean isActive, Pageable pageable);
 }

@@ -4,9 +4,9 @@ import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.TokenDetails;
 import com.example.springboot.dto.request.*;
-import com.example.springboot.dto.response.JwtResponseDTO;
-import com.example.springboot.dto.response.TokenResponseDTO;
-import com.example.springboot.dto.response.UserProfileResponseDTO;
+import com.example.springboot.dto.response.JwtResponse;
+import com.example.springboot.dto.response.TokenResponse;
+import com.example.springboot.dto.response.UserProfileResponse;
 import com.example.springboot.entity.RefreshToken;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
@@ -21,11 +21,12 @@ import com.example.springboot.service.MailService;
 import com.example.springboot.service.RefreshTokenService;
 import com.example.springboot.service.UserProfileService;
 import com.example.springboot.util.EnumRole;
-import com.example.springboot.util.Mapper;
+import com.example.springboot.util.CustomBuilder;
 import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,12 +56,12 @@ public class UserProfileServiceImpl implements UserProfileService {
     /**
      * Create a new user profile and save it into database
      *
-     * @param signupVM : The {@link SignUpRequestDTO} object
-     * @return : The {@link JwtResponseDTO} responseEntity
+     * @param signupVM : The {@link SignUpDTO} object
+     * @return : The {@link JwtResponse} responseEntity
      */
     @Override
     @Transactional
-    public ResponseEntity<?> createUser(SignUpRequestDTO signupVM, Boolean isTeacher, Boolean isAdmin) {
+    public ResponseEntity<?> createUser(SignUpDTO signupVM, Boolean isTeacher, Boolean isAdmin) {
         log.info("Start createUser()");
         UserProfile newUserProfile = new UserProfile();
 
@@ -82,12 +83,12 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         // create response information to user
         TokenDetails tokenDetails = authService.authenticate(
-                new LoginRequestDTO(newUserProfile.getLoginName(), signupVM.getPassword())
+                new LoginDTO(newUserProfile.getLoginName(), signupVM.getPassword())
         );
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(newUserProfile.getUserID());
         log.info("End createUser()");
 
-        return ResponseEntity.ok(new JwtResponseDTO(
+        return ResponseEntity.ok(new JwtResponse(
                 tokenDetails.getDisplayName(),
                 signupVM.getLoginName(),
                 signupVM.getEmailAddress(),
@@ -101,11 +102,11 @@ public class UserProfileServiceImpl implements UserProfileService {
     /**
      * Authenticate the user by username and password
      *
-     * @param loginVM : The {@link LoginRequestDTO} object
-     * @return : The {@link JwtResponseDTO} response entity
+     * @param loginVM : The {@link LoginDTO} object
+     * @return : The {@link JwtResponse} response entity
      */
     @Override
-    public ResponseEntity<?> login(LoginRequestDTO loginVM) {
+    public ResponseEntity<?> login(LoginDTO loginVM) {
         log.info("Start login");
 
         // Delete the old refresh before add the new refresh
@@ -123,7 +124,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         loginVM.setLoginName(userProfile.get().getLoginName());
         TokenDetails tokenDetails = authService.authenticate(loginVM);
         log.info("End login");
-        return ResponseEntity.ok(new JwtResponseDTO(
+        return ResponseEntity.ok(new JwtResponse(
                 tokenDetails.getDisplayName(),
                 loginVM.getLoginName(),
                 tokenDetails.getEmailAddress(),
@@ -138,7 +139,7 @@ public class UserProfileServiceImpl implements UserProfileService {
      * Renew the old token by the refresh token
      *
      * @param refreshTokenDTO : The {@link RefreshTokenDTO} object
-     * @return : The {@link TokenResponseDTO} responseEntity
+     * @return : The {@link TokenResponse} responseEntity
      */
     @Override
     public ResponseEntity<?> refreshToken(RefreshTokenDTO refreshTokenDTO) {
@@ -153,7 +154,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                 .map(userProfile -> {
                     String token = jwtTokenProvider.doGenerateToken(claims, userProfile.getLoginName());
                     log.info("End refresh token");
-                    return ResponseEntity.ok(new TokenResponseDTO(token, requestRefreshToken));
+                    return ResponseEntity.ok(new TokenResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new RefreshTokenNotFoundException(requestRefreshToken,
                         "Refresh token is not in database!"));
@@ -277,7 +278,7 @@ public class UserProfileServiceImpl implements UserProfileService {
      * Change password of current logged-in user
      *
      * @param changePassword : The {@link ChangePasswordDTO}
-     * @return : The {@link TokenResponseDTO}
+     * @return : The {@link TokenResponse}
      */
     @Override
     public ResponseEntity<?> changePassword(ChangePasswordDTO changePassword) {
@@ -307,7 +308,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         Map<String, Object> claims = new HashMap<>();
         String token = jwtTokenProvider.doGenerateToken(claims, userProfile.getLoginName());
         log.info("End refresh token");
-        return ResponseEntity.ok(new TokenResponseDTO(token, refreshToken.getRefreshToken()));
+        return ResponseEntity.ok(new TokenResponse(token, refreshToken.getRefreshToken()));
     }
 
     /**
@@ -352,9 +353,11 @@ public class UserProfileServiceImpl implements UserProfileService {
         log.info("Start get all active student searched by display name and email");
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
         String searchText = "%" + search + "%";
-        List<UserProfile> listStudents = studentRepositoryRead.findAllSeachedStudentsByStatus(searchText, isActive);
-        List<UserProfileResponseDTO> listStudentsDTO = listStudents.stream().map(Mapper::mapUserProfileToDTO).collect(Collectors.toList());
+        Page<UserProfile> listStudents = studentRepositoryRead
+                .findAllSeachedStudentsByStatus(searchText, isActive, pageable);
+        Page<UserProfileResponse> response = listStudents
+                .map(CustomBuilder::builtUserProfileResponse);
         log.info("Start get all active student searched by display name and email");
-        return ResponseEntity.ok(PageUtils.convertListToPage(listStudentsDTO, pageable));
+        return ResponseEntity.ok(response);
     }
 }

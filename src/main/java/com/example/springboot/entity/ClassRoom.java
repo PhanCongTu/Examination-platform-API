@@ -50,4 +50,10 @@ public class ClassRoom extends AbstractAuditingEntity {
             cascade = CascadeType.ALL
     )
     private List<ClassroomRegistration> ClassroomRegistrations;
+
+    @OneToMany(
+            mappedBy = "classRoom",
+            cascade = CascadeType.ALL
+    )
+    private List<QuestionGroup> questionGroups;
 }

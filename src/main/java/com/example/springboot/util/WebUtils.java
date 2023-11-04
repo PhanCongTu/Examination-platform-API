@@ -15,9 +15,8 @@ public class WebUtils {
     public UserProfile getCurrentLogedInUser() {
         // Get current logged in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserProfile userProfile = userProfileRepository.findOneByLoginName(auth.getName()).orElseThrow(
+        return userProfileRepository.findOneByLoginName(auth.getName()).orElseThrow(
                 UserNotFoundException::new
         );
-        return userProfile;
     }
 }

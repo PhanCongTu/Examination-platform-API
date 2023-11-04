@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @ValidateLogin
 @Builder
-public class LoginRequestDTO {
+public class LoginDTO {
 
     private String loginName;
 

@@ -13,7 +13,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @ValidateSignUp
 @Builder
-public class SignUpRequestDTO {
+public class SignUpDTO {
 
     private String loginName;
 
