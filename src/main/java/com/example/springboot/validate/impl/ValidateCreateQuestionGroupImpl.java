@@ -1,5 +1,6 @@
 package com.example.springboot.validate.impl;
 
+import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateQuestionGroupDTO;
 import com.example.springboot.dto.request.UpdateClassroomDTO;
@@ -9,6 +10,7 @@ import com.example.springboot.validate.ValidateCreateQuestionGroup;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -68,19 +70,27 @@ public class ValidateCreateQuestionGroupImpl implements ConstraintValidator<Vali
 
     private boolean validateQuestionGroupCode(CreateQuestionGroupDTO value, ConstraintValidatorContext context) {
         log.info("Start validate code when creating question group");
-        if(Objects.isNull(value.getCode()) || value.getCode().isBlank()){
+        String code = value.getCode();
+        if(Objects.isNull(code) || code.isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(CODE)
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
 
-        if(questionGroupRepository.findByCode(CODE_PREFIX + value.getCode()).isPresent()){
-            context.buildConstraintViolationWithTemplate(ErrorMessage.QUESTION_GROUP_CODE_CLASS_CODE_DUPLICATE.name())
+        if(StringUtils.isNoneBlank(code)){
+            code = StringUtils.deleteWhitespace(code);
+            code = code.substring(0, Math.min(code.length(), Constants.CODE_MAX_LENGTH));
+            value.setCode(code);
+        }
+
+        if(questionGroupRepository.findByCode(CODE_PREFIX + code).isPresent()){
+            context.buildConstraintViolationWithTemplate(ErrorMessage.QUESTION_GROUP_CODE_DUPLICATE.name())
                     .addPropertyNode(CODE)
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
+
         return Boolean.TRUE;
     }
 }

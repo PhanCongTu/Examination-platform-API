@@ -17,6 +17,8 @@ public final class Constants {
     public static final String PASSWORD_REGEX = "^[!-~]{8,20}$";
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,62}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+$";
     public static final String EXAM_DATE_PATTERN = "dd-MM-yyyy HH:mm";
+
+    public static final int CODE_MAX_LENGTH = 30;
     private Constants(){
     }
 }

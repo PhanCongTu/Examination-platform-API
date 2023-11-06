@@ -1,5 +1,6 @@
 package com.example.springboot.validate.impl;
 
+import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateClassroomDTO;
 import com.example.springboot.repository.ClassroomRepository;
@@ -7,6 +8,7 @@ import com.example.springboot.validate.ValidateCreateClassroom;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -44,13 +46,22 @@ public class ValidateCreateClassroomImpl implements ConstraintValidator<Validate
     }
 
     private boolean validateClassCode(CreateClassroomDTO value, ConstraintValidatorContext context) {
-        if(Objects.isNull(value.getClassCode()) || value.getClassCode().isBlank()){
+        String classCode = value.getClassCode();
+        if(Objects.isNull(classCode) || classCode.isBlank()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                     .addPropertyNode(CLASS_CODE)
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
-        if(classRoomRepository.findByClassCode(CODE_PREFIX + value.getClassCode()).isPresent()){
+
+
+        if(StringUtils.isNoneBlank(classCode)){
+            classCode = StringUtils.deleteWhitespace(classCode);
+            classCode = classCode.substring(0, Math.min(classCode.length(), Constants.CODE_MAX_LENGTH));
+            value.setClassCode(classCode);
+        }
+
+        if(classRoomRepository.findByClassCode(CODE_PREFIX + classCode).isPresent()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.CLASS_CODE_DUPLICATE.name())
                     .addPropertyNode(CLASS_CODE)
                     .addConstraintViolation();

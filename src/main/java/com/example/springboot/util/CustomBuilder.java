@@ -48,4 +48,12 @@ public class CustomBuilder {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
+    public static ResponseEntity<LinkedHashMap<String, String>> buildQuestionGroupNotFoundResponseEntity() {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.QUESTION_GROUP_NOT_FOUND.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.QUESTION_GROUP_NOT_FOUND.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
 }
