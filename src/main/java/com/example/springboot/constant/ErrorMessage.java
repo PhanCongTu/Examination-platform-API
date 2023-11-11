@@ -37,6 +37,10 @@ public enum ErrorMessage {
 
     QUESTION_GROUP_CODE_DUPLICATE(Constants.BAD_REQUEST, "The code of question group already exists."),
     QUESTION_GROUP_NOT_FOUND(Constants.NOT_FOUND, "Can not find question group."),
+
+    QUESTION_CREATE_MUST_HAVE_ONE_TRUE_ANSWER(Constants.BAD_REQUEST, "There must have one only correct answer."),
+    QUESTION_CREATE_ANSWER_CONTENT_REQUIRED(Constants.BAD_REQUEST, "answerContent is required.")
+
     ;
 
     private String errorCode;

@@ -13,6 +13,9 @@ import java.util.Optional;
 @Repository
 public interface QuestionGroupRepository extends JpaRepository<QuestionGroup, Long> {
 
+    @Query(value = "select * FROM question_group where id = :id and is_enable = :isEnable", nativeQuery = true)
+    Optional<QuestionGroup> findByIdAndStatus(Long id, Boolean isEnable);
+
     Optional<QuestionGroup> findByCode(String code);
 
     @Query(value = "select * FROM question_group where class_room_id = :classroomId and is_enable = :isEnable", nativeQuery = true)

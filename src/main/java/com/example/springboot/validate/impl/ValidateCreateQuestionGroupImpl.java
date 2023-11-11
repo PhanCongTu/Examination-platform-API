@@ -3,7 +3,6 @@ package com.example.springboot.validate.impl;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateQuestionGroupDTO;
-import com.example.springboot.dto.request.UpdateClassroomDTO;
 import com.example.springboot.repository.ClassroomRepository;
 import com.example.springboot.repository.QuestionGroupRepository;
 import com.example.springboot.validate.ValidateCreateQuestionGroup;
@@ -54,6 +53,7 @@ public class ValidateCreateQuestionGroupImpl implements ConstraintValidator<Vali
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
+        log.info("End validate classroomId when creating question group");
         return Boolean.TRUE;
     }
 
@@ -65,6 +65,7 @@ public class ValidateCreateQuestionGroupImpl implements ConstraintValidator<Vali
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
+        log.info("End validate name when creating question group");
         return Boolean.TRUE;
     }
 
@@ -90,7 +91,7 @@ public class ValidateCreateQuestionGroupImpl implements ConstraintValidator<Vali
                     .addConstraintViolation();
             return Boolean.FALSE;
         }
-
+        log.info("End validate code when creating question group");
         return Boolean.TRUE;
     }
 }

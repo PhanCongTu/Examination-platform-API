@@ -50,10 +50,11 @@ public class ExceptionTranslator {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleAMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        log.error("MethodArgumentNotValidException");
         BindingResult result = ex.getBindingResult();
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         String errorMessageName = result.getAllErrors().get(0).getDefaultMessage();
-        String errorField = ((FieldError) result.getAllErrors().get(0)).getField();
+        String errorField = Objects.requireNonNull(((FieldError) result.getAllErrors().get(0)).getField());
         String errorCode = "";
         String message = "";
         if (ErrorMessage.SIGNUP_LOGIN_NAME_DUPLICATE.name().equals(errorMessageName)) {

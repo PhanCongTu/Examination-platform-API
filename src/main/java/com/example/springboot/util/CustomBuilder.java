@@ -3,7 +3,9 @@ package com.example.springboot.util;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.response.QuestionGroupResponse;
+import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.dto.response.UserProfileResponse;
+import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.UserProfile;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,17 @@ public class CustomBuilder {
                 .name(questionGroup.getName())
                 .code(questionGroup.getCode())
                 .isEnable(questionGroup.getIsEnable())
+                .build();
+    }
+
+    public static QuestionResponse builtQuestionResponse(Question question){
+        return QuestionResponse.builder()
+                .id(question.getId())
+                .content(question.getContent())
+                .firstAnswer(question.getFirstAnswer())
+                .secondAnswer(question.getSecondAnswer())
+                .thirdAnswer(question.getThirdAnswer())
+                .fourthAnswer(question.getFourthAnswer())
                 .build();
     }
     /**

@@ -1,6 +1,8 @@
 package com.example.springboot.validate;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for validate annotations
@@ -26,5 +28,9 @@ public final class ValidateUtils {
      */
     public static boolean isAnyTrue(List<Boolean> list){
         return list.stream().anyMatch(item -> item);
+    }
+    public static boolean isOnlyOneTrue(List<Boolean> list){
+        Predicate<Boolean> byTrue = value -> value;
+        return list.stream().filter(byTrue).count() == 1;
     }
 }
