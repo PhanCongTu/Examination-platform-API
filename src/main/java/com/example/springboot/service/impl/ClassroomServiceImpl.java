@@ -62,13 +62,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         classRoom.setIsPrivate(DTO.getIsPrivate());
         classRoom.setCreatedBy(userProfile.getLoginName());
         ClassRoom savedClassRoom = classRoomRepository.save(classRoom);
-        ClassroomResponse response = ClassroomResponse.builder()
-                .id(savedClassRoom.getId())
-                .className(savedClassRoom.getClassName())
-                .classCode(savedClassRoom.getClassCode())
-                .isPrivate(savedClassRoom.getIsPrivate())
-                .isEnable(savedClassRoom.getIsEnable())
-                .build();
+        ClassroomResponse response = CustomBuilder.builtClassroomResponse(savedClassRoom);
         log.info("End create Classroom");
         return ResponseEntity.ok(response);
     }
@@ -108,13 +102,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         String searchText = "%" + search + "%";
         Page<ClassRoom> classRooms = classRoomRepository.findAllSearchedClassRoomsByStatus(searchText,isEnable, pageable);
         // Map topic to topic response DTO
-        Page<ClassroomResponse> response = classRooms.map(classRoom -> new ClassroomResponse(
-                classRoom.getId(),
-                classRoom.getClassCode(),
-                classRoom.getClassName(),
-                classRoom.getIsEnable(),
-                classRoom.getIsPrivate()
-        ));
+        Page<ClassroomResponse> response = classRooms.map(CustomBuilder::builtClassroomResponse);
         log.info("End get all enable Classroom (non-Admin)");
         return ResponseEntity.ok(response);
     }
@@ -151,9 +139,10 @@ public class ClassroomServiceImpl implements ClassroomService {
             classRoom.setClassCode(CODE_PREFIX + DTO.getClassCode());
             modifyUpdateClassroom(classRoom);
         }
-        classRoomRepository.save(classRoom);
+        classRoom = classRoomRepository.save(classRoom);
+        ClassroomResponse response = CustomBuilder.builtClassroomResponse(classRoom);
         log.info("End update Classroom");
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 
     @Override

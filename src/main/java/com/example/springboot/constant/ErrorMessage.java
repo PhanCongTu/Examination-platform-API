@@ -8,6 +8,7 @@ public enum ErrorMessage {
     COMMON_INTERNAL_SERVER_ERROR(Constants.INTERNAL_SERVER_ERROR, "Undefined error."),
     COMMON_JSON_BODY_MALFORMED(Constants.BAD_REQUEST,"JSON body is malformed."),
     COMMON_USER_NOT_FOUND(Constants.NOT_FOUND,"Can not find user"),
+    COMMON_VALUE_MUST_BE_NUMBER(Constants.BAD_REQUEST, "The input value must be a number."),
 
 
     SIGNUP_LOGIN_NAME_DUPLICATE(Constants.USER_ALREADY_EXISTS, "User with loginName %s already exists."),
@@ -39,7 +40,8 @@ public enum ErrorMessage {
     QUESTION_GROUP_NOT_FOUND(Constants.NOT_FOUND, "Can not find question group."),
 
     QUESTION_CREATE_MUST_HAVE_ONE_TRUE_ANSWER(Constants.BAD_REQUEST, "There must have one only correct answer."),
-    QUESTION_CREATE_ANSWER_CONTENT_REQUIRED(Constants.BAD_REQUEST, "answerContent is required.")
+    QUESTION_CREATE_ANSWER_CONTENT_REQUIRED(Constants.BAD_REQUEST, "answerContent is required."),
+    QUESTION_NOT_FOUND(Constants.NOT_FOUND, "Can not find question."),
 
     ;
 

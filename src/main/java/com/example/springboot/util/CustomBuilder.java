@@ -2,9 +2,11 @@ package com.example.springboot.util;
 
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
+import com.example.springboot.dto.response.ClassroomResponse;
 import com.example.springboot.dto.response.QuestionGroupResponse;
 import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.dto.response.UserProfileResponse;
+import com.example.springboot.entity.ClassRoom;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.UserProfile;
@@ -15,6 +17,16 @@ import org.springframework.http.ResponseEntity;
 import java.util.LinkedHashMap;
 
 public class CustomBuilder {
+
+    public static ClassroomResponse builtClassroomResponse(ClassRoom classRoom){
+        return ClassroomResponse.builder()
+                .id(classRoom.getId())
+                .className(classRoom.getClassName())
+                .classCode(classRoom.getClassCode())
+                .isPrivate(classRoom.getIsPrivate())
+                .isEnable(classRoom.getIsEnable())
+                .build();
+    }
 
     public static UserProfileResponse builtUserProfileResponse(UserProfile userProfile){
         return UserProfileResponse.builder()
@@ -65,6 +77,15 @@ public class CustomBuilder {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(Constants.ERROR_CODE_KEY, ErrorMessage.QUESTION_GROUP_NOT_FOUND.getErrorCode());
         response.put(Constants.MESSAGE_KEY, ErrorMessage.QUESTION_GROUP_NOT_FOUND.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    public static ResponseEntity<LinkedHashMap<String, String>> buildQuestionNotFoundResponseEntity() {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.QUESTION_NOT_FOUND.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.QUESTION_NOT_FOUND.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);

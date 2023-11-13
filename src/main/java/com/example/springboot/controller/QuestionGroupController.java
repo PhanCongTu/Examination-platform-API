@@ -42,22 +42,24 @@ public class QuestionGroupController {
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllActiveQuestionGroupOfClassroom(
             @PathVariable(name = "classroomId") Long classroomId,
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
             @RequestParam(defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
             @RequestParam(defaultValue = DEFAULT_SIZE) int size,
             @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType){
-        return questionGroupService.getAllQuestionGroupOfClassroom(classroomId, page, column, size, sortType, true);
+        return questionGroupService.getAllQuestionGroupOfClassroom(classroomId, search, page, column, size, sortType, true);
     }
 
     @GetMapping(value = "/inactive/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllInactiveQuestionGroupOfClassroom(
             @PathVariable(name = "classroomId") Long classroomId,
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
             @RequestParam(defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
             @RequestParam(defaultValue = DEFAULT_SIZE) int size,
             @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType){
-        return questionGroupService.getAllQuestionGroupOfClassroom(classroomId, page, column, size, sortType, false);
+        return questionGroupService.getAllQuestionGroupOfClassroom(classroomId, search, page, column, size, sortType, false);
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)

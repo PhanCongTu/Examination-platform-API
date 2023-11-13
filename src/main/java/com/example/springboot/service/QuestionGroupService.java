@@ -8,7 +8,7 @@ public interface QuestionGroupService {
 
     ResponseEntity<?> createQuestionGroup(CreateQuestionGroupDTO dto);
 
-    ResponseEntity<?> getAllQuestionGroupOfClassroom(Long classroomId, int page, String column, int size, String sortType, Boolean isEnable);
+    ResponseEntity<?> getAllQuestionGroupOfClassroom(Long classroomId, String search, int page, String column, int size, String sortType, Boolean isEnable);
 
     ResponseEntity<?> switchQuestionGroupStatus(Long questionGroupId, boolean newStatus);
 

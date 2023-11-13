@@ -228,6 +228,16 @@ public class ExceptionTranslator {
                 .body(response);
     }
 
+    @ExceptionHandler({NumberFormatException.class})
+    public ResponseEntity<?> handleNumberFormatException(NumberFormatException ex) {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.COMMON_VALUE_MUST_BE_NUMBER.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, String.format(ErrorMessage.COMMON_VALUE_MUST_BE_NUMBER.getMessage(), ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
 
     // Uncomment bên dưới khi project hoàn thành
 
