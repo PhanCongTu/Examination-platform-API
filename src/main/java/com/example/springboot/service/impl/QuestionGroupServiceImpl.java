@@ -3,7 +3,7 @@ package com.example.springboot.service.impl;
 import com.example.springboot.dto.request.CreateQuestionGroupDTO;
 import com.example.springboot.dto.request.UpdateQuestionGroupDTO;
 import com.example.springboot.dto.response.QuestionGroupResponse;
-import com.example.springboot.entity.ClassRoom;
+import com.example.springboot.entity.Classroom;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.repository.ClassroomRepository;
@@ -35,7 +35,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
     public ResponseEntity<?> createQuestionGroup(CreateQuestionGroupDTO dto) {
         log.info("Start create Question Group");
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
-        Optional<ClassRoom> classRoom =  classroomRepository.findById(dto.getClassroomId());
+        Optional<Classroom> classRoom =  classroomRepository.findById(dto.getClassroomId());
 
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setName(dto.getName());
@@ -54,7 +54,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
     public ResponseEntity<?> getAllQuestionGroupOfClassroom(Long classroomId, String search, int page, String column, int size, String sortType, Boolean isEnable) {
         log.info("Start get all Question Group of classroom");
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        Optional<ClassRoom> classRoom =  classroomRepository.findById(classroomId);
+        Optional<Classroom> classRoom =  classroomRepository.findById(classroomId);
         if (classRoom.isEmpty()){
             return CustomBuilder.buildClassroomNotFoundResponseEntity();
         }

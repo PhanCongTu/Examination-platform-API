@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,17 +21,16 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "classroom_registration")
-public class ClassroomRegistration extends AbstractAuditingEntity {
+@Table(name = "test_question")
+public class TestQuestion extends AbstractAuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Classroom classRoom;
+    private MultipleChoiceTest multipleChoiceTest;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserProfile userProfile;
-
-
+    private Question question;
 }

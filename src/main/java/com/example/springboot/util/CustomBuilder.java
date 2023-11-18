@@ -3,10 +3,13 @@ package com.example.springboot.util;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.response.ClassroomResponse;
+import com.example.springboot.dto.response.MultipleChoiceTestResponse;
+import com.example.springboot.dto.response.MultipleChoiceTestWithQuestionsResponse;
 import com.example.springboot.dto.response.QuestionGroupResponse;
 import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.dto.response.UserProfileResponse;
-import com.example.springboot.entity.ClassRoom;
+import com.example.springboot.entity.Classroom;
+import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.UserProfile;
@@ -15,10 +18,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class CustomBuilder {
 
-    public static ClassroomResponse builtClassroomResponse(ClassRoom classRoom){
+    public static MultipleChoiceTestWithQuestionsResponse builtMultipleChoiceTest(MultipleChoiceTest multipleChoiceTest, List<QuestionResponse> questions) {
+        return MultipleChoiceTestWithQuestionsResponse.builder()
+                .id(multipleChoiceTest.getId())
+                .testName(multipleChoiceTest.getTestName())
+                .startDate(multipleChoiceTest.getStartDate())
+                .endDate(multipleChoiceTest.getEndDate())
+                .testingTime(multipleChoiceTest.getTestingTime())
+                .questions(questions)
+                .build();
+    }
+
+    public static ClassroomResponse builtClassroomResponse(Classroom classRoom){
         return ClassroomResponse.builder()
                 .id(classRoom.getId())
                 .className(classRoom.getClassName())
@@ -86,6 +101,15 @@ public class CustomBuilder {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
         response.put(Constants.ERROR_CODE_KEY, ErrorMessage.QUESTION_NOT_FOUND.getErrorCode());
         response.put(Constants.MESSAGE_KEY, ErrorMessage.QUESTION_NOT_FOUND.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    public static ResponseEntity<LinkedHashMap<String, String>> buildMultipleChoiceTestNotFoundResponseEntity() {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.MULTIPLE_CHOICE_NOT_FOUND.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.MULTIPLE_CHOICE_NOT_FOUND.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);

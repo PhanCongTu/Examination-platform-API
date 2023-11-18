@@ -6,6 +6,8 @@ import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.UserProfile;
+import com.example.springboot.exception.NotEnoughQuestionException;
+import com.example.springboot.exception.QuestionGroupNotFoundException;
 import com.example.springboot.repository.QuestionGroupRepository;
 import com.example.springboot.repository.QuestionRepository;
 import com.example.springboot.service.QuestionService;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -31,6 +34,21 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionGroupRepository questionGroupRepository;
     private final WebUtils webUtils;
+
+    @Override
+    public List<Question> getRandomQuestionsByQuestionGroup(Long questionGroupId, Long numberOfQuestion) {
+        Optional<QuestionGroup> questionGroup = questionGroupRepository
+                .findByIdAndStatus(questionGroupId, true);
+        if(questionGroup.isEmpty()) {
+            throw new QuestionGroupNotFoundException();
+        }
+        List<Question> questions =  questionRepository
+                .findRandomQuestionByQuestionGroupId(questionGroupId, numberOfQuestion);
+        if (questions.size() < numberOfQuestion) {
+            throw new NotEnoughQuestionException(questionGroup.get().getName());
+        }
+        return questions;
+    }
     
     @Override
     public ResponseEntity<?> createQuestion(CreateQuestionDTO dto) {
@@ -47,6 +65,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .correctAnswer(getCorrectAnswerCreate(dto))
                 .questionGroup(questionGroupOp.get())
                 .build();
+        modifyUpdateQuestion(question);
         question = questionRepository.save(question);
         QuestionResponse response = CustomBuilder.builtQuestionResponse(question);
         log.info("Create question: end");

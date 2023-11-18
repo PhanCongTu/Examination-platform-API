@@ -23,7 +23,7 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "class_room")
-public class ClassRoom extends AbstractAuditingEntity {
+public class Classroom extends AbstractAuditingEntity {
 
     private static final long serialVersionUID = 1L;
     private static final String CLASS_ID = "id";
@@ -56,4 +56,10 @@ public class ClassRoom extends AbstractAuditingEntity {
             cascade = CascadeType.ALL
     )
     private List<QuestionGroup> questionGroups;
+
+    @OneToMany(
+            mappedBy = "classRoom",
+            cascade = CascadeType.ALL
+    )
+    private List<MultipleChoiceTest> multipleChoiceTests;
 }

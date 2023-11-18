@@ -38,11 +38,20 @@ public enum ErrorMessage {
 
     QUESTION_GROUP_CODE_DUPLICATE(Constants.BAD_REQUEST, "The code of question group already exists."),
     QUESTION_GROUP_NOT_FOUND(Constants.NOT_FOUND, "Can not find question group."),
+    QUESTION_GROUP_REQUIRE(Constants.BAD_REQUEST, "Question group is require."),
 
     QUESTION_CREATE_MUST_HAVE_ONE_TRUE_ANSWER(Constants.BAD_REQUEST, "There must have one only correct answer."),
     QUESTION_CREATE_ANSWER_CONTENT_REQUIRED(Constants.BAD_REQUEST, "answerContent is required."),
     QUESTION_NOT_FOUND(Constants.NOT_FOUND, "Can not find question."),
 
+    MULTIPLE_CHOICE_TEST_START_DATE_INVALID(Constants.BAD_REQUEST, "Start date is not valid."),
+    MULTIPLE_CHOICE_TEST_END_DATE_INVALID(Constants.BAD_REQUEST, "End date is not valid."),
+    MULTIPLE_CHOICE_TEST_DATE_INVALID(Constants.BAD_REQUEST, "The endDate must be after the startDate."),
+    MULTIPLE_CHOICE_TESTING_TIME_INVALID(Constants.BAD_REQUEST, "The testing time is not valid."),
+    MULTIPLE_CHOICE_NOT_FOUND(Constants.NOT_FOUND, "Can not find the multiple choice test"),
+    NOT_ENOUGH_QUESTION(Constants.BAD_REQUEST, "Do not enough question in question group with name is %s"),
+    QUESTION_NUMBER_REQUIRE(Constants.NOT_FOUND, "Number of question is require."),
+    MULTIPLE_CHOICE_TEST_QUESTION_SOURCE_INVALID(Constants.BAD_REQUEST, "The questions of the test is missing or duplicate source.")
     ;
 
     private String errorCode;
