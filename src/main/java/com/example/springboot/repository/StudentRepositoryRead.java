@@ -15,10 +15,10 @@ public interface StudentRepositoryRead extends JpaRepository<UserProfile, Long> 
     @Query(value = "Select * from user_profile u\n" +
             "\twhere u.is_enable = :isActive and u.user_id in (\n" +
             "    select user_profile_user_id from user_profile_roles ur\n" +
-            "\t\twhere ur.user_profile_user_id = :userId and ur.roles = \"ROLE_STUDENT\"\n" +
+            "\t\twhere ur.user_profile_user_id = :userId and is_email_address_verified=true and ur.roles = \"ROLE_STUDENT\"\n" +
             "    )",
             nativeQuery = true)
-    Optional<UserProfile> findStudentByIdAndStatus(Long userId, Boolean isActive);
+    Optional<UserProfile> findVerifiedStudentByIdAndStatus(Long userId, Boolean isActive);
 
     @Query(value = "select * from user_profile \n" +
             "where user_id in (\n" +

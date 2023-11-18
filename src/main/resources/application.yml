@@ -16,7 +16,7 @@ spring:
       FAIL_ON_EMPTY_BEANS: false
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -37,4 +37,4 @@ config:
     password: udvepsndgybmyzye
 send-by-mail:
   verification-code-time: 30 #minutes
-  reset-password-code-time: 1 #minutes
+  reset-password-code-time: 15 #minutes

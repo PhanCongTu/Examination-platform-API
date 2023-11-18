@@ -14,6 +14,7 @@ import com.example.springboot.repository.ClassroomRepository;
 import com.example.springboot.repository.MultipleChoiceTestRepository;
 import com.example.springboot.repository.QuestionRepository;
 import com.example.springboot.repository.TestQuestionRepository;
+import com.example.springboot.service.MailService;
 import com.example.springboot.service.MultipleChoiceTestService;
 import com.example.springboot.service.QuestionService;
 import com.example.springboot.util.CustomBuilder;
@@ -24,8 +25,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,6 +44,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     private final ClassroomRepository classroomRepository;
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
+    private final MailService mailService;
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseEntity<?> createMultipleChoiceTest(CreateMultipleChoiceTestDTO dto) throws QuestionNotFoundException {
@@ -64,6 +68,9 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
                             (multipleChoiceTest.getId(), dto.getRandomQuestions());
         }
         MultipleChoiceTestWithQuestionsResponse response = CustomBuilder.builtMultipleChoiceTest(multipleChoiceTest, questionsOfTheTest);
+
+        // Send notification email to student in this classroom
+        mailService.sendTestCreatedNotificationEmail(dto.getClassroomId(), multipleChoiceTest);
         return ResponseEntity.ok(response);
     }
 

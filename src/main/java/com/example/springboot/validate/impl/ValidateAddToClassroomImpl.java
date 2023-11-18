@@ -38,7 +38,7 @@ public class ValidateAddToClassroomImpl implements ConstraintValidator<ValidateA
 
     private boolean validateStudentId(AddToClassroomDTO value, ConstraintValidatorContext context) {
         log.info("Start check student id");
-        if(studentRepositoryRead.findStudentByIdAndStatus(value.getStudentId(), true).isEmpty()){
+        if(studentRepositoryRead.findVerifiedStudentByIdAndStatus(value.getStudentId(), true).isEmpty()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.STUDENT_NOT_FOUND.name())
                     .addPropertyNode(STUDENT_ID)
                     .addConstraintViolation();

@@ -1,9 +1,12 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.entity.ClassroomRegistration;
+import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
 import com.example.springboot.exception.InValidUserStatusException;
 import com.example.springboot.exception.UserNotFoundException;
+import com.example.springboot.repository.ClassroomRegistrationRepository;
 import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.service.MailService;
 import com.example.springboot.service.ThymeleafService;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 
@@ -46,6 +50,9 @@ public class MailServiceImpl implements MailService {
     @Autowired
     UserProfileRepository userProfileRepository;
 
+    @Autowired
+    ClassroomRegistrationRepository classroomRegistrationRepository;
+
     private Message getEmailMessage() {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
@@ -62,6 +69,39 @@ public class MailServiceImpl implements MailService {
                 });
         Message message = new MimeMessage(session);
         return message;
+    }
+
+    @Override
+    @Async
+    public void sendTestCreatedNotificationEmail(Long classroomId, MultipleChoiceTest multipleChoiceTest) {
+    List<String> registerUserEmails =
+            classroomRegistrationRepository.findUserEmailOfClassroom(classroomId);
+        sendEmailTestCreatedNotification(registerUserEmails, multipleChoiceTest);
+    }
+
+    @Async
+    protected void sendEmailTestCreatedNotification(List<String> registerUserEmails, MultipleChoiceTest multipleChoiceTest) {
+        Timestamp stamp = new Timestamp(multipleChoiceTest.getStartDate());
+        Date date = new Date(stamp.getTime());
+        String startDate = String.format("%s:%s %s/%s", date.getHours(), date.getMinutes(), date.getDate(), date.getMonth()+1);
+        String classroomName = multipleChoiceTest.getClassRoom().getClassName();
+        String testingTime = multipleChoiceTest.getTestingTime().toString() + " minutes";
+        String testName = multipleChoiceTest.getTestName();
+        try {
+            Message message = getEmailMessage();
+            String emails = String.join(",", registerUserEmails);
+            // start send mail
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emails));
+            message.setFrom(new InternetAddress(email));
+            message.setSubject("[ONLINE EXAM PLATFORM] Your classroom has a new exam!");
+            message.setContent(
+                    thymeleafService.getTestCreatedNotificationMailContent
+                            (classroomName, testName, startDate, testingTime), CONTENT_TYPE_TEXT_HTML);
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

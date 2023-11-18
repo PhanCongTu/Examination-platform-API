@@ -141,7 +141,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     @Override
     public ResponseEntity<?> addStudentToClassroom(AddToClassroomDTO dto) {
         Optional<Classroom> classRoom = classRoomRepository.findById(dto.getClassroomId());
-        Optional<UserProfile> userProfile = studentRepositoryRead.findStudentByIdAndStatus(dto.getStudentId(), true);
+        Optional<UserProfile> userProfile = studentRepositoryRead.findVerifiedStudentByIdAndStatus(dto.getStudentId(), true);
 
 
         ClassroomRegistration classroomRegistration =
