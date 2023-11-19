@@ -21,9 +21,13 @@ import com.example.springboot.service.MailService;
 import com.example.springboot.service.MultipleChoiceTestService;
 import com.example.springboot.service.QuestionService;
 import com.example.springboot.util.CustomBuilder;
+import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +57,27 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
     private final MailService mailService;
+
+    @Override
+    public ResponseEntity<?> getMultipleChoiceTestsOfClassroom(Long classroomId,boolean isStarted, String search, int page, String column, int size, String sortType) {
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        Optional<Classroom> classRoom =  classroomRepository.findById(classroomId);
+        if (classRoom.isEmpty()){
+            return CustomBuilder.buildClassroomNotFoundResponseEntity();
+        }
+        String searchText = "%" + search + "%";
+        Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
+        Page<MultipleChoiceTest> multipleChoiceTests;
+        if (isStarted) {
+            multipleChoiceTests = multipleChoiceTestRepository.
+                    findStatedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
+        } else {
+            multipleChoiceTests = multipleChoiceTestRepository.
+                    findNotStatedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
+        }
+        Page<MultipleChoiceTestResponse> response = multipleChoiceTests.map(CustomBuilder::buildMultipleChoiceTestResponse);
+        return ResponseEntity.ok(response);
+    }
 
     @Override
     public ResponseEntity<?> updateMultipleChoiceTest(Long testId, UpdateMultipleChoiceTestDTO dto) {
@@ -102,7 +127,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
             modifyUpdateMultipleChoiceTest(multipleChoiceTest);
         }
         multipleChoiceTest = multipleChoiceTestRepository.save(multipleChoiceTest);
-        MultipleChoiceTestResponse response = CustomBuilder.buildMultipleChoiceTest(multipleChoiceTest);
+        MultipleChoiceTestResponse response = CustomBuilder.buildMultipleChoiceTestResponse(multipleChoiceTest);
         mailService.sendTestUpdatedNotificationEmail(multipleChoiceTest);
         return ResponseEntity.ok(response);
     }
@@ -150,7 +175,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
                     addRandomQuestionToTestByQuestionGroupId
                             (multipleChoiceTest.getId(), dto.getRandomQuestions());
         }
-        MultipleChoiceTestWithQuestionsResponse response = CustomBuilder.buildMultipleChoiceTestWithQuestions(multipleChoiceTest, questionsOfTheTest);
+        MultipleChoiceTestWithQuestionsResponse response = CustomBuilder.buildMultipleChoiceTestWithQuestionsResponse(multipleChoiceTest, questionsOfTheTest);
 
         // Send notification email to student in this classroom
         mailService.sendTestCreatedNotificationEmail(dto.getClassroomId(), multipleChoiceTest);

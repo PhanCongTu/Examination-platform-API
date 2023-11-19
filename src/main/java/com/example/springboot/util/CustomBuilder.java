@@ -22,7 +22,7 @@ import java.util.List;
 
 public class CustomBuilder {
 
-    public static MultipleChoiceTestResponse buildMultipleChoiceTest(MultipleChoiceTest multipleChoiceTest) {
+    public static MultipleChoiceTestResponse buildMultipleChoiceTestResponse(MultipleChoiceTest multipleChoiceTest) {
         return MultipleChoiceTestResponse.builder()
                 .id(multipleChoiceTest.getId())
                 .testName(multipleChoiceTest.getTestName())
@@ -32,7 +32,7 @@ public class CustomBuilder {
                 .build();
     }
 
-    public static MultipleChoiceTestWithQuestionsResponse buildMultipleChoiceTestWithQuestions(MultipleChoiceTest multipleChoiceTest, List<QuestionResponse> questions) {
+    public static MultipleChoiceTestWithQuestionsResponse buildMultipleChoiceTestWithQuestionsResponse(MultipleChoiceTest multipleChoiceTest, List<QuestionResponse> questions) {
         return MultipleChoiceTestWithQuestionsResponse.builder()
                 .id(multipleChoiceTest.getId())
                 .testName(multipleChoiceTest.getTestName())

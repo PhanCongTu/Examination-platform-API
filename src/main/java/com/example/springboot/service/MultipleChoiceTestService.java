@@ -11,4 +11,6 @@ public interface MultipleChoiceTestService {
     ResponseEntity<?> deleteMultipleChoiceTest(Long testId);
 
     ResponseEntity<?> updateMultipleChoiceTest(Long testId, UpdateMultipleChoiceTestDTO dto);
+
+    ResponseEntity<?> getMultipleChoiceTestsOfClassroom(Long classroomId,boolean isStarted, String search, int page, String column, int size, String sortType);
 }
