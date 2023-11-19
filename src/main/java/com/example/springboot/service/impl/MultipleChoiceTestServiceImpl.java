@@ -61,6 +61,16 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
             return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
         }
         MultipleChoiceTest multipleChoiceTest = multipleChoiceTestOp.get();
+
+        Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
+        if(multipleChoiceTest.getStartDate() < unixTimeNow) {
+            LinkedHashMap<String, String> response = new LinkedHashMap<>();
+            response.put(Constants.ERROR_CODE_KEY, ErrorMessage.MULTIPLE_CHOICE_TEST_UPDATE_STARTED_TEST.getErrorCode());
+            response.put(Constants.MESSAGE_KEY, ErrorMessage.MULTIPLE_CHOICE_TEST_UPDATE_STARTED_TEST.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
+        }
         if (Objects.nonNull(dto.getTestName())) {
             multipleChoiceTest.setTestName(dto.getTestName());
             modifyUpdateMultipleChoiceTest(multipleChoiceTest);
