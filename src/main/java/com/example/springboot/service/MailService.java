@@ -10,6 +10,7 @@ public interface MailService {
     void sendTestCreatedNotificationEmail(Long classroomId, MultipleChoiceTest multipleChoiceTest);
 
     void sendTestDeletedNotificationEmail(MultipleChoiceTest multipleChoiceTest);
+    void sendTestUpdatedNotificationEmail(MultipleChoiceTest multipleChoiceTest);
 
     ResponseEntity<?> sendVerificationEmail(String username);
 

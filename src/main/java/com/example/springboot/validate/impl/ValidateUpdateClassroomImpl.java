@@ -4,7 +4,7 @@ import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.UpdateClassroomDTO;
 import com.example.springboot.repository.ClassroomRepository;
-import com.example.springboot.validate.ValidateCreateClassroom;
+import com.example.springboot.validate.ValidateUpdateClassroom;
 import com.example.springboot.validate.ValidateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
-public class ValidateUpdateClassroomImpl implements ConstraintValidator<ValidateCreateClassroom, UpdateClassroomDTO> {
+public class ValidateUpdateClassroomImpl implements ConstraintValidator<ValidateUpdateClassroom, UpdateClassroomDTO> {
     private ClassroomRepository classRoomRepository;
     private static final String CLASS_NAME = "className";
     private static final String CLASS_CODE = "classCode";

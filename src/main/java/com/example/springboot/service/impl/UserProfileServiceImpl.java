@@ -356,7 +356,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         Page<UserProfile> listStudents = studentRepositoryRead
                 .findAllSeachedStudentsByStatus(searchText, isActive, pageable);
         Page<UserProfileResponse> response = listStudents
-                .map(CustomBuilder::builtUserProfileResponse);
+                .map(CustomBuilder::buildUserProfileResponse);
         log.info("Start get all active student searched by display name and email");
         return ResponseEntity.ok(response);
     }

@@ -44,7 +44,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
         questionGroup.setClassRoom(classRoom.get());
 
         questionGroup = questionGroupRepository.save(questionGroup);
-        QuestionGroupResponse response = CustomBuilder.builtQuestionGroupResponse(questionGroup);
+        QuestionGroupResponse response = CustomBuilder.buildQuestionGroupResponse(questionGroup);
 
         log.info("End create Question Group");
         return ResponseEntity.ok(response);
@@ -62,7 +62,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
         Page<QuestionGroup> questionGroups = questionGroupRepository
                 .findQuestionGroupsOfClassroomByClassroomId(classroomId, searchText, isEnable, pageable);
 
-        Page<QuestionGroupResponse> response = questionGroups.map(CustomBuilder::builtQuestionGroupResponse);
+        Page<QuestionGroupResponse> response = questionGroups.map(CustomBuilder::buildQuestionGroupResponse);
         log.info("End get all Question Group of classroom");
         return ResponseEntity.ok(response);
     }
@@ -107,7 +107,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
             modifyUpdateQuestionGroup(questionGroup);
         }
         questionGroup = questionGroupRepository.save(questionGroup);
-        QuestionGroupResponse response = CustomBuilder.builtQuestionGroupResponse(questionGroup);
+        QuestionGroupResponse response = CustomBuilder.buildQuestionGroupResponse(questionGroup);
         log.info("End update Question Group");
         return ResponseEntity.ok(response);
     }

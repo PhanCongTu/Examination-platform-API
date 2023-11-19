@@ -3,6 +3,7 @@ package com.example.springboot.service.impl;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateMultipleChoiceTestDTO;
+import com.example.springboot.dto.request.UpdateMultipleChoiceTestDTO;
 import com.example.springboot.dto.response.MultipleChoiceTestResponse;
 import com.example.springboot.dto.response.MultipleChoiceTestWithQuestionsResponse;
 import com.example.springboot.dto.response.QuestionResponse;
@@ -54,13 +55,55 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     private final MailService mailService;
 
     @Override
+    public ResponseEntity<?> updateMultipleChoiceTest(Long testId, UpdateMultipleChoiceTestDTO dto) {
+        Optional<MultipleChoiceTest> multipleChoiceTestOp = multipleChoiceTestRepository.findById(testId);
+        if(multipleChoiceTestOp.isEmpty()) {
+            return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
+        }
+        MultipleChoiceTest multipleChoiceTest = multipleChoiceTestOp.get();
+        if (Objects.nonNull(dto.getTestName())) {
+            multipleChoiceTest.setTestName(dto.getTestName());
+            modifyUpdateMultipleChoiceTest(multipleChoiceTest);
+        }
+        if (Objects.nonNull(dto.getTestingTime())) {
+            multipleChoiceTest.setTestingTime(dto.getTestingTime());
+            modifyUpdateMultipleChoiceTest(multipleChoiceTest);
+        }
+        if (Objects.nonNull(dto.getStartDate()) && Objects.isNull(dto.getEndDate())) {
+            if (dto.getStartDate() < multipleChoiceTest.getEndDate()){
+                multipleChoiceTest.setStartDate(dto.getStartDate());
+                modifyUpdateMultipleChoiceTest(multipleChoiceTest);
+            } else {
+                return CustomBuilder.buildMultipleChoiceTestTestDateInvalidResponseEntity();
+            }
+        }
+        if (Objects.nonNull(dto.getEndDate()) && Objects.isNull(dto.getStartDate())) {
+            if (dto.getEndDate() > multipleChoiceTest.getStartDate()){
+                multipleChoiceTest.setEndDate(dto.getEndDate());
+                modifyUpdateMultipleChoiceTest(multipleChoiceTest);
+            } else {
+                return CustomBuilder.buildMultipleChoiceTestTestDateInvalidResponseEntity();
+            }
+        }
+        // Validated in validator
+        if (Objects.nonNull(dto.getEndDate()) && Objects.nonNull(dto.getStartDate())) {
+            multipleChoiceTest.setEndDate(dto.getEndDate());
+            multipleChoiceTest.setStartDate(dto.getStartDate());
+            modifyUpdateMultipleChoiceTest(multipleChoiceTest);
+        }
+        multipleChoiceTest = multipleChoiceTestRepository.save(multipleChoiceTest);
+        MultipleChoiceTestResponse response = CustomBuilder.buildMultipleChoiceTest(multipleChoiceTest);
+        mailService.sendTestUpdatedNotificationEmail(multipleChoiceTest);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
     public ResponseEntity<?> deleteMultipleChoiceTest(Long testId) {
         Optional<MultipleChoiceTest> multipleChoiceTestOp = multipleChoiceTestRepository.findById(testId);
         if(multipleChoiceTestOp.isEmpty()) {
             return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
         }
         MultipleChoiceTest multipleChoiceTest = multipleChoiceTestOp.get();
-        System.out.println("Classroom id: " + multipleChoiceTest.getClassRoom().getId());
         Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
         if(multipleChoiceTest.getStartDate() < unixTimeNow) {
             LinkedHashMap<String, String> response = new LinkedHashMap<>();
@@ -97,7 +140,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
                     addRandomQuestionToTestByQuestionGroupId
                             (multipleChoiceTest.getId(), dto.getRandomQuestions());
         }
-        MultipleChoiceTestWithQuestionsResponse response = CustomBuilder.builtMultipleChoiceTest(multipleChoiceTest, questionsOfTheTest);
+        MultipleChoiceTestWithQuestionsResponse response = CustomBuilder.buildMultipleChoiceTestWithQuestions(multipleChoiceTest, questionsOfTheTest);
 
         // Send notification email to student in this classroom
         mailService.sendTestCreatedNotificationEmail(dto.getClassroomId(), multipleChoiceTest);
@@ -124,7 +167,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
             UserProfile userProfile = webUtils.getCurrentLogedInUser();
             testQuestion.setCreatedBy(userProfile.getLoginName());
             testQuestionRepository.save(testQuestion);
-            questionResponses.add(CustomBuilder.builtQuestionResponse(question));
+            questionResponses.add(CustomBuilder.buildQuestionResponse(question));
         });
         return questionResponses;
     }
@@ -147,7 +190,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
             UserProfile userProfile = webUtils.getCurrentLogedInUser();
             testQuestion.setCreatedBy(userProfile.getLoginName());
             testQuestions.add(testQuestion);
-            questionResponses.add(CustomBuilder.builtQuestionResponse(question));
+            questionResponses.add(CustomBuilder.buildQuestionResponse(question));
         });
         // Only save when finding all the questions by list questionId
         testQuestionRepository.saveAll(testQuestions);

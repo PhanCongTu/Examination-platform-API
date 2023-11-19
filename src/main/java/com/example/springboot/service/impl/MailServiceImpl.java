@@ -72,6 +72,39 @@ public class MailServiceImpl implements MailService {
 
     @Override
     @Async
+    public void sendTestUpdatedNotificationEmail(MultipleChoiceTest multipleChoiceTest) {
+        List<String> registerUserEmails =
+                classroomRegistrationRepository.findUserEmailOfClassroom(multipleChoiceTest.getClassRoom().getId());
+        sendEmailTestUpdatedNotification(multipleChoiceTest, registerUserEmails);
+    }
+
+    @Async
+    protected void sendEmailTestUpdatedNotification(MultipleChoiceTest multipleChoiceTest, List<String> registerUserEmails) {
+        Timestamp stamp = new Timestamp(multipleChoiceTest.getStartDate());
+        Date date = new Date(stamp.getTime());
+        String startDate = String.format("%s:%s %s/%s", date.getHours(), date.getMinutes(), date.getDate(), date.getMonth()+1);
+        String classroomName = multipleChoiceTest.getClassRoom().getClassName();
+        String testingTime = multipleChoiceTest.getTestingTime().toString() + " minutes";
+        String testName = multipleChoiceTest.getTestName();
+        try {
+            Message message = getEmailMessage();
+            String emails = String.join(",", registerUserEmails);
+            // start send mail
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emails));
+            message.setFrom(new InternetAddress(email));
+            message.setSubject("[ONLINE EXAM PLATFORM] Your exam has been updated!");
+            message.setContent(
+                    thymeleafService.getTestUpdatedNotificationMailContent
+                            (classroomName, testName, startDate, testingTime), CONTENT_TYPE_TEXT_HTML);
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    @Async
     public void sendTestCreatedNotificationEmail(Long classroomId, MultipleChoiceTest multipleChoiceTest) {
     List<String> registerUserEmails =
             classroomRegistrationRepository.findUserEmailOfClassroom(classroomId);

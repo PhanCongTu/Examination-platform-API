@@ -67,7 +67,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .build();
         modifyUpdateQuestion(question);
         question = questionRepository.save(question);
-        QuestionResponse response = CustomBuilder.builtQuestionResponse(question);
+        QuestionResponse response = CustomBuilder.buildQuestionResponse(question);
         log.info("Create question: end");
         return ResponseEntity.ok(response);
     }
@@ -121,7 +121,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
         question.setCorrectAnswer(correctAnswer);
         question = questionRepository.save(question);
-        QuestionResponse response = CustomBuilder.builtQuestionResponse(question);
+        QuestionResponse response = CustomBuilder.buildQuestionResponse(question);
         log.info("Update question: end");
         return ResponseEntity.ok(response);
     }
@@ -152,7 +152,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
         Page<Question> questions = questionRepository
                 .getQuestionsOfQuestionGroupByQuestionGroupId(questionGroupId, searchText, isActiveQuestion, pageable);
-        Page<QuestionResponse> response = questions.map(CustomBuilder::builtQuestionResponse);
+        Page<QuestionResponse> response = questions.map(CustomBuilder::buildQuestionResponse);
         log.info("Get questions of question group: end, isActiveQuestion: "+isActiveQuestion);
         return ResponseEntity.ok(response);
     }

@@ -55,7 +55,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         classRoom.setIsPrivate(DTO.getIsPrivate());
         classRoom.setCreatedBy(userProfile.getLoginName());
         Classroom savedClassroom = classRoomRepository.save(classRoom);
-        ClassroomResponse response = CustomBuilder.builtClassroomResponse(savedClassroom);
+        ClassroomResponse response = CustomBuilder.buildClassroomResponse(savedClassroom);
         log.info("End create Classroom");
         return ResponseEntity.ok(response);
     }
@@ -95,7 +95,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         String searchText = "%" + search + "%";
         Page<Classroom> classRooms = classRoomRepository.findAllSearchedClassRoomsByStatus(searchText,isEnable, pageable);
         // Map topic to topic response DTO
-        Page<ClassroomResponse> response = classRooms.map(CustomBuilder::builtClassroomResponse);
+        Page<ClassroomResponse> response = classRooms.map(CustomBuilder::buildClassroomResponse);
         log.info("End get all enable Classroom (non-Admin)");
         return ResponseEntity.ok(response);
     }
@@ -133,7 +133,7 @@ public class ClassroomServiceImpl implements ClassroomService {
             modifyUpdateClassroom(classRoom);
         }
         classRoom = classRoomRepository.save(classRoom);
-        ClassroomResponse response = CustomBuilder.builtClassroomResponse(classRoom);
+        ClassroomResponse response = CustomBuilder.buildClassroomResponse(classRoom);
         log.info("End update Classroom");
         return ResponseEntity.ok(response);
     }
@@ -170,7 +170,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         Page<UserProfile> listStudentByClassroom =
                 studentRepositoryRead.findAllStudentByClassroomId(classroomId, pageable);
         Page<UserProfileResponse> response =
-                listStudentByClassroom.map(CustomBuilder::builtUserProfileResponse);
+                listStudentByClassroom.map(CustomBuilder::buildUserProfileResponse);
         log.info("End get all user of classroom by id");
         return ResponseEntity.ok(response);
     }

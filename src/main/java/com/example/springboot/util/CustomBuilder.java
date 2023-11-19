@@ -22,7 +22,17 @@ import java.util.List;
 
 public class CustomBuilder {
 
-    public static MultipleChoiceTestWithQuestionsResponse builtMultipleChoiceTest(MultipleChoiceTest multipleChoiceTest, List<QuestionResponse> questions) {
+    public static MultipleChoiceTestResponse buildMultipleChoiceTest(MultipleChoiceTest multipleChoiceTest) {
+        return MultipleChoiceTestResponse.builder()
+                .id(multipleChoiceTest.getId())
+                .testName(multipleChoiceTest.getTestName())
+                .startDate(multipleChoiceTest.getStartDate())
+                .endDate(multipleChoiceTest.getEndDate())
+                .testingTime(multipleChoiceTest.getTestingTime())
+                .build();
+    }
+
+    public static MultipleChoiceTestWithQuestionsResponse buildMultipleChoiceTestWithQuestions(MultipleChoiceTest multipleChoiceTest, List<QuestionResponse> questions) {
         return MultipleChoiceTestWithQuestionsResponse.builder()
                 .id(multipleChoiceTest.getId())
                 .testName(multipleChoiceTest.getTestName())
@@ -33,7 +43,7 @@ public class CustomBuilder {
                 .build();
     }
 
-    public static ClassroomResponse builtClassroomResponse(Classroom classRoom){
+    public static ClassroomResponse buildClassroomResponse(Classroom classRoom){
         return ClassroomResponse.builder()
                 .id(classRoom.getId())
                 .className(classRoom.getClassName())
@@ -43,7 +53,7 @@ public class CustomBuilder {
                 .build();
     }
 
-    public static UserProfileResponse builtUserProfileResponse(UserProfile userProfile){
+    public static UserProfileResponse buildUserProfileResponse(UserProfile userProfile){
         return UserProfileResponse.builder()
                 .userID(userProfile.getUserID())
                 .displayName(userProfile.getDisplayName())
@@ -56,7 +66,7 @@ public class CustomBuilder {
                 .build();
     }
 
-    public static QuestionGroupResponse builtQuestionGroupResponse(QuestionGroup questionGroup){
+    public static QuestionGroupResponse buildQuestionGroupResponse(QuestionGroup questionGroup){
         return QuestionGroupResponse.builder()
                 .id(questionGroup.getId())
                 .name(questionGroup.getName())
@@ -65,7 +75,7 @@ public class CustomBuilder {
                 .build();
     }
 
-    public static QuestionResponse builtQuestionResponse(Question question){
+    public static QuestionResponse buildQuestionResponse(Question question){
         return QuestionResponse.builder()
                 .id(question.getId())
                 .content(question.getContent())
@@ -111,6 +121,15 @@ public class CustomBuilder {
         response.put(Constants.ERROR_CODE_KEY, ErrorMessage.MULTIPLE_CHOICE_NOT_FOUND.getErrorCode());
         response.put(Constants.MESSAGE_KEY, ErrorMessage.MULTIPLE_CHOICE_NOT_FOUND.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    public static ResponseEntity<LinkedHashMap<String, String>> buildMultipleChoiceTestTestDateInvalidResponseEntity() {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.MULTIPLE_CHOICE_TEST_DATE_INVALID.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.MULTIPLE_CHOICE_TEST_DATE_INVALID.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }

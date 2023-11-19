@@ -4,6 +4,8 @@ import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateClassroomDTO;
 import com.example.springboot.dto.request.CreateMultipleChoiceTestDTO;
+import com.example.springboot.dto.request.UpdateClassroomDTO;
+import com.example.springboot.dto.request.UpdateMultipleChoiceTestDTO;
 import com.example.springboot.exception.NotEnoughQuestionException;
 import com.example.springboot.exception.QuestionGroupNotFoundException;
 import com.example.springboot.exception.QuestionNotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,5 +65,11 @@ public class MultipleChoiceTestController {
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> deleteMultipleChoiceTest(@PathVariable(name = "testId") Long testId){
         return multipleChoiceTestService.deleteMultipleChoiceTest(testId);
+    }
+    @PutMapping(value = "/update/info/{testId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateMultipleChoiceTest(@PathVariable(name = "testId") Long testId,
+                                             @RequestBody UpdateMultipleChoiceTestDTO DTO){
+        return multipleChoiceTestService.updateMultipleChoiceTest(testId, DTO);
     }
 }
