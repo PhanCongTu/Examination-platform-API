@@ -51,7 +51,8 @@ public enum ErrorMessage {
     MULTIPLE_CHOICE_NOT_FOUND(Constants.NOT_FOUND, "Can not find the multiple choice test"),
     NOT_ENOUGH_QUESTION(Constants.BAD_REQUEST, "Do not enough question in question group with name is %s"),
     QUESTION_NUMBER_REQUIRE(Constants.NOT_FOUND, "Number of question is require."),
-    MULTIPLE_CHOICE_TEST_QUESTION_SOURCE_INVALID(Constants.BAD_REQUEST, "The questions of the test is missing or duplicate source.")
+    MULTIPLE_CHOICE_TEST_QUESTION_SOURCE_INVALID(Constants.BAD_REQUEST, "The questions of the test is missing or duplicate source."),
+    MULTIPLE_CHOICE_TEST_DELETE_STARTED_TEST(Constants.BAD_REQUEST, "Cannot delete this test. It has been started.")
     ;
 
     private String errorCode;

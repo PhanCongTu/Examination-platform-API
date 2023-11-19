@@ -21,6 +21,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         globally_quoted_identifiers: true
+        enable_lazy_load_no_trans: true
     show-sql: true
   mvc:
     pathmatch:
@@ -38,3 +39,4 @@ config:
 send-by-mail:
   verification-code-time: 30 #minutes
   reset-password-code-time: 15 #minutes
+

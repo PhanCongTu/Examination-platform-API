@@ -19,6 +19,7 @@ public class ThymeleafService {
     private static final String VERIFY_MAIL_TEMPLATE_NAME = "verify-mail-template";
     private static final String RESET_PASSWORD_TEMPLATE_NAME = "reset-password-template";
     private static final String TEST_CREATED_NOTIFICATION = "test-created-notification";
+    private static final String TEST_DELETED_NOTIFICATION = "test-deleted-notification";
 
 
     private static TemplateEngine templateEngine;
@@ -68,5 +69,14 @@ public class ThymeleafService {
         context.setVariable("startDate", startDate);
         context.setVariable("testingTime", testingTime);
         return templateEngine.process(TEST_CREATED_NOTIFICATION, context);
+    }
+
+    public Object getTestDeletedNotificationMailContent(String classroomName, String testName, String startDate, String testingTime) {
+        final Context context = new Context();
+        context.setVariable("classroomName", classroomName);
+        context.setVariable("testName", testName);
+        context.setVariable("startDate", startDate);
+        context.setVariable("testingTime", testingTime);
+        return templateEngine.process(TEST_DELETED_NOTIFICATION, context);
     }
 }

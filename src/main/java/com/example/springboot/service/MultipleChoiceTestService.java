@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface MultipleChoiceTestService {
     ResponseEntity<?> createMultipleChoiceTest(CreateMultipleChoiceTestDTO dto) throws QuestionNotFoundException;
+
+    ResponseEntity<?> deleteMultipleChoiceTest(Long testId);
 }

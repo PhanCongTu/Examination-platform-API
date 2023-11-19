@@ -1,6 +1,5 @@
 package com.example.springboot.service.impl;
 
-import com.example.springboot.entity.ClassroomRegistration;
 import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.EmailAddressVerifiedByAnotherUser;
@@ -77,6 +76,38 @@ public class MailServiceImpl implements MailService {
     List<String> registerUserEmails =
             classroomRegistrationRepository.findUserEmailOfClassroom(classroomId);
         sendEmailTestCreatedNotification(registerUserEmails, multipleChoiceTest);
+    }
+
+    @Override
+    @Async
+    public void sendTestDeletedNotificationEmail(MultipleChoiceTest multipleChoiceTest) {
+        List<String> registerUserEmails =
+                classroomRegistrationRepository.findUserEmailOfClassroom(multipleChoiceTest.getClassRoom().getId());
+        sendEmailTestDeletedNotification(registerUserEmails, multipleChoiceTest);
+    }
+    @Async
+    protected void sendEmailTestDeletedNotification(List<String> registerUserEmails, MultipleChoiceTest multipleChoiceTest) {
+        Timestamp stamp = new Timestamp(multipleChoiceTest.getStartDate());
+        Date date = new Date(stamp.getTime());
+        String startDate = String.format("%s:%s %s/%s", date.getHours(), date.getMinutes(), date.getDate(), date.getMonth()+1);
+        String classroomName = multipleChoiceTest.getClassRoom().getClassName();
+        String testingTime = multipleChoiceTest.getTestingTime().toString() + " minutes";
+        String testName = multipleChoiceTest.getTestName();
+        try {
+            Message message = getEmailMessage();
+            String emails = String.join(",", registerUserEmails);
+            // start send mail
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emails));
+            message.setFrom(new InternetAddress(email));
+            message.setSubject("[ONLINE EXAM PLATFORM] Your exam has been cancelled!");
+            message.setContent(
+                    thymeleafService.getTestDeletedNotificationMailContent
+                            (classroomName, testName, startDate, testingTime), CONTENT_TYPE_TEXT_HTML);
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Async

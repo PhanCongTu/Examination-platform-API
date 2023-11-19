@@ -1,5 +1,7 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.constant.Constants;
+import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateMultipleChoiceTestDTO;
 import com.example.springboot.dto.response.MultipleChoiceTestResponse;
 import com.example.springboot.dto.response.MultipleChoiceTestWithQuestionsResponse;
@@ -21,14 +23,19 @@ import com.example.springboot.util.CustomBuilder;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.event.MailEvent;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,6 +52,29 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
     private final MailService mailService;
+
+    @Override
+    public ResponseEntity<?> deleteMultipleChoiceTest(Long testId) {
+        Optional<MultipleChoiceTest> multipleChoiceTestOp = multipleChoiceTestRepository.findById(testId);
+        if(multipleChoiceTestOp.isEmpty()) {
+            return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
+        }
+        MultipleChoiceTest multipleChoiceTest = multipleChoiceTestOp.get();
+        System.out.println("Classroom id: " + multipleChoiceTest.getClassRoom().getId());
+        Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
+        if(multipleChoiceTest.getStartDate() < unixTimeNow) {
+            LinkedHashMap<String, String> response = new LinkedHashMap<>();
+            response.put(Constants.ERROR_CODE_KEY, ErrorMessage.MULTIPLE_CHOICE_TEST_DELETE_STARTED_TEST.getErrorCode());
+            response.put(Constants.MESSAGE_KEY, ErrorMessage.MULTIPLE_CHOICE_TEST_DELETE_STARTED_TEST.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
+        }
+        mailService.sendTestDeletedNotificationEmail(multipleChoiceTest);
+        multipleChoiceTestRepository.deleteById(testId);
+        return ResponseEntity.noContent().build();
+    }
+
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseEntity<?> createMultipleChoiceTest(CreateMultipleChoiceTestDTO dto) throws QuestionNotFoundException {
