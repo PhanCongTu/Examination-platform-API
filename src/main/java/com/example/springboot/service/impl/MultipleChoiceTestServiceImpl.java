@@ -6,6 +6,7 @@ import com.example.springboot.dto.request.CreateMultipleChoiceTestDTO;
 import com.example.springboot.dto.request.UpdateMultipleChoiceTestDTO;
 import com.example.springboot.dto.response.MultipleChoiceTestResponse;
 import com.example.springboot.dto.response.MultipleChoiceTestWithQuestionsResponse;
+import com.example.springboot.dto.response.MyMultipleChoiceTestResponse;
 import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.entity.Classroom;
 import com.example.springboot.entity.MultipleChoiceTest;
@@ -57,6 +58,23 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
     private final MailService mailService;
+
+    @Override
+    public ResponseEntity<?> getMyMultipleChoiceTests(boolean isStarted, String search, int page, String column, int size, String sortType) {
+        Long  myId = webUtils.getCurrentLogedInUser().getUserID();
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search + "%";
+        Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
+        Page<MyMultipleChoiceTestResponse> multipleChoiceTests;
+        if (isStarted) {
+            multipleChoiceTests = multipleChoiceTestRepository.
+                    findMyStatedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
+        } else {
+            multipleChoiceTests = multipleChoiceTestRepository.
+                    findMyNotStatedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
+        }
+        return ResponseEntity.ok(multipleChoiceTests);
+    }
 
     @Override
     public ResponseEntity<?> getMultipleChoiceTestsOfClassroom(Long classroomId,boolean isStarted, String search, int page, String column, int size, String sortType) {

@@ -89,6 +89,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         log.info("End createUser()");
 
         return ResponseEntity.ok(new JwtResponse(
+                newUserProfile.getUserID(),
                 tokenDetails.getDisplayName(),
                 signupVM.getLoginName(),
                 signupVM.getEmailAddress(),
@@ -125,6 +126,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         TokenDetails tokenDetails = authService.authenticate(loginVM);
         log.info("End login");
         return ResponseEntity.ok(new JwtResponse(
+                userProfile.get().getUserID(),
                 tokenDetails.getDisplayName(),
                 loginVM.getLoginName(),
                 tokenDetails.getEmailAddress(),

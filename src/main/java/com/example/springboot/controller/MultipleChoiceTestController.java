@@ -44,6 +44,19 @@ public class MultipleChoiceTestController {
     private static final String DEFAULT_SORT_INCREASE = "asc";
 
     private final MultipleChoiceTestService multipleChoiceTestService;
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMyMultipleChoiceTests(
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
+            @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType,
+            @RequestParam(defaultValue = "false") boolean isStarted
+    ){
+        return multipleChoiceTestService.
+                getMyMultipleChoiceTests(isStarted, search, page, column, size, sortType);
+    }
 
     @GetMapping(value = "/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMultipleChoiceTestsOfClassroom(
@@ -83,7 +96,7 @@ public class MultipleChoiceTestController {
         return multipleChoiceTestService.deleteMultipleChoiceTest(testId);
     }
     @PutMapping(value = "/update/info/{testId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> updateMultipleChoiceTest(@PathVariable(name = "testId") Long testId,
                                              @RequestBody UpdateMultipleChoiceTestDTO DTO){
         return multipleChoiceTestService.updateMultipleChoiceTest(testId, DTO);

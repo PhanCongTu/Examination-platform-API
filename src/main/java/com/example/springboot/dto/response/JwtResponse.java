@@ -13,6 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtResponse {
+
+    private Long userId;
+
     private String displayName;
 
     private String loginName;
