@@ -7,11 +7,13 @@ import com.example.springboot.dto.response.MultipleChoiceTestResponse;
 import com.example.springboot.dto.response.MultipleChoiceTestWithQuestionsResponse;
 import com.example.springboot.dto.response.QuestionGroupResponse;
 import com.example.springboot.dto.response.QuestionResponse;
+import com.example.springboot.dto.response.ScoreResponse;
 import com.example.springboot.dto.response.UserProfileResponse;
 import com.example.springboot.entity.Classroom;
 import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
+import com.example.springboot.entity.Score;
 import com.example.springboot.entity.UserProfile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +23,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CustomBuilder {
+
+    public static ScoreResponse buildScoreResponse(Score score) {
+        return ScoreResponse.builder()
+                .id(score.getId())
+                .totalScore(score.getTotalCore())
+                .isLate(score.isLate())
+                .SubmittedDate(score.getCreatedDate().toEpochMilli())
+                .multipleChoiceTest(CustomBuilder.buildMultipleChoiceTestResponse(score.getMultipleChoiceTest()))
+                .build();
+    }
 
     public static MultipleChoiceTestResponse buildMultipleChoiceTestResponse(MultipleChoiceTest multipleChoiceTest) {
         return MultipleChoiceTestResponse.builder()
@@ -133,4 +145,5 @@ public class CustomBuilder {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
+
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface TestQuestionRepository extends JpaRepository<TestQuestion,Long> {
     @Query(value = "SELECT question_id FROM test_question where is_enable = true and multiple_choice_test_id = :testId", nativeQuery = true)
     List<Long> findQuestionIdsOfTest(Long testId);
+
+    Long countAllByMultipleChoiceTestId(Long testId);
 }
