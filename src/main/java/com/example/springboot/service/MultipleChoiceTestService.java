@@ -15,4 +15,6 @@ public interface MultipleChoiceTestService {
     ResponseEntity<?> getMultipleChoiceTestsOfClassroom(Long classroomId,boolean isStarted, String search, int page, String column, int size, String sortType);
 
     ResponseEntity<?> getMyMultipleChoiceTests(boolean isStarted, String search, int page, String column, int size, String sortType);
+
+    ResponseEntity<?> getMultipleChoiceTest(Long testId);
 }

@@ -45,6 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -58,6 +59,24 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
     private final MailService mailService;
+
+    @Override
+    public ResponseEntity<?> getMultipleChoiceTest(Long testId) {
+        Optional<MultipleChoiceTest> multipleChoiceTestOp = multipleChoiceTestRepository.findById(testId);
+        if(multipleChoiceTestOp.isEmpty()) {
+            return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
+        }
+        MultipleChoiceTest multipleChoiceTest = multipleChoiceTestOp.get();
+        List<Long> questionIds = testQuestionRepository.findQuestionIdsOfTest(multipleChoiceTest.getId());
+        List<Question> questions = questionRepository.findAllByIds(questionIds);
+        List<QuestionResponse> questionsOfTheTest =
+                questions.stream()
+                        .map(CustomBuilder::buildQuestionResponse)
+                        .collect(Collectors.toList());
+        MultipleChoiceTestWithQuestionsResponse response =
+                CustomBuilder.buildMultipleChoiceTestWithQuestionsResponse(multipleChoiceTest, questionsOfTheTest);
+        return ResponseEntity.ok(response);
+    }
 
     @Override
     public ResponseEntity<?> getMyMultipleChoiceTests(boolean isStarted, String search, int page, String column, int size, String sortType) {

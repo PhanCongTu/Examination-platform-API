@@ -16,6 +16,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(value = "select * FROM question where id = :id and is_enable = :isEnable", nativeQuery = true)
     Optional<Question> findByIdAndStatus(Long id, Boolean isEnable);
 
+    @Query(value = "SELECT * FROM question where id IN :ids", nativeQuery = true)
+    List<Question> findAllByIds(List<Long> ids);
+
     @Query(value = "select * FROM question where " +
             "question_group_id = :questionGroupId " +
             "and is_enable = :isActiveQuestion " +

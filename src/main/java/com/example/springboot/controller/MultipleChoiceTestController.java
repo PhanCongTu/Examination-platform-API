@@ -44,6 +44,15 @@ public class MultipleChoiceTestController {
     private static final String DEFAULT_SORT_INCREASE = "asc";
 
     private final MultipleChoiceTestService multipleChoiceTestService;
+
+    @GetMapping(value = "/{testId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN', 'STUDENT')")
+    public ResponseEntity<?> getMultipleChoiceTest(
+            @PathVariable(name = "testId") Long testId){
+        return multipleChoiceTestService.
+                getMultipleChoiceTest(testId);
+    }
+
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMyMultipleChoiceTests(
