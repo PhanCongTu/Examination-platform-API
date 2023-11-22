@@ -15,8 +15,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 
 @Setter
 @Getter
@@ -28,6 +30,7 @@ import javax.persistence.Table;
 public class Score extends AbstractAuditingEntity {
 
     private static final String TOTAL_SCORE = "total_core";
+    private static final String TOTAL_CORRECT = "total_correct";
     private static final String MULTIPLE_CHOICE_TEST_ID = "multiple_choice_test_id";
 
     @Id
@@ -38,6 +41,9 @@ public class Score extends AbstractAuditingEntity {
     @Column(name = TOTAL_SCORE)
     private double totalCore;
 
+    @Column(name = TOTAL_CORRECT)
+    private Long totalCorrect;
+
     private boolean isLate;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -46,4 +52,10 @@ public class Score extends AbstractAuditingEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private UserProfile userProfile;
+
+    @OneToMany(
+            mappedBy = "score",
+            cascade = CascadeType.ALL
+    )
+    private List<SubmittedQuestion> submittedQuestions;
 }

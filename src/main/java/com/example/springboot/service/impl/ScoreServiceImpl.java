@@ -7,10 +7,12 @@ import com.example.springboot.dto.response.ScoreResponse;
 import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.Score;
+import com.example.springboot.entity.SubmittedQuestion;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.repository.MultipleChoiceTestRepository;
 import com.example.springboot.repository.QuestionRepository;
 import com.example.springboot.repository.ScoreRepository;
+import com.example.springboot.repository.SubmittedQuestionRepository;
 import com.example.springboot.repository.TestQuestionRepository;
 import com.example.springboot.service.ScoreService;
 import com.example.springboot.util.CustomBuilder;
@@ -34,6 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 @AllArgsConstructor
 public class ScoreServiceImpl implements ScoreService {
+    private final SubmittedQuestionRepository submittedQuestionRepository;
 
     private final WebUtils webUtils;
     private final ScoreRepository scoreRepository;
@@ -42,13 +45,15 @@ public class ScoreServiceImpl implements ScoreService {
     private final TestQuestionRepository testQuestionRepository;
     @Override
     public ResponseEntity<?> submitTest(SubmitMCTestDTO dto) {
+        // Current logged-in student
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
+        // Get the test which student submitted
         Optional<MultipleChoiceTest> multipleChoiceTestOp =
                 multipleChoiceTestRepository.findById(dto.getMultipleChoiceTestId());
         if(multipleChoiceTestOp.isEmpty()) {
             return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
         }
-
+        // Response error if this test has been submitted
         Optional<Score> scoreOp =
                 scoreRepository
                         .findByMultipleChoiceTestIdAndUserProfileUserID(dto.getMultipleChoiceTestId(), userProfile.getUserID());
@@ -73,29 +78,47 @@ public class ScoreServiceImpl implements ScoreService {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(response);
         }
+        // Submit late
         if(multipleChoiceTestOp.get().getEndDate() < unixTimeNow) {
             isLate = true;
         }
 
-        AtomicReference<Double> totalScore = new AtomicReference<>(0.00);
+        Double totalScore = 0.00;
+        Long totalCorrect = 0L;
         Long totalQuestion = testQuestionRepository.countAllByMultipleChoiceTestId(dto.getMultipleChoiceTestId());
         Double eachQuestionScore =  (10/(double)totalQuestion);
-        dto.getSubmittedAnswers().forEach((item -> {
-            Optional<Question> question = questionRepository.findById(item.getQuestionId());
-            if (question.isPresent()) {
-                if(question.get().getCorrectAnswer().equals(item.getAnswer())) {
-                    totalScore.updateAndGet(v -> v + eachQuestionScore);
-                }
-            }
-        }));
 
         Score score = Score.builder()
                 .isLate(isLate)
-                .totalCore(totalScore.getOpaque())
-                .totalCore((int)(Math.round(totalScore.getOpaque() * 100))/100.0)
                 .multipleChoiceTest(multipleChoiceTestOp.get())
                 .userProfile(userProfile)
                 .build();
+        score = scoreRepository.save(score);
+
+        for (SubmitMCTestDTO.SubmittedAnswer item : dto.getSubmittedAnswers()) {
+            Optional<Question> questionOp = questionRepository.findById(item.getQuestionId());
+            if (questionOp.isPresent()) {
+                Question question = questionOp.get();
+                SubmittedQuestion submittedQuestion = SubmittedQuestion.builder()
+                        .questionId(question.getId())
+                        .content(question.getContent())
+                        .firstAnswer(question.getFirstAnswer())
+                        .secondAnswer(question.getSecondAnswer())
+                        .thirdAnswer(question.getThirdAnswer())
+                        .fourthAnswer(question.getFourthAnswer())
+                        .correctAnswer(question.getCorrectAnswer())
+                        .submittedAnswer(item.getAnswer())
+                        .score(score)
+                        .build();
+                submittedQuestionRepository.save(submittedQuestion);
+                if(question.getCorrectAnswer().equals(item.getAnswer())) {
+                    totalScore += eachQuestionScore;
+                    totalCorrect += 1;
+                }
+            }
+        }
+        score.setTotalCore((int)(Math.round(totalScore * 100))/100.0);
+        score.setTotalCorrect(totalCorrect);
         score = scoreRepository.save(score);
         ScoreResponse response = CustomBuilder.buildScoreResponse(score);
         return ResponseEntity.ok(response);
