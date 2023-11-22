@@ -4,6 +4,7 @@ import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.SubmitMCTestDTO;
 import com.example.springboot.dto.response.ScoreResponse;
+import com.example.springboot.dto.response.StudentScoreResponse;
 import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.Score;
@@ -16,9 +17,12 @@ import com.example.springboot.repository.SubmittedQuestionRepository;
 import com.example.springboot.repository.TestQuestionRepository;
 import com.example.springboot.service.ScoreService;
 import com.example.springboot.util.CustomBuilder;
+import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +47,20 @@ public class ScoreServiceImpl implements ScoreService {
     private final MultipleChoiceTestRepository multipleChoiceTestRepository;
     private final QuestionRepository questionRepository;
     private final TestQuestionRepository testQuestionRepository;
+
+
+    @Override
+    public ResponseEntity<?> getAllStudentScoreOfTest(Long testId, String search, int page, String column, int size, String sortType) {
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        Optional<MultipleChoiceTest> MCTestOp = multipleChoiceTestRepository.findById(testId);
+        if (MCTestOp.isEmpty()) {
+            return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
+        }
+        String searchText = "%" + search + "%";
+        Page<StudentScoreResponse> scores =  scoreRepository.findAllScoreOfMultipleChoiceTest(testId, searchText, pageable);
+        return ResponseEntity.ok(scores);
+    }
+
     @Override
     public ResponseEntity<?> submitTest(SubmitMCTestDTO dto) {
         // Current logged-in student

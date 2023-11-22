@@ -5,4 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface ScoreService {
     ResponseEntity<?> submitTest(SubmitMCTestDTO dto);
+
+    ResponseEntity<?> getAllStudentScoreOfTest(Long testId, String search, int page, String column, int size, String sortType);
+
 }
