@@ -5,6 +5,7 @@ import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.SubmitMCTestDTO;
 import com.example.springboot.dto.response.ScoreResponse;
 import com.example.springboot.dto.response.StudentScoreResponse;
+import com.example.springboot.dto.response.SubmittedQuestionResponse;
 import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.Score;
@@ -15,6 +16,7 @@ import com.example.springboot.repository.QuestionRepository;
 import com.example.springboot.repository.ScoreRepository;
 import com.example.springboot.repository.SubmittedQuestionRepository;
 import com.example.springboot.repository.TestQuestionRepository;
+import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.service.ScoreService;
 import com.example.springboot.util.CustomBuilder;
 import com.example.springboot.util.PageUtils;
@@ -32,9 +34,12 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -47,7 +52,27 @@ public class ScoreServiceImpl implements ScoreService {
     private final MultipleChoiceTestRepository multipleChoiceTestRepository;
     private final QuestionRepository questionRepository;
     private final TestQuestionRepository testQuestionRepository;
+    private final UserProfileRepository userProfileRepository;
 
+    @Override
+    public ResponseEntity<?> getScoreOfStudent(Long studentId, Long multipleChoiceTestId) {
+        Optional<UserProfile> studentOp = userProfileRepository.findById(studentId);
+        if (studentOp.isEmpty()) {
+            return CustomBuilder.buildStudentNotFoundResponseEntity();
+        }
+        Optional<Score> score = scoreRepository.findByMultipleChoiceTestIdAndUserProfileUserID(multipleChoiceTestId, studentId);
+        if (score.isEmpty()){
+            return CustomBuilder.buildScoreNotFoundResponseEntity();
+        }
+
+        List<SubmittedQuestion> submittedQuestions = submittedQuestionRepository.findAllByScoreId(score.get().getId());
+        List<SubmittedQuestionResponse> submittedQuestionResponses
+                = submittedQuestions.stream()
+                .map(CustomBuilder::buildSubmittedQuestionResponse)
+                .collect(Collectors.toList());
+        ScoreResponse response = CustomBuilder.buildScoreResponse(score.get(), submittedQuestionResponses);
+        return ResponseEntity.ok(response);
+    }
 
     @Override
     public ResponseEntity<?> getAllStudentScoreOfTest(Long testId, String search, int page, String column, int size, String sortType) {
@@ -112,7 +137,7 @@ public class ScoreServiceImpl implements ScoreService {
                 .userProfile(userProfile)
                 .build();
         score = scoreRepository.save(score);
-
+        List<SubmittedQuestionResponse> submittedQuestionResponses = new ArrayList<>();
         for (SubmitMCTestDTO.SubmittedAnswer item : dto.getSubmittedAnswers()) {
             Optional<Question> questionOp = questionRepository.findById(item.getQuestionId());
             if (questionOp.isPresent()) {
@@ -128,7 +153,8 @@ public class ScoreServiceImpl implements ScoreService {
                         .submittedAnswer(item.getAnswer())
                         .score(score)
                         .build();
-                submittedQuestionRepository.save(submittedQuestion);
+                submittedQuestion = submittedQuestionRepository.save(submittedQuestion);
+                submittedQuestionResponses.add(CustomBuilder.buildSubmittedQuestionResponse(submittedQuestion));
                 if(question.getCorrectAnswer().equals(item.getAnswer())) {
                     totalScore += eachQuestionScore;
                     totalCorrect += 1;
@@ -138,7 +164,7 @@ public class ScoreServiceImpl implements ScoreService {
         score.setTotalCore((int)(Math.round(totalScore * 100))/100.0);
         score.setTotalCorrect(totalCorrect);
         score = scoreRepository.save(score);
-        ScoreResponse response = CustomBuilder.buildScoreResponse(score);
+        ScoreResponse response = CustomBuilder.buildScoreResponse(score, submittedQuestionResponses);
         return ResponseEntity.ok(response);
     }
 

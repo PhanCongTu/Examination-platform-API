@@ -58,6 +58,7 @@ public enum ErrorMessage {
     MULTIPLE_CHOICE_TEST_SUBMIT_NOT_STARTED_TEST(Constants.BAD_REQUEST, "Cannot submit this test. It is not started."),
 
     SCORE_TEST_SUBMITTED(Constants.BAD_REQUEST, "This test has been submitted."),
+    SCORE_NOT_FOUND(Constants.BAD_REQUEST, "Can not find the score."),
     ;
 
     private String errorCode;

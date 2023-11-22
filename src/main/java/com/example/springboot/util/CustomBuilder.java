@@ -8,12 +8,14 @@ import com.example.springboot.dto.response.MultipleChoiceTestWithQuestionsRespon
 import com.example.springboot.dto.response.QuestionGroupResponse;
 import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.dto.response.ScoreResponse;
+import com.example.springboot.dto.response.SubmittedQuestionResponse;
 import com.example.springboot.dto.response.UserProfileResponse;
 import com.example.springboot.entity.Classroom;
 import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.Score;
+import com.example.springboot.entity.SubmittedQuestion;
 import com.example.springboot.entity.UserProfile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,13 +26,28 @@ import java.util.List;
 
 public class CustomBuilder {
 
-    public static ScoreResponse buildScoreResponse(Score score) {
+    public static ScoreResponse buildScoreResponse(Score score, List<SubmittedQuestionResponse> submittedQuestionResponses) {
         return ScoreResponse.builder()
                 .id(score.getId())
                 .totalScore(score.getTotalCore())
                 .isLate(score.isLate())
                 .SubmittedDate(score.getCreatedDate().toEpochMilli())
                 .multipleChoiceTest(CustomBuilder.buildMultipleChoiceTestResponse(score.getMultipleChoiceTest()))
+                .submittedQuestions(submittedQuestionResponses)
+                .build();
+    }
+
+    public static SubmittedQuestionResponse buildSubmittedQuestionResponse(SubmittedQuestion value) {
+        return SubmittedQuestionResponse.builder()
+                .id(value.getId())
+                .questionId(value.getQuestionId())
+                .content(value.getContent())
+                .firstAnswer(value.getFirstAnswer())
+                .secondAnswer(value.getSecondAnswer())
+                .thirdAnswer(value.getThirdAnswer())
+                .fourthAnswer(value.getFourthAnswer())
+                .correctAnswer(value.getCorrectAnswer())
+                .submittedAnswer(value.getSubmittedAnswer())
                 .build();
     }
 
@@ -146,4 +163,21 @@ public class CustomBuilder {
                 .body(response);
     }
 
+    public static ResponseEntity<?> buildStudentNotFoundResponseEntity() {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.STUDENT_NOT_FOUND.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.STUDENT_NOT_FOUND.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    public static ResponseEntity<?> buildScoreNotFoundResponseEntity() {
+        LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        response.put(Constants.ERROR_CODE_KEY, ErrorMessage.SCORE_NOT_FOUND.getErrorCode());
+        response.put(Constants.MESSAGE_KEY, ErrorMessage.SCORE_NOT_FOUND.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
 }

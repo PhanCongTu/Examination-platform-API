@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.request.CreateQuestionDTO;
+import com.example.springboot.dto.request.GetScoreOfStudentDTO;
 import com.example.springboot.dto.request.SubmitMCTestDTO;
 import com.example.springboot.service.ScoreService;
 import lombok.AllArgsConstructor;
@@ -49,5 +50,9 @@ public class ScoreController {
         return scoreService.getAllStudentScoreOfTest(testId, search, page, column, size, sortType);
     }
 
-
+    @GetMapping(value = "/student", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<?> getScoreOfStudent(@Valid @RequestBody GetScoreOfStudentDTO dto){
+        return scoreService.getScoreOfStudent(dto.getStudentId(), dto.getMultipleChoiceTestId());
+    }
 }
