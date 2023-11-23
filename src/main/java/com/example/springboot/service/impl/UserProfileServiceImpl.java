@@ -362,4 +362,16 @@ public class UserProfileServiceImpl implements UserProfileService {
         log.info("Start get all active student searched by display name and email");
         return ResponseEntity.ok(response);
     }
+
+    @Override
+    public ResponseEntity<?> getAllVerifiedStudents(String search, int page, String column, int size, String sortType) {
+        log.info("Get all verified student: start");
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search + "%";
+        Page<UserProfile> listStudents = studentRepositoryRead.findAllVerifiedStudents(searchText, pageable);
+        Page<UserProfileResponse> response = listStudents
+                .map(CustomBuilder::buildUserProfileResponse);
+        log.info("Get all verified student: end");
+        return ResponseEntity.ok(response);
+    }
 }

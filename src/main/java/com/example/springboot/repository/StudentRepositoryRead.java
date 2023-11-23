@@ -36,4 +36,10 @@ public interface StudentRepositoryRead extends JpaRepository<UserProfile, Long> 
             "\t\t)",
             nativeQuery = true)
     Page<UserProfile> findAllSeachedStudentsByStatus(String searchText, Boolean isActive, Pageable pageable);
+
+    @Query(value = "SELECT u.* FROM user_profile u left join user_profile_roles ur on u.user_id = ur.user_profile_user_id\n" +
+            "where u.is_email_address_verified = true and u.is_enable = true and ur.roles like \"ROLE_STUDENT\" \n" +
+            "and (u.display_name like :searchText or u.email_address like :searchText)",
+            nativeQuery = true)
+    Page<UserProfile> findAllVerifiedStudents(String searchText, Pageable pageable);
 }

@@ -78,4 +78,16 @@ public class StudentController {
     ){
         return userProfileService.getAllStudentsByStatus(search, page, column, size, sortType, false);
     }
+
+    @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<?> getAllVerifiedStudents(
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_COLUMN_STUDENT) String column,
+            @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType
+    ){
+        return userProfileService.getAllVerifiedStudents(search, page, column, size, sortType);
+    }
 }
