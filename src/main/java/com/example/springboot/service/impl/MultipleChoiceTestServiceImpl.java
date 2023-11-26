@@ -38,7 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.event.MailEvent;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -75,6 +78,16 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
                         .collect(Collectors.toList());
         MultipleChoiceTestWithQuestionsResponse response =
                 CustomBuilder.buildMultipleChoiceTestWithQuestionsResponse(multipleChoiceTest, questionsOfTheTest);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<?> getMyMultipleChoiceTestsOf2WeeksAround() {
+        Long  myId = webUtils.getCurrentLogedInUser().getUserID();
+        Long unixTime2WeeksAgo = Timestamp.from(ZonedDateTime.now().toInstant().minus(Period.ofWeeks(2))).getTime();
+        Long unixTime2WeeksLater = Timestamp.from(ZonedDateTime.now().toInstant().plus(Period.ofWeeks(2))).getTime();
+        List<MyMultipleChoiceTestResponse> response =
+                multipleChoiceTestRepository.find2WeeksAroundMCTest(myId, unixTime2WeeksAgo, unixTime2WeeksLater);
         return ResponseEntity.ok(response);
     }
 

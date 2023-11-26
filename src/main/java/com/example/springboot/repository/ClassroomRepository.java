@@ -28,4 +28,11 @@ public interface ClassroomRepository extends JpaRepository<Classroom,Long> {
 
     @Query(value = "select * FROM class_room where id = :classroomId and is_enable = :isEnable", nativeQuery = true)
     Optional<Classroom> findClassRoomByIdAndStatus(Long classroomId, Boolean isEnable);
+
+    @Query("SELECT cl FROM Classroom cl left join ClassroomRegistration cr on cl.id = cr.classRoom.id \n" +
+            "where cr.userProfile.userID = :userID \n" +
+            "and (cl.classCode like :searchText or cl.className like :searchText)")
+    Page<Classroom> findAllRegistedClassroomOfUser(Long userID,String searchText, Pageable pageable);
+    @Query("select cl from Classroom cl where cl.id = :classroomId and cl.isEnable=true")
+    Optional<Classroom> findActiveClassroomById(Long classroomId);
 }

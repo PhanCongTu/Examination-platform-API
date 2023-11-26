@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "class_room")
+@ToString
 public class Classroom extends AbstractAuditingEntity {
 
     private static final long serialVersionUID = 1L;

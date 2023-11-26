@@ -18,4 +18,8 @@ public interface ClassroomService {
     ResponseEntity<?> addStudentToClassroom(AddToClassroomDTO dto);
 
     ResponseEntity<?> getAllStudentOfClassroom(Long classroomId, int page,String column,int size,String sortType);
+
+    ResponseEntity<?> getMyClassrooms(String search, int page, String column, int size, String sortType);
+
+    ResponseEntity<?> getClassRoomById(Long classroomId);
 }

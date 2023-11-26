@@ -174,4 +174,28 @@ public class ClassroomServiceImpl implements ClassroomService {
         log.info("End get all user of classroom by id");
         return ResponseEntity.ok(response);
     }
+
+    @Override
+    public ResponseEntity<?> getMyClassrooms(String search, int page, String column, int size, String sortType) {
+        UserProfile userProfile = webUtils.getCurrentLogedInUser();
+        log.info("Get all my classroom. Start. User is: "+userProfile.getUserID());
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search + "%";
+        Page<Classroom> classRooms = classRoomRepository.findAllRegistedClassroomOfUser(userProfile.getUserID(),searchText, pageable);
+        Page<ClassroomResponse> response = classRooms.map(CustomBuilder::buildClassroomResponse);
+        log.info("Get all my classroom. End. User is: "+userProfile.getUserID());
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<?> getClassRoomById(Long classroomId) {
+        log.info("Get classroom by id. Start");
+        Optional<Classroom> classroom = classRoomRepository.findActiveClassroomById(classroomId);
+        if(classroom.isEmpty()) {
+            return CustomBuilder.buildClassroomNotFoundResponseEntity();
+        }
+        ClassroomResponse response = CustomBuilder.buildClassroomResponse(classroom.get());
+        log.info("Get classroom by id. End");
+        return ResponseEntity.ok(response);
+    }
 }

@@ -36,6 +36,19 @@ public class ClassroomController {
 
     private ClassroomService classroomService;
 
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMyMultipleChoiceTests(
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
+            @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType
+    ){
+        return classroomService.
+                getMyClassrooms(search, page, column, size, sortType);
+    }
+
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createClassroom(@Valid @RequestBody CreateClassroomDTO DTO){
@@ -66,6 +79,12 @@ public class ClassroomController {
             @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType
     ){
         return classroomService.getAllClassroomsByStatus(search, page, column, size, sortType, true);
+    }
+    @GetMapping(value = "/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMultipleChoiceTest(
+            @PathVariable(name = "classroomId") Long classroomId){
+        return classroomService.
+                getClassRoomById(classroomId);
     }
     @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
