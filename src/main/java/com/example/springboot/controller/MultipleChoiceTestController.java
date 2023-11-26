@@ -61,10 +61,10 @@ public class MultipleChoiceTestController {
             @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
             @RequestParam(defaultValue = DEFAULT_SIZE) int size,
             @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType,
-            @RequestParam(defaultValue = "false") boolean isStarted
+            @RequestParam(defaultValue = "false") boolean isEnded
     ){
         return multipleChoiceTestService.
-                getMyMultipleChoiceTests(isStarted, search, page, column, size, sortType);
+                getMyMultipleChoiceTests(isEnded, search, page, column, size, sortType);
     }
 
     @PreAuthorize("hasRole('STUDENT')")
@@ -82,10 +82,10 @@ public class MultipleChoiceTestController {
             @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
             @RequestParam(defaultValue = DEFAULT_SIZE) int size,
             @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType,
-            @RequestParam(defaultValue = "false") boolean isStarted
+            @RequestParam(defaultValue = "false") boolean isEnded
     ){
         return multipleChoiceTestService.
-                getMultipleChoiceTestsOfClassroom(classroomId, isStarted, search, page, column, size, sortType);
+                getMultipleChoiceTestsOfClassroom(classroomId, isEnded, search, page, column, size, sortType);
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)

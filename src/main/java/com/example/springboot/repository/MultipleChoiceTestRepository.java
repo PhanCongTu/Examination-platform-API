@@ -15,15 +15,15 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
 
     @Query(value = "select * FROM multiple_choice_test \n" +
             "\twhere class_room_id = :classroomId \n" +
-            "\t\tand start_date <= :unixTimeNow \n" +
+            "\t\tand end_date <= :unixTimeNow \n" +
             "\t\tand test_name like :searchText", nativeQuery = true)
-    Page<MultipleChoiceTest> findStatedMultipleChoiceTestOfClassroomByClassroomId(Long classroomId,Long unixTimeNow, String searchText, Pageable pageable);
+    Page<MultipleChoiceTest> findEndedMultipleChoiceTestOfClassroomByClassroomId(Long classroomId,Long unixTimeNow, String searchText, Pageable pageable);
 
     @Query(value = "select * FROM multiple_choice_test \n" +
             "\twhere class_room_id = :classroomId \n" +
-            "\t\tand start_date > :unixTimeNow \n" +
+            "\t\tand end_date > :unixTimeNow \n" +
             "\t\tand test_name like :searchText", nativeQuery = true)
-    Page<MultipleChoiceTest> findNotStatedMultipleChoiceTestOfClassroomByClassroomId(Long classroomId,Long unixTimeNow, String searchText, Pageable pageable);
+    Page<MultipleChoiceTest> findNotEndedMultipleChoiceTestOfClassroomByClassroomId(Long classroomId,Long unixTimeNow, String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName, mct.testingTime, \n" +
             "\tmct.classRoom.id , cr.className , cr.classCode )\n" +
@@ -32,8 +32,8 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
             "\t\tSELECT crr.classRoom.id FROM ClassroomRegistration crr \n" +
             "\t\t\twhere crr.userProfile.userID = :myId \n" +
             "\t\t\tand crr.isEnable = true\n" +
-            "    ) and mct.startDate <= :unixTimeNow and mct.testName like :searchText")
-    Page<MyMultipleChoiceTestResponse> findMyStatedMultipleChoiceTest(Long myId, Long unixTimeNow, String searchText, Pageable pageable);
+            "    ) and mct.endDate <= :unixTimeNow and mct.testName like :searchText")
+    Page<MyMultipleChoiceTestResponse> findMyEndedMultipleChoiceTest(Long myId, Long unixTimeNow, String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName, mct.testingTime, \n" +
             "\tmct.classRoom.id , cr.className , cr.classCode )\n" +
@@ -42,8 +42,8 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
             "\t\tSELECT crr.classRoom.id FROM ClassroomRegistration crr \n" +
             "\t\t\twhere crr.userProfile.userID = :myId \n" +
             "\t\t\tand crr.isEnable = true\n" +
-            "    ) and mct.startDate > :unixTimeNow and mct.testName like :searchText")
-    Page<MyMultipleChoiceTestResponse> findMyNotStatedMultipleChoiceTest(Long myId, Long unixTimeNow, String searchText, Pageable pageable);
+            "    ) and mct.endDate > :unixTimeNow and mct.testName like :searchText")
+    Page<MyMultipleChoiceTestResponse> findMyNotEndedMultipleChoiceTest(Long myId, Long unixTimeNow, String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName, mct.testingTime, \n" +
             "\tmct.classRoom.id , cr.className , cr.classCode )\n" +

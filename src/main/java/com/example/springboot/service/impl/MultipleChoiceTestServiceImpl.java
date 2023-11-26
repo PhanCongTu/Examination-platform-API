@@ -92,24 +92,24 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     }
 
     @Override
-    public ResponseEntity<?> getMyMultipleChoiceTests(boolean isStarted, String search, int page, String column, int size, String sortType) {
+    public ResponseEntity<?> getMyMultipleChoiceTests(boolean isEnded, String search, int page, String column, int size, String sortType) {
         Long  myId = webUtils.getCurrentLogedInUser().getUserID();
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
         String searchText = "%" + search + "%";
         Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
         Page<MyMultipleChoiceTestResponse> multipleChoiceTests;
-        if (isStarted) {
+        if (isEnded) {
             multipleChoiceTests = multipleChoiceTestRepository.
-                    findMyStatedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
+                    findMyEndedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
         } else {
             multipleChoiceTests = multipleChoiceTestRepository.
-                    findMyNotStatedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
+                    findMyNotEndedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
         }
         return ResponseEntity.ok(multipleChoiceTests);
     }
 
     @Override
-    public ResponseEntity<?> getMultipleChoiceTestsOfClassroom(Long classroomId,boolean isStarted, String search, int page, String column, int size, String sortType) {
+    public ResponseEntity<?> getMultipleChoiceTestsOfClassroom(Long classroomId,boolean isEnded, String search, int page, String column, int size, String sortType) {
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
         Optional<Classroom> classRoom =  classroomRepository.findById(classroomId);
         if (classRoom.isEmpty()){
@@ -118,12 +118,12 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
         String searchText = "%" + search + "%";
         Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
         Page<MultipleChoiceTest> multipleChoiceTests;
-        if (isStarted) {
+        if (isEnded) {
             multipleChoiceTests = multipleChoiceTestRepository.
-                    findStatedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
+                    findEndedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
         } else {
             multipleChoiceTests = multipleChoiceTestRepository.
-                    findNotStatedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
+                    findNotEndedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
         }
         Page<MultipleChoiceTestResponse> response = multipleChoiceTests.map(CustomBuilder::buildMultipleChoiceTestResponse);
         return ResponseEntity.ok(response);
