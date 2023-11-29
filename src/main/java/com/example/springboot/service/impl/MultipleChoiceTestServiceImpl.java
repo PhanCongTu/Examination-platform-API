@@ -90,6 +90,16 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
                 multipleChoiceTestRepository.find2WeeksAroundMCTest(myId, unixTime2WeeksAgo, unixTime2WeeksLater);
         return ResponseEntity.ok(response);
     }
+    @Override
+    public ResponseEntity<?> getInfoMultipleChoiceTest(Long testId) {
+        Long  myId = webUtils.getCurrentLogedInUser().getUserID();
+        MyMultipleChoiceTestResponse response =
+                multipleChoiceTestRepository.findMultipleChoiceTestInformation(testId, myId);
+        if (Objects.isNull(response)) {
+            return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
+        }
+        return ResponseEntity.ok(response);
+    }
 
     @Override
     public ResponseEntity<?> getMyMultipleChoiceTests(boolean isEnded, String search, int page, String column, int size, String sortType) {
@@ -100,10 +110,10 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
         Page<MyMultipleChoiceTestResponse> multipleChoiceTests;
         if (isEnded) {
             multipleChoiceTests = multipleChoiceTestRepository.
-                    findMyEndedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
+                    findMyEndedMultipleChoiceTests(myId,unixTimeNow, searchText, pageable);
         } else {
             multipleChoiceTests = multipleChoiceTestRepository.
-                    findMyNotEndedMultipleChoiceTest(myId,unixTimeNow, searchText, pageable);
+                    findMyNotEndedMultipleChoiceTests(myId,unixTimeNow, searchText, pageable);
         }
         return ResponseEntity.ok(multipleChoiceTests);
     }

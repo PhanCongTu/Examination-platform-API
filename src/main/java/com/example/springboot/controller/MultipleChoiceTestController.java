@@ -52,7 +52,13 @@ public class MultipleChoiceTestController {
         return multipleChoiceTestService.
                 getMultipleChoiceTest(testId);
     }
-
+    @GetMapping(value = "/my/info/{testId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<?> getInfoMyMultipleChoiceTest(
+            @PathVariable(name = "testId") Long testId){
+        return multipleChoiceTestService.
+                getInfoMultipleChoiceTest(testId);
+    }
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMyMultipleChoiceTests(

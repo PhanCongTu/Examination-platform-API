@@ -3,12 +3,16 @@ package com.example.springboot.controller;
 import com.example.springboot.dto.request.CreateQuestionDTO;
 import com.example.springboot.dto.request.GetScoreOfStudentDTO;
 import com.example.springboot.dto.request.SubmitMCTestDTO;
+import com.example.springboot.entity.UserProfile;
 import com.example.springboot.service.ScoreService;
+import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +36,7 @@ public class ScoreController {
     private static final String DEFAULT_SIZE = "12";
     private static final String DEFAULT_SORT_INCREASE = "asc";
     private final ScoreService scoreService;
-
+    private final WebUtils webUtils;
     @PostMapping(value = "/submit-test", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<?> submitTest(@Valid @RequestBody SubmitMCTestDTO DTO){
@@ -54,5 +58,11 @@ public class ScoreController {
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getScoreOfStudent(@Valid @RequestBody GetScoreOfStudentDTO dto){
         return scoreService.getScoreOfStudent(dto.getStudentId(), dto.getMultipleChoiceTestId());
+    }
+    @GetMapping(value = "/my/{testId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<?> getMyScore(@PathVariable Long testId){
+        UserProfile userProfile = webUtils.getCurrentLogedInUser();
+        return scoreService.getScoreOfStudent(userProfile.getUserID(), testId);
     }
 }

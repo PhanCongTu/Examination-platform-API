@@ -10,12 +10,14 @@ import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.Score;
 import com.example.springboot.entity.SubmittedQuestion;
+import com.example.springboot.entity.TestTracking;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.repository.MultipleChoiceTestRepository;
 import com.example.springboot.repository.QuestionRepository;
 import com.example.springboot.repository.ScoreRepository;
 import com.example.springboot.repository.SubmittedQuestionRepository;
 import com.example.springboot.repository.TestQuestionRepository;
+import com.example.springboot.repository.TestTrackingRepository;
 import com.example.springboot.repository.UserProfileRepository;
 import com.example.springboot.service.ScoreService;
 import com.example.springboot.util.CustomBuilder;
@@ -53,6 +55,7 @@ public class ScoreServiceImpl implements ScoreService {
     private final QuestionRepository questionRepository;
     private final TestQuestionRepository testQuestionRepository;
     private final UserProfileRepository userProfileRepository;
+    private final TestTrackingRepository testTrackingRepository;
 
     @Override
     public ResponseEntity<?> getScoreOfStudent(Long studentId, Long multipleChoiceTestId) {
@@ -164,6 +167,12 @@ public class ScoreServiceImpl implements ScoreService {
         score.setTotalCore((int)(Math.round(totalScore * 100))/100.0);
         score.setTotalCorrect(totalCorrect);
         score = scoreRepository.save(score);
+
+        // Delete test tracking
+        Optional<TestTracking> testTracking = testTrackingRepository.findByMultipleChoiceTestIdAndUserProfileUserID(
+                multipleChoiceTestOp.get().getId(), userProfile.getUserID());
+        testTrackingRepository.delete(testTracking.get());
+
         ScoreResponse response = CustomBuilder.buildScoreResponse(score, submittedQuestionResponses);
         return ResponseEntity.ok(response);
     }

@@ -100,6 +100,12 @@ public class UserProfile extends AbstractAuditingEntity implements Serializable 
             cascade = CascadeType.ALL
     )
     private List<Score> scores;
+
+    @OneToMany(
+            mappedBy = "userProfile",
+            cascade = CascadeType.ALL
+    )
+    private List<TestTracking> doTestHistories;
     public UserProfile(String loginName, String hashPassword, String displayName, String emailAddress, List<String> roles) {
         this.loginName = loginName;
         this.hashPassword = hashPassword;

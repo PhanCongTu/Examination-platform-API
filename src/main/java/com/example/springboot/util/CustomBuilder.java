@@ -9,6 +9,7 @@ import com.example.springboot.dto.response.QuestionGroupResponse;
 import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.dto.response.ScoreResponse;
 import com.example.springboot.dto.response.SubmittedQuestionResponse;
+import com.example.springboot.dto.response.TestTrackingResponse;
 import com.example.springboot.dto.response.UserProfileResponse;
 import com.example.springboot.entity.Classroom;
 import com.example.springboot.entity.MultipleChoiceTest;
@@ -16,6 +17,7 @@ import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.Score;
 import com.example.springboot.entity.SubmittedQuestion;
+import com.example.springboot.entity.TestTracking;
 import com.example.springboot.entity.UserProfile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -179,5 +181,15 @@ public class CustomBuilder {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
+    }
+
+    public static TestTrackingResponse buildTestTrackingResponse(TestTracking testTracking) {
+        return TestTrackingResponse.builder()
+                .id(testTracking.getId())
+                .firstTimeAccess(testTracking.getFirstTimeAccess())
+                .dueTime(testTracking.getDueTime())
+                .multipleChoiceTestId(testTracking.getMultipleChoiceTest().getId())
+                .studentId(testTracking.getUserProfile().getUserID())
+                .build();
     }
 }

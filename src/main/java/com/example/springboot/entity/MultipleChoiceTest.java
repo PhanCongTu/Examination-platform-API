@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.procedure.spi.ParameterRegistrationImplementor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,4 +62,10 @@ public class MultipleChoiceTest extends AbstractAuditingEntity {
 
     @OneToOne(mappedBy = "multipleChoiceTest")
     private Score score;
+
+    @OneToMany(
+            mappedBy = "multipleChoiceTest",
+            cascade = CascadeType.ALL
+    )
+    private List<TestTracking> doTestHistories;
 }
