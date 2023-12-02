@@ -174,6 +174,7 @@ public class MailServiceImpl implements MailService {
      * @param loginName : The login name
      */
     @Override
+    @Async
     public ResponseEntity<?> sendVerificationEmail(String loginName) {
 
 
@@ -211,17 +212,17 @@ public class MailServiceImpl implements MailService {
         }
         // update verification code and expired time into database
         updateVerificationCode(verificationCode, userProfile);
-        sendEmailVerification(verificationCode, userProfile);
+        sendEmailVerification(verificationCode, checkEmailAddress);
 
         return ResponseEntity.noContent().build();
     }
 
     @Async
-    protected void sendEmailVerification(String verificationCode, UserProfile userProfile) {
+    protected void sendEmailVerification(String verificationCode, String checkEmailAddress) {
         try {
             Message message = getEmailMessage();
             // start send mail
-            message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(userProfile.getEmailAddress())});
+            message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(checkEmailAddress)});
             message.setFrom(new InternetAddress(email));
             message.setSubject("[ONLINE EXAM PLATFORM] Verify your email");
             message.setContent(thymeleafService.getVerificationMailContent(verificationCode), CONTENT_TYPE_TEXT_HTML);
@@ -245,6 +246,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
+    @Async
     public ResponseEntity<?> sendResetPasswordEmail(String emailAddress) {
 
         int length = 6;

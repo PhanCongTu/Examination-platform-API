@@ -12,7 +12,9 @@ public interface MailService {
     void sendTestDeletedNotificationEmail(MultipleChoiceTest multipleChoiceTest);
     void sendTestUpdatedNotificationEmail(MultipleChoiceTest multipleChoiceTest);
 
+    @Async
     ResponseEntity<?> sendVerificationEmail(String username);
+    @Async
 
     ResponseEntity<?> sendResetPasswordEmail(String emailAddress);
 }

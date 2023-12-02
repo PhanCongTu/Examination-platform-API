@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -60,8 +61,13 @@ public class UserController {
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO changePassword){
         return userProfileService.changePassword(changePassword);
     }
-    @PostMapping(value = "/user/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/user/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateUserprofile(@Valid @RequestBody UpdateUserProfileDTO DTO){
         return userProfileService.updateUserProfile(DTO);
+    }
+    @GetMapping("/my-info")
+    @PreAuthorize("hasAnyRole('STUDENT','TEACHER', 'ADMIN')")
+    public ResponseEntity<?> getMyInformation() {
+        return userProfileService.getCurrentLoggedInUser();
     }
 }
