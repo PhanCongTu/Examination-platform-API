@@ -30,4 +30,11 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             "    and is_enable = true \n" +
             "    ORDER BY RAND() LIMIT :numberOfQuestion", nativeQuery = true)
     List<Question> findRandomQuestionByQuestionGroupId(Long questionGroupId, Long numberOfQuestion);
+
+    @Query(value = "SELECT * FROM question q where \n" +
+            "q.is_enable = :isActiveQuestion  \n" +
+            "and (q.content like :searchText) \n" +
+            "and  q.question_group_id \n" +
+            "\tIN (SELECT id FROM question_group qg where qg.class_room_id = :classroomId)", nativeQuery = true)
+    Page<Question> getQuestionsOfClassroom(Long classroomId, String searchText, boolean isActiveQuestion, Pageable pageable);
 }

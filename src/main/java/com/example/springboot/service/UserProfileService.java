@@ -21,4 +21,6 @@ public interface UserProfileService {
     ResponseEntity<?> getAllStudentsByStatus(String search, int page, String column, int size, String sortType, boolean isActive);
 
     ResponseEntity<?> getAllVerifiedStudents(String search, int page, String column, int size, String sortType);
+
+    ResponseEntity<?> getCurrentLoggedInUser();
 }

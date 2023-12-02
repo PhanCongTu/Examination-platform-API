@@ -17,4 +17,6 @@ public interface QuestionService {
     ResponseEntity<?> switchQuestionStatus(Long questionId, boolean newStatus);
 
     ResponseEntity<?> getAllQuestionOfQuestionGroup(Long questionGroupId,String search, int page, String column, int size, String sortType, boolean isActiveQuestion);
+
+    ResponseEntity<?> getAllQuestionsOfClassroom(Long classroomId, String search, int page, String column, int size, String sortType, boolean isActiveQuestion);
 }

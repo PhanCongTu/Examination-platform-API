@@ -51,6 +51,12 @@ public class AuthController {
         return userProfileService.refreshToken(refreshTokenDTO);
     }
 
+    @GetMapping("/my-info")
+    @PreAuthorize("hasAnyRole('STUDENT','TEACHER', 'ADMIN')")
+    public ResponseEntity<?> getMyInformation() {
+        return userProfileService.getCurrentLoggedInUser();
+    }
+
     @GetMapping("/check/student")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<String> checkRoleStudent() {

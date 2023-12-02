@@ -35,6 +35,29 @@ public class QuestionController {
     private static final String DEFAULT_SORT_INCREASE = "asc";
 
     private QuestionService questionService;
+    @GetMapping(value = "/inactive/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<?> getAllInactiveQuestionOfClassroom(
+            @PathVariable(name = "classroomId") Long classroomId,
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
+            @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType){
+        return questionService.getAllQuestionsOfClassroom(classroomId, search, page, column, size, sortType, false);
+    }
+    @GetMapping(value = "/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<?> getAllActiveQuestionOfClassroom(
+            @PathVariable(name = "classroomId") Long classroomId,
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
+            @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType){
+        return questionService.getAllQuestionsOfClassroom(classroomId, search, page, column, size, sortType, true);
+    }
+
     @GetMapping(value = "/question-group/{questionGroupId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getAllActiveQuestionOfQuestionGroup(

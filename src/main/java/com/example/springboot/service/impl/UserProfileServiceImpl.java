@@ -32,6 +32,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -373,5 +375,12 @@ public class UserProfileServiceImpl implements UserProfileService {
                 .map(CustomBuilder::buildUserProfileResponse);
         log.info("Get all verified student: end");
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<?> getCurrentLoggedInUser() {
+        // Get current logged in user
+        UserProfile userProfile = webUtils.getCurrentLogedInUser();
+        return ResponseEntity.ok(CustomBuilder.buildUserProfileResponse(userProfile));
     }
 }

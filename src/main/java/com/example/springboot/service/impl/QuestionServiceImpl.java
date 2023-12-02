@@ -3,11 +3,13 @@ package com.example.springboot.service.impl;
 import com.example.springboot.dto.request.CreateQuestionDTO;
 import com.example.springboot.dto.request.UpdateQuestionDTO;
 import com.example.springboot.dto.response.QuestionResponse;
+import com.example.springboot.entity.Classroom;
 import com.example.springboot.entity.Question;
 import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.NotEnoughQuestionException;
 import com.example.springboot.exception.QuestionGroupNotFoundException;
+import com.example.springboot.repository.ClassroomRepository;
 import com.example.springboot.repository.QuestionGroupRepository;
 import com.example.springboot.repository.QuestionRepository;
 import com.example.springboot.service.QuestionService;
@@ -33,6 +35,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionGroupRepository questionGroupRepository;
+    private final ClassroomRepository classroomRepository;
     private final WebUtils webUtils;
 
     @Override
@@ -178,5 +181,22 @@ public class QuestionServiceImpl implements QuestionService {
         }
         log.error("There are no correct answer in CreateQuestionDTO");
         return "";
+    }
+
+    @Override
+    public ResponseEntity<?> getAllQuestionsOfClassroom(Long classroomId, String search, int page, String column, int size, String sortType, boolean isActiveQuestion) {
+        log.info("Get questions of classroom: start, isActiveQuestion: "+isActiveQuestion);
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search + "%";
+        Optional<Classroom> classroom =
+                classroomRepository.findActiveClassroomById(classroomId);
+        if (classroom.isEmpty()) {
+            return CustomBuilder.buildClassroomNotFoundResponseEntity();
+        }
+        Page<Question> questions = questionRepository
+                .getQuestionsOfClassroom(classroomId, searchText, isActiveQuestion, pageable);
+        Page<QuestionResponse> response = questions.map(CustomBuilder::buildQuestionResponse);
+        log.info("Get questions of classroom: end, isActiveQuestion: "+isActiveQuestion);
+        return ResponseEntity.ok(response);
     }
 }
