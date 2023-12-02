@@ -31,6 +31,7 @@ public class Score extends AbstractAuditingEntity {
 
     private static final String TOTAL_SCORE = "total_core";
     private static final String TOTAL_CORRECT = "total_correct";
+    private static final String SUBMITTED_DATE = "submitted_date";
     private static final String MULTIPLE_CHOICE_TEST_ID = "multiple_choice_test_id";
 
     @Id
@@ -43,6 +44,9 @@ public class Score extends AbstractAuditingEntity {
 
     @Column(name = TOTAL_CORRECT)
     private Long totalCorrect;
+
+    @Column(name = SUBMITTED_DATE)
+    private Long submittedDate;
 
     private boolean isLate;
 

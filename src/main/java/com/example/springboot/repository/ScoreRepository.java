@@ -1,5 +1,6 @@
 package com.example.springboot.repository;
 
+import com.example.springboot.dto.response.MyScoreResponse;
 import com.example.springboot.dto.response.StudentScoreResponse;
 import com.example.springboot.entity.Score;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,10 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
             "FROM Score s inner join UserProfile u on  s.userProfile.userID = u.userID \n" +
             "where s.multipleChoiceTest.id = :testId and (u.displayName like :searchText or u.loginName like :searchText)")
     Page<StudentScoreResponse> findAllScoreOfMultipleChoiceTest(Long testId, String searchText, Pageable pageable);
+
+    @Query("select new com.example.springboot.dto.response.MyScoreResponse(s.id, s.totalCore, s.isLate, s.submittedDate, mc.id, mc.testName, c.id, c.className, c.classCode) " +
+            "FROM Score s inner join MultipleChoiceTest mc on s.multipleChoiceTest.id = mc.id " +
+            "inner join Classroom c on mc.classRoom.id = c.id " +
+            "where s.userProfile.userID = :studentId and s.submittedDate > :dateFrom and s.submittedDate < :dateTo")
+    Page<MyScoreResponse> findAllMyScores(Long studentId, Long dateFrom,Long dateTo , Pageable pageable);
 }

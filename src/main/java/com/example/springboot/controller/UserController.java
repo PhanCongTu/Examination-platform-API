@@ -57,7 +57,7 @@ public class UserController {
                                            @PathVariable(value = "email-address") String emailAddress){
         return userProfileService.resetPassword(emailAddress,resetPasswordDTO);
     }
-    @PostMapping(value = "/change-password", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/change-password", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO changePassword){
         return userProfileService.changePassword(changePassword);
     }

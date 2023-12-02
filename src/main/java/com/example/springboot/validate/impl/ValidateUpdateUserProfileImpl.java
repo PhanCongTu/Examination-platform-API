@@ -55,7 +55,7 @@ public class ValidateUpdateUserProfileImpl implements ConstraintValidator<Valida
             }
             Optional<UserProfile> userProfileOp = userProfileRepository.findOneByEmailAddressVerified(value.getEmailAddress());
             if (userProfileOp.isPresent()){
-                context.buildConstraintViolationWithTemplate(ErrorMessage.SIGNUP_EMAIL_ADDRESS_DUPLICATE.name())
+                context.buildConstraintViolationWithTemplate(ErrorMessage.UPDATE_EMAIL_ADDRESS_DUPLICATE.name())
                         .addPropertyNode(EMAIL_ADDRESS)
                         .addConstraintViolation();
                 return Boolean.FALSE;

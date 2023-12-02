@@ -9,4 +9,7 @@ public interface ScoreService {
     ResponseEntity<?> getAllStudentScoreOfTest(Long testId, String search, int page, String column, int size, String sortType);
 
     ResponseEntity<?> getScoreOfStudent(Long studentId,Long multipleChoiceTestId);
+
+
+    ResponseEntity<?> getAllScoreOfStudent(Long userID, Long dateFrom, Long dateTo, int page, String column, int size, String sortType);
 }

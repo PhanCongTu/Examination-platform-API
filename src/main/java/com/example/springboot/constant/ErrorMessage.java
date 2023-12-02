@@ -17,7 +17,7 @@ public enum ErrorMessage {
     SIGNUP_EMAIL_ADDRESS_INVALID_CHARACTER(Constants.INVALID_PARAMETER, "There are validation errors of email address - Must be made of letters, numbers, contains '@' and/or '_' - '-'. " +
             "Dot isn't allowed at the start and end of the local part. Consecutive dots aren't allowed. a maximum of 64 characters are allowed."),
     SIGNUP_EMAIL_ADDRESS_DUPLICATE(Constants.USER_ALREADY_EXISTS, "User with email address %s already exists."),
-
+    UPDATE_EMAIL_ADDRESS_DUPLICATE(Constants.USER_ALREADY_EXISTS, "New email address already exists."),
     LOGIN_NAME_NOT_FOUND(Constants.NOT_FOUND, "Can not find user with login name %s."),
     LOGIN_BAD_CREDENTIALS(Constants.BAD_REQUEST, "Wrong login or password."),
     LOGIN_ACCESS_DENIED(Constants.FORBIDDEN, "Not authorized."),

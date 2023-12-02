@@ -3,6 +3,7 @@ package com.example.springboot.service.impl;
 import com.example.springboot.constant.Constants;
 import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.SubmitMCTestDTO;
+import com.example.springboot.dto.response.MyScoreResponse;
 import com.example.springboot.dto.response.ScoreResponse;
 import com.example.springboot.dto.response.StudentScoreResponse;
 import com.example.springboot.dto.response.SubmittedQuestionResponse;
@@ -37,6 +38,7 @@ import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -138,6 +140,7 @@ public class ScoreServiceImpl implements ScoreService {
                 .isLate(isLate)
                 .multipleChoiceTest(multipleChoiceTestOp.get())
                 .userProfile(userProfile)
+                .submittedDate(Timestamp.from(ZonedDateTime.now().toInstant()).getTime())
                 .build();
         score = scoreRepository.save(score);
         List<SubmittedQuestionResponse> submittedQuestionResponses = new ArrayList<>();
@@ -181,5 +184,16 @@ public class ScoreServiceImpl implements ScoreService {
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
         question.setUpdateBy(userProfile.getLoginName());
         question.setUpdateDate(Instant.now());
+    }
+
+    @Override
+    public ResponseEntity<?> getAllScoreOfStudent(Long userID, Long dateFrom, Long dateTo, int page, String column, int size, String sortType) {
+        Optional<UserProfile> studentOp = userProfileRepository.findById(userID);
+        if (studentOp.isEmpty()) {
+            return CustomBuilder.buildStudentNotFoundResponseEntity();
+        }
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        Page<MyScoreResponse> response = scoreRepository.findAllMyScores(studentOp.get().getUserID(), dateFrom, dateTo, pageable);
+        return ResponseEntity.ok(response);
     }
 }
