@@ -26,6 +26,7 @@ import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -326,12 +327,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         // Get current logged in user
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
         // Update display name
-        if (Objects.nonNull(dto.getDisplayName())){
+        if (StringUtils.isNoneBlank(dto.getDisplayName())){
             userProfile.setDisplayName(dto.getDisplayName());
             userProfileRepository.save(userProfile);
         }
         // Update email address.
-        if (Objects.nonNull(dto.getEmailAddress())){
+        if (StringUtils.isNoneBlank(dto.getEmailAddress())){
             String newEmailAddress = dto.getEmailAddress();
             // If old email address has been verified
             if(userProfile.getIsEmailAddressVerified()){

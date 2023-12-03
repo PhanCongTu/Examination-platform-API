@@ -40,7 +40,7 @@ public class ValidateUpdateUserProfileImpl implements ConstraintValidator<Valida
 
     private boolean validateEmailAddress(UpdateUserProfileDTO value, ConstraintValidatorContext context) {
         log.info(String.format("Validate emailAddress: start"));
-        if (Objects.nonNull(value.getEmailAddress())) {
+        if (StringUtils.isNoneBlank(value.getEmailAddress())) {
             if (StringUtils.isBlank(value.getEmailAddress())) {
                 context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                         .addPropertyNode(EMAIL_ADDRESS)
@@ -67,7 +67,7 @@ public class ValidateUpdateUserProfileImpl implements ConstraintValidator<Valida
 
     private boolean validateDisplayName(UpdateUserProfileDTO value, ConstraintValidatorContext context) {
         log.info(String.format("Validate displayName: start"));
-        if (Objects.nonNull(value.getDisplayName())) {
+        if (StringUtils.isNoneBlank(value.getDisplayName())) {
             if (StringUtils.isBlank(value.getDisplayName())) {
                 context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
                         .addPropertyNode(DISPLAY_NAME)
