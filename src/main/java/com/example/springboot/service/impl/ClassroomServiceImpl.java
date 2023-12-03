@@ -129,7 +129,7 @@ public class ClassroomServiceImpl implements ClassroomService {
             modifyUpdateClassroom(classRoom);
         }
         if(Objects.nonNull(DTO.getClassCode())){
-            classRoom.setClassCode(CODE_PREFIX + DTO.getClassCode());
+            classRoom.setClassCode(DTO.getClassCode());
             modifyUpdateClassroom(classRoom);
         }
         classRoom = classRoomRepository.save(classRoom);
