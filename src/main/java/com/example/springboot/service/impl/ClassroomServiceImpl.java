@@ -1,5 +1,7 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.constant.Constants;
+import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.AddToClassroomDTO;
 import com.example.springboot.dto.request.CreateClassroomDTO;
 import com.example.springboot.dto.request.UpdateClassroomDTO;
@@ -18,12 +20,16 @@ import com.example.springboot.util.PageUtils;
 import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,7 +57,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
         Classroom classRoom = new Classroom();
         classRoom.setClassName(DTO.getClassName());
-        classRoom.setClassCode(CODE_PREFIX + DTO.getClassCode());
+        classRoom.setClassCode(CODE_PREFIX + DTO.getClassCode().trim());
         classRoom.setIsPrivate(DTO.getIsPrivate());
         classRoom.setCreatedBy(userProfile.getLoginName());
         Classroom savedClassroom = classRoomRepository.save(classRoom);
@@ -124,11 +130,20 @@ public class ClassroomServiceImpl implements ClassroomService {
             modifyUpdateClassroom(classRoom);
             classRoom.setIsPrivate(DTO.getIsPrivate());
         }
-        if (Objects.nonNull(DTO.getClassName())){
+        if (StringUtils.isNoneBlank(DTO.getClassName())){
             classRoom.setClassName(DTO.getClassName());
             modifyUpdateClassroom(classRoom);
         }
-        if(Objects.nonNull(DTO.getClassCode())){
+        if(StringUtils.isNoneBlank(DTO.getClassCode())){
+            Optional<Classroom> classroomEx = classRoomRepository.findByClassCode(DTO.getClassCode().trim());
+            if(classroomEx.isPresent() && classroomEx.get().getId() != classroomId){
+                LinkedHashMap<String, String> response = new LinkedHashMap<>();
+                response.put(Constants.ERROR_CODE_KEY, ErrorMessage.CLASS_CODE_DUPLICATE.getErrorCode());
+                response.put(Constants.MESSAGE_KEY, ErrorMessage.CLASS_CODE_DUPLICATE.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(response);
+            }
             classRoom.setClassCode(DTO.getClassCode());
             modifyUpdateClassroom(classRoom);
         }

@@ -1,5 +1,7 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.constant.Constants;
+import com.example.springboot.constant.ErrorMessage;
 import com.example.springboot.dto.request.CreateQuestionGroupDTO;
 import com.example.springboot.dto.request.UpdateQuestionGroupDTO;
 import com.example.springboot.dto.response.QuestionGroupResponse;
@@ -17,10 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 
 @Service
@@ -39,7 +44,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
 
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setName(dto.getName());
-        questionGroup.setCode(CODE_PREFIX + dto.getCode());
+        questionGroup.setCode(CODE_PREFIX + dto.getCode().trim());
         questionGroup.setCreatedBy(userProfile.getLoginName());
         questionGroup.setClassRoom(classRoom.get());
 
@@ -103,6 +108,15 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
             modifyUpdateQuestionGroup(questionGroup);
         }
         if (StringUtils.isNoneBlank(dto.getCode())){
+            Optional<QuestionGroup> questionGroupEx = questionGroupRepository.findByCode(dto.getCode().trim());
+            if (questionGroupEx.isPresent() && questionGroupEx.get().getId() != questionGroupId){
+                LinkedHashMap<String, String> response = new LinkedHashMap<>();
+                response.put(Constants.ERROR_CODE_KEY, ErrorMessage.QUESTION_GROUP_CODE_DUPLICATE.getErrorCode());
+                response.put(Constants.MESSAGE_KEY, ErrorMessage.QUESTION_GROUP_CODE_DUPLICATE.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(response);
+            }
             questionGroup.setCode(dto.getCode());
             modifyUpdateQuestionGroup(questionGroup);
         }
