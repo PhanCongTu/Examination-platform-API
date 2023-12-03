@@ -41,12 +41,12 @@ public class ValidateUpdateClassroomImpl implements ConstraintValidator<Validate
             value.setClassCode(classCode);
         }
 
-        if(Objects.nonNull(classCode) && classRoomRepository.findByClassCode(classCode).isPresent()){
-            context.buildConstraintViolationWithTemplate(ErrorMessage.CLASS_CODE_DUPLICATE.name())
-                    .addPropertyNode(CLASS_CODE)
-                    .addConstraintViolation();
-            return Boolean.FALSE;
-        }
+//        if(Objects.nonNull(classCode) && classRoomRepository.findByClassCode(classCode).isPresent()){
+//            context.buildConstraintViolationWithTemplate(ErrorMessage.CLASS_CODE_DUPLICATE.name())
+//                    .addPropertyNode(CLASS_CODE)
+//                    .addConstraintViolation();
+//            return Boolean.FALSE;
+//        }
         return Boolean.TRUE;
     }
 }

@@ -44,12 +44,12 @@ public class ValidateUpdateQuestionGroupImpl implements ConstraintValidator<Vali
             code = code.substring(0, Math.min(code.length(), Constants.CODE_MAX_LENGTH));
             value.setCode(code);
         }
-        if(questionGroupRepository.findByCode(code).isPresent()){
-            context.buildConstraintViolationWithTemplate(ErrorMessage.QUESTION_GROUP_CODE_DUPLICATE.name())
-                    .addPropertyNode(CODE)
-                    .addConstraintViolation();
-            return Boolean.FALSE;
-        }
+//        if(questionGroupRepository.findByCode(code).isPresent()){
+//            context.buildConstraintViolationWithTemplate(ErrorMessage.QUESTION_GROUP_CODE_DUPLICATE.name())
+//                    .addPropertyNode(CODE)
+//                    .addConstraintViolation();
+//            return Boolean.FALSE;
+//        }
         log.info("End validate question group code");
         return Boolean.TRUE;
     }
