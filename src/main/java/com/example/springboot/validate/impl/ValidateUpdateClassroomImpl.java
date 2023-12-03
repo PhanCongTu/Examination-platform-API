@@ -41,7 +41,7 @@ public class ValidateUpdateClassroomImpl implements ConstraintValidator<Validate
             value.setClassCode(classCode);
         }
 
-        if(Objects.nonNull(classCode) && classRoomRepository.findByClassCode(CODE_PREFIX + classCode).isPresent()){
+        if(Objects.nonNull(classCode) && classRoomRepository.findByClassCode(classCode).isPresent()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.CLASS_CODE_DUPLICATE.name())
                     .addPropertyNode(CLASS_CODE)
                     .addConstraintViolation();

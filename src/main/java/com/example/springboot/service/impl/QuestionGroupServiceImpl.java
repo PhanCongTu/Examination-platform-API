@@ -103,7 +103,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
             modifyUpdateQuestionGroup(questionGroup);
         }
         if (StringUtils.isNoneBlank(dto.getCode())){
-            questionGroup.setCode(CODE_PREFIX + dto.getCode());
+            questionGroup.setCode(dto.getCode());
             modifyUpdateQuestionGroup(questionGroup);
         }
         questionGroup = questionGroupRepository.save(questionGroup);

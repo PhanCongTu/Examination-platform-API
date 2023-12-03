@@ -44,7 +44,7 @@ public class ValidateUpdateQuestionGroupImpl implements ConstraintValidator<Vali
             code = code.substring(0, Math.min(code.length(), Constants.CODE_MAX_LENGTH));
             value.setCode(code);
         }
-        if(questionGroupRepository.findByCode(CODE_PREFIX + code).isPresent()){
+        if(questionGroupRepository.findByCode(code).isPresent()){
             context.buildConstraintViolationWithTemplate(ErrorMessage.QUESTION_GROUP_CODE_DUPLICATE.name())
                     .addPropertyNode(CODE)
                     .addConstraintViolation();
