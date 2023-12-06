@@ -10,6 +10,7 @@ import com.example.springboot.entity.QuestionGroup;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.repository.ClassroomRepository;
 import com.example.springboot.repository.QuestionGroupRepository;
+import com.example.springboot.repository.QuestionRepository;
 import com.example.springboot.service.QuestionGroupService;
 import com.example.springboot.util.CustomBuilder;
 import com.example.springboot.util.PageUtils;
@@ -33,6 +34,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class QuestionGroupServiceImpl implements QuestionGroupService {
     private final QuestionGroupRepository questionGroupRepository;
+    private final QuestionRepository questionRepository;
     private final ClassroomRepository classroomRepository;
     private final WebUtils webUtils;
     private static final String CODE_PREFIX = "group_";
@@ -68,6 +70,11 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
                 .findQuestionGroupsOfClassroomByClassroomId(classroomId, searchText, isEnable, pageable);
 
         Page<QuestionGroupResponse> response = questionGroups.map(CustomBuilder::buildQuestionGroupResponse);
+        for(QuestionGroupResponse group : response) {
+            Long groupID = group.getId();
+            Long totalQuestionInGr = questionRepository.countQuestionsByQuestionGroupId(groupID);
+            group.setTotalQuestion(totalQuestionInGr);
+        }
         log.info("End get all Question Group of classroom");
         return ResponseEntity.ok(response);
     }

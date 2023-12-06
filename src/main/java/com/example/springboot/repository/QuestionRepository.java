@@ -37,4 +37,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             "and  q.question_group_id \n" +
             "\tIN (SELECT id FROM question_group qg where qg.class_room_id = :classroomId)", nativeQuery = true)
     Page<Question> getQuestionsOfClassroom(Long classroomId, String searchText, boolean isActiveQuestion, Pageable pageable);
+    Long countQuestionsByQuestionGroupId(Long questionGroupId);
 }
