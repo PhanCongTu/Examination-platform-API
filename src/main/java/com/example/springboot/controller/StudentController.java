@@ -40,8 +40,13 @@ public class StudentController {
     @PostMapping(value = "/add-to-class", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> addStudentToClassroom(@Valid @RequestBody AddToClassroomDTO DTO){
-        System.out.println("vao");
         return classroomService.addStudentToClassroom(DTO);
+    }
+
+    @PostMapping(value = "/remove-from-class", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+    public ResponseEntity<?> removeStudentFromClassroom(@Valid @RequestBody AddToClassroomDTO DTO){
+        return classroomService.removeStudentFromClassroom(DTO);
     }
 
     @GetMapping(value = "/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)

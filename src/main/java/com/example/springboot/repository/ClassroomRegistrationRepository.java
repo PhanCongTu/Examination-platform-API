@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClassroomRegistrationRepository extends JpaRepository<ClassroomRegistration,Long> {
@@ -16,4 +17,6 @@ public interface ClassroomRegistrationRepository extends JpaRepository<Classroom
             "where cr.class_room_id = :classroomId and cr.is_enable = true and u.is_enable = true;"
             , nativeQuery = true)
     List<String> findUserEmailOfClassroom(Long classroomId);
+
+    Optional<ClassroomRegistration> findByClassRoomIdAndUserProfileUserID(Long classroomId, Long studentID);
 }

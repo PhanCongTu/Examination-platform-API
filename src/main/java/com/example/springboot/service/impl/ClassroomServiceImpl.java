@@ -213,4 +213,13 @@ public class ClassroomServiceImpl implements ClassroomService {
         log.info("Get classroom by id. End");
         return ResponseEntity.ok(response);
     }
+
+    @Override
+    public ResponseEntity<?> removeStudentFromClassroom(AddToClassroomDTO dto) {
+        Optional<Classroom> classRoom = classRoomRepository.findById(dto.getClassroomId());
+        Optional<UserProfile> userProfile = studentRepositoryRead.findVerifiedStudentByIdAndStatus(dto.getStudentId(), true);
+        Optional<ClassroomRegistration> classroomRegistration = classroomRegistrationRepository.findByClassRoomIdAndUserProfileUserID(classRoom.get().getId(), userProfile.get().getUserID());
+        classroomRegistration.ifPresent(registration -> classroomRegistrationRepository.deleteById(registration.getId()));
+        return ResponseEntity.noContent().build();
+    }
 }

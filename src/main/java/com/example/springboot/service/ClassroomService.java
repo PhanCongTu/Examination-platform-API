@@ -22,4 +22,6 @@ public interface ClassroomService {
     ResponseEntity<?> getMyClassrooms(String search, int page, String column, int size, String sortType);
 
     ResponseEntity<?> getClassRoomById(Long classroomId);
+
+    ResponseEntity<?> removeStudentFromClassroom(AddToClassroomDTO dto);
 }
