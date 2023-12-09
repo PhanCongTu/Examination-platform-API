@@ -73,6 +73,7 @@ public class ScoreController {
     @GetMapping(value = "/my", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<?> getMyAllScores(
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
             @RequestParam(required = false) Long dateFrom,
             @RequestParam(required = false) Long dateTo,
             @RequestParam(defaultValue = DEFAULT_PAGE) int page,
@@ -91,6 +92,6 @@ public class ScoreController {
             dateTo = dateToDefault;
         }
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
-        return scoreService.getAllScoreOfStudent(userProfile.getUserID(), dateFrom, dateTo, page, column, size, sortType);
+        return scoreService.getAllScoreOfStudent(userProfile.getUserID(),search, dateFrom, dateTo, page, column, size, sortType);
     }
 }

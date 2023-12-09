@@ -357,7 +357,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public ResponseEntity<?> getAllStudentsByStatus(String search, int page, String column, int size, String sortType, boolean isActive) {
         log.info("Start get all active student searched by display name and email");
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Page<UserProfile> listStudents = studentRepositoryRead
                 .findAllSeachedStudentsByStatus(searchText, isActive, pageable);
         Page<UserProfileResponse> response = listStudents
@@ -370,7 +370,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public ResponseEntity<?> getAllVerifiedStudents(String search, int page, String column, int size, String sortType) {
         log.info("Get all verified student: start");
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Page<UserProfile> listStudents = studentRepositoryRead.findAllVerifiedStudents(searchText, pageable);
         Page<UserProfileResponse> response = listStudents
                 .map(CustomBuilder::buildUserProfileResponse);

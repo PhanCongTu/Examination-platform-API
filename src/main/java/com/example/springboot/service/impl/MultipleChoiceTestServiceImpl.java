@@ -105,7 +105,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     public ResponseEntity<?> getMyMultipleChoiceTests(boolean isEnded, String search, int page, String column, int size, String sortType) {
         Long  myId = webUtils.getCurrentLogedInUser().getUserID();
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
         Page<MyMultipleChoiceTestResponse> multipleChoiceTests;
         if (isEnded) {
@@ -125,7 +125,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
         if (classRoom.isEmpty()){
             return CustomBuilder.buildClassroomNotFoundResponseEntity();
         }
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
         Page<MultipleChoiceTest> multipleChoiceTests;
         if (isEnded) {

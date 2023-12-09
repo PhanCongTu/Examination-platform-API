@@ -86,7 +86,7 @@ public class ScoreServiceImpl implements ScoreService {
         if (MCTestOp.isEmpty()) {
             return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
         }
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Page<StudentScoreResponse> scores =  scoreRepository.findAllScoreOfMultipleChoiceTest(testId, searchText, pageable);
         return ResponseEntity.ok(scores);
     }
@@ -187,13 +187,14 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public ResponseEntity<?> getAllScoreOfStudent(Long userID, Long dateFrom, Long dateTo, int page, String column, int size, String sortType) {
+    public ResponseEntity<?> getAllScoreOfStudent(Long userID,String search, Long dateFrom, Long dateTo, int page, String column, int size, String sortType) {
         Optional<UserProfile> studentOp = userProfileRepository.findById(userID);
         if (studentOp.isEmpty()) {
             return CustomBuilder.buildStudentNotFoundResponseEntity();
         }
+        String searchText = "%" + search.trim() + "%";
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        Page<MyScoreResponse> response = scoreRepository.findAllMyScores(studentOp.get().getUserID(), dateFrom, dateTo, pageable);
+        Page<MyScoreResponse> response = scoreRepository.findAllMyScores(studentOp.get().getUserID(),searchText, dateFrom, dateTo, pageable);
         return ResponseEntity.ok(response);
     }
 }

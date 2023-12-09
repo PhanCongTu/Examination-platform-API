@@ -11,5 +11,5 @@ public interface ScoreService {
     ResponseEntity<?> getScoreOfStudent(Long studentId,Long multipleChoiceTestId);
 
 
-    ResponseEntity<?> getAllScoreOfStudent(Long userID, Long dateFrom, Long dateTo, int page, String column, int size, String sortType);
+    ResponseEntity<?> getAllScoreOfStudent( Long userID,String search, Long dateFrom, Long dateTo, int page, String column, int size, String sortType);
 }

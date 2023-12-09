@@ -24,6 +24,6 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
     @Query("select new com.example.springboot.dto.response.MyScoreResponse(s.id, s.totalCore, s.isLate, s.submittedDate, mc.id, mc.testName, c.id, c.className, c.classCode) " +
             "FROM Score s inner join MultipleChoiceTest mc on s.multipleChoiceTest.id = mc.id " +
             "inner join Classroom c on mc.classRoom.id = c.id " +
-            "where s.userProfile.userID = :studentId and s.submittedDate > :dateFrom and s.submittedDate < :dateTo")
-    Page<MyScoreResponse> findAllMyScores(Long studentId, Long dateFrom,Long dateTo , Pageable pageable);
+            "where mc.testName like :searchText and s.userProfile.userID = :studentId and s.submittedDate > :dateFrom and s.submittedDate < :dateTo")
+    Page<MyScoreResponse> findAllMyScores(Long studentId,String searchText, Long dateFrom,Long dateTo , Pageable pageable);
 }

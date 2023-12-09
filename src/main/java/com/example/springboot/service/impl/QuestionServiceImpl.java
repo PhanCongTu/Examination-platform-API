@@ -147,7 +147,7 @@ public class QuestionServiceImpl implements QuestionService {
     public ResponseEntity<?> getAllQuestionOfQuestionGroup(Long questionGroupId,String search, int page, String column, int size, String sortType, boolean isActiveQuestion) {
         log.info("Get questions of question group: start, isActiveQuestion: "+isActiveQuestion);
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Optional<QuestionGroup> questionGroupOp =
                 questionGroupRepository.findByIdAndStatus(questionGroupId, true);
         if (questionGroupOp.isEmpty()) {
@@ -187,7 +187,7 @@ public class QuestionServiceImpl implements QuestionService {
     public ResponseEntity<?> getAllQuestionsOfClassroom(Long classroomId, String search, int page, String column, int size, String sortType, boolean isActiveQuestion) {
         log.info("Get questions of classroom: start, isActiveQuestion: "+isActiveQuestion);
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Optional<Classroom> classroom =
                 classroomRepository.findActiveClassroomById(classroomId);
         if (classroom.isEmpty()) {

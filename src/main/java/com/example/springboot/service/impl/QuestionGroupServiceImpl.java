@@ -65,7 +65,7 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
         if (classRoom.isEmpty()){
             return CustomBuilder.buildClassroomNotFoundResponseEntity();
         }
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Page<QuestionGroup> questionGroups = questionGroupRepository
                 .findQuestionGroupsOfClassroomByClassroomId(classroomId, searchText, isEnable, pageable);
 

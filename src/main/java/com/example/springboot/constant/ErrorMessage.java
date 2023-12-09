@@ -19,7 +19,7 @@ public enum ErrorMessage {
     SIGNUP_EMAIL_ADDRESS_DUPLICATE(Constants.USER_ALREADY_EXISTS, "User with email address %s already exists."),
     UPDATE_EMAIL_ADDRESS_DUPLICATE(Constants.USER_ALREADY_EXISTS, "New email address already exists."),
     LOGIN_NAME_NOT_FOUND(Constants.NOT_FOUND, "Can not find user with login name %s."),
-    LOGIN_BAD_CREDENTIALS(Constants.BAD_REQUEST, "Wrong login or password."),
+    LOGIN_BAD_CREDENTIALS(Constants.BAD_REQUEST, "Wrong login name or password."),
     LOGIN_ACCESS_DENIED(Constants.FORBIDDEN, "Not authorized."),
     LOGIN_TOKEN_INVALID(Constants.FORBIDDEN, "Access token or refresh token is invalid or expired."),
 

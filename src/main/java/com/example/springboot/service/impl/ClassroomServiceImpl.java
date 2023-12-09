@@ -98,7 +98,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     public ResponseEntity<?> getAllClassroomsByStatus(String search,int page,String column,int size,String sortType, Boolean isEnable) {
         log.info("Start get all enable Classroom (non-Admin)");
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Page<Classroom> classRooms = classRoomRepository.findAllSearchedClassRoomsByStatus(searchText,isEnable, pageable);
         // Map topic to topic response DTO
         Page<ClassroomResponse> response = classRooms.map(CustomBuilder::buildClassroomResponse);
@@ -195,7 +195,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
         log.info("Get all my classroom. Start. User is: "+userProfile.getUserID());
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
-        String searchText = "%" + search + "%";
+        String searchText = "%" + search.trim() + "%";
         Page<Classroom> classRooms = classRoomRepository.findAllRegistedClassroomOfUser(userProfile.getUserID(),searchText, pageable);
         Page<ClassroomResponse> response = classRooms.map(CustomBuilder::buildClassroomResponse);
         log.info("Get all my classroom. End. User is: "+userProfile.getUserID());
