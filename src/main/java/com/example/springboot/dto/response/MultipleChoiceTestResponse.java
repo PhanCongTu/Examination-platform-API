@@ -19,4 +19,6 @@ public class MultipleChoiceTestResponse {
     private Long endDate;
 
     private Long testingTime;
+
+    private double targetScore;
 }

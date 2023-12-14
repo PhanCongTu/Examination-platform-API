@@ -164,6 +164,10 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
             multipleChoiceTest.setTestingTime(dto.getTestingTime());
             modifyUpdateMultipleChoiceTest(multipleChoiceTest);
         }
+        if (Objects.nonNull(dto.getTargetScore())) {
+            multipleChoiceTest.setTargetScore(dto.getTargetScore());
+            modifyUpdateMultipleChoiceTest(multipleChoiceTest);
+        }
         if (Objects.nonNull(dto.getStartDate()) && Objects.isNull(dto.getEndDate())) {
             if (dto.getStartDate() < multipleChoiceTest.getEndDate()){
                 multipleChoiceTest.setStartDate(dto.getStartDate());
@@ -224,6 +228,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
         multipleChoiceTest.setEndDate(dto.getEndDate());
         multipleChoiceTest.setTestingTime(dto.getTestingTime());
         multipleChoiceTest.setClassRoom(classroom);
+        multipleChoiceTest.setTargetScore(dto.getTargetScore());
         modifyUpdateMultipleChoiceTest(multipleChoiceTest);
         multipleChoiceTest = multipleChoiceTestRepository.save(multipleChoiceTest);
         List<QuestionResponse> questionsOfTheTest = new ArrayList<>();

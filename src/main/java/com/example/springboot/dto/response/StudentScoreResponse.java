@@ -21,8 +21,9 @@ public class StudentScoreResponse {
     private Long studentId;
     private String studentDisplayName;
     private String studentLoginName;
+    private Double targetScore;
 
-    public StudentScoreResponse(Long id, Long testId, Double totalScore, Instant submittedDate, Boolean isLate, Long studentId, String studentDisplayName, String studentLoginName) {
+    public StudentScoreResponse(Long id, Long testId, Double totalScore, Instant submittedDate, Boolean isLate, Long studentId, String studentDisplayName, String studentLoginName, Double targetScore) {
         this.id = id;
         this.testId = testId;
         this.totalScore = totalScore;
@@ -31,5 +32,6 @@ public class StudentScoreResponse {
         this.studentId = studentId;
         this.studentDisplayName = studentDisplayName;
         this.studentLoginName = studentLoginName;
+        this.targetScore = targetScore;
     }
 }

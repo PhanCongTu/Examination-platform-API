@@ -24,4 +24,6 @@ public class UpdateMultipleChoiceTestDTO {
     private Long endDate;
     // minutes
     private Long testingTime;
+
+    private Double targetScore;
 }

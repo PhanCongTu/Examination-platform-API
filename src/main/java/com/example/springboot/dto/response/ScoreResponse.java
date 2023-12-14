@@ -12,6 +12,7 @@ import java.util.List;
 public class ScoreResponse {
     private Long id;
     private Double totalScore;
+    private Double targetScore;
     private Long SubmittedDate;
     private Boolean isLate;
     private MultipleChoiceTestResponse multipleChoiceTest;

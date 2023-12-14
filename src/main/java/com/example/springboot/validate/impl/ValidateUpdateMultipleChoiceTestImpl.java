@@ -27,6 +27,7 @@ public class ValidateUpdateMultipleChoiceTestImpl implements ConstraintValidator
     private final String END_DATE = "endDate";
 
     private final String TESTING_TIME = "testingTime";
+    private final String TARGET_SCORE = "targetScore";
     private static final Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
 
     @Override
@@ -37,13 +38,27 @@ public class ValidateUpdateMultipleChoiceTestImpl implements ConstraintValidator
         boolean checkStartDate = validateStartDate(value, context);
         boolean checkEndDate = validateEndDate(value, context);
         boolean checkTestingTime = validateTestingTime(value, context);
+        boolean checkTargetScore = validateTargetScore(value, context);
         return ValidateUtils.isAllTrue(List.of(
                 checkTestName,
                 checkDescription,
                 checkStartDate,
                 checkEndDate,
-                checkTestingTime
+                checkTestingTime,
+                checkTargetScore
         ));
+    }
+
+    private boolean validateTargetScore(UpdateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {
+        if (Objects.nonNull(value.getTargetScore())){
+            if (value.getTargetScore() < 0 || value.getTargetScore() >10){
+                context.buildConstraintViolationWithTemplate(ErrorMessage.MULTIPLE_CHOICE_TARGET_SCORE_INVALID.name())
+                        .addPropertyNode(TARGET_SCORE)
+                        .addConstraintViolation();
+                return Boolean.FALSE;
+            }
+        }
+        return Boolean.TRUE;
     }
 
     private boolean validateDescription(UpdateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {

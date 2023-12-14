@@ -49,6 +49,7 @@ public enum ErrorMessage {
     MULTIPLE_CHOICE_TEST_DATE_INVALID(Constants.BAD_REQUEST, "The endDate must be after the startDate."),
     MULTIPLE_CHOICE_TESTING_TIME_INVALID(Constants.BAD_REQUEST, "The testing time is not valid."),
     MULTIPLE_CHOICE_NOT_FOUND(Constants.NOT_FOUND, "Can not find the multiple choice test"),
+    MULTIPLE_CHOICE_TARGET_SCORE_INVALID(Constants.NOT_FOUND, "The target score is invalid."),
     NOT_ENOUGH_QUESTION(Constants.BAD_REQUEST, "Do not enough question in question group with name is %s"),
     QUESTION_NUMBER_REQUIRE(Constants.NOT_FOUND, "Number of question is require."),
     MULTIPLE_CHOICE_TEST_QUESTION_SOURCE_INVALID(Constants.BAD_REQUEST, "The questions of the test is missing or duplicate source."),

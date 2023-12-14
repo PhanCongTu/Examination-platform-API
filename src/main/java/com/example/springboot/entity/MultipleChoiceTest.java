@@ -34,6 +34,7 @@ public class MultipleChoiceTest extends AbstractAuditingEntity {
     private static final String END_DATE = "end_date";
     private static final String TESTING_TIME = "testing_time";
     private static final String DESCRIPTION = "description";
+    private static final String TARGET_SCORE = "target_score";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +58,9 @@ public class MultipleChoiceTest extends AbstractAuditingEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Classroom classRoom;
+
+    @Column(name = TARGET_SCORE)
+    private Double targetScore;
 
     @OneToMany(
             mappedBy = "multipleChoiceTest",

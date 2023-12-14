@@ -36,6 +36,7 @@ public class CustomBuilder {
                 .SubmittedDate(score.getCreatedDate().toEpochMilli())
                 .multipleChoiceTest(CustomBuilder.buildMultipleChoiceTestResponse(score.getMultipleChoiceTest()))
                 .submittedQuestions(submittedQuestionResponses)
+                .targetScore(score.getTargetScore())
                 .build();
     }
 
@@ -61,6 +62,7 @@ public class CustomBuilder {
                 .startDate(multipleChoiceTest.getStartDate())
                 .endDate(multipleChoiceTest.getEndDate())
                 .testingTime(multipleChoiceTest.getTestingTime())
+                .targetScore(multipleChoiceTest.getTargetScore())
                 .build();
     }
 
@@ -73,6 +75,7 @@ public class CustomBuilder {
                 .endDate(multipleChoiceTest.getEndDate())
                 .testingTime(multipleChoiceTest.getTestingTime())
                 .questions(questions)
+                .targetScore(multipleChoiceTest.getTargetScore())
                 .build();
     }
 

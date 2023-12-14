@@ -28,6 +28,8 @@ public class CreateMultipleChoiceTestDTO {
 
     private Long classroomId;
 
+    private Double targetScore;
+
     private List<Long> questionIds;
 
     private List<Questions> randomQuestions;

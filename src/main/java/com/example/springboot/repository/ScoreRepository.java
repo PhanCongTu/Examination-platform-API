@@ -16,12 +16,12 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
 
     Optional<Score> findByMultipleChoiceTestIdAndUserProfileUserID(Long testId, Long userId);
 
-    @Query("select new com.example.springboot.dto.response.StudentScoreResponse( s.id,s.multipleChoiceTest.id, s.totalCore, s.createdDate, s.isLate, u.userID, u.displayName, u.loginName) " +
+    @Query("select new com.example.springboot.dto.response.StudentScoreResponse( s.id,s.multipleChoiceTest.id, s.totalCore, s.createdDate, s.isLate, u.userID, u.displayName, u.loginName, s.targetScore) " +
             "FROM Score s inner join UserProfile u on  s.userProfile.userID = u.userID \n" +
             "where s.multipleChoiceTest.id = :testId and (u.displayName like :searchText or u.loginName like :searchText)")
     Page<StudentScoreResponse> findAllScoreOfMultipleChoiceTest(Long testId, String searchText, Pageable pageable);
 
-    @Query("select new com.example.springboot.dto.response.MyScoreResponse(s.id, s.totalCore, s.isLate, s.submittedDate, mc.id, mc.testName, c.id, c.className, c.classCode) " +
+    @Query("select new com.example.springboot.dto.response.MyScoreResponse(s.id, s.totalCore, s.isLate, s.submittedDate, mc.id, mc.testName, c.id, c.className, c.classCode, s.targetScore) " +
             "FROM Score s inner join MultipleChoiceTest mc on s.multipleChoiceTest.id = mc.id " +
             "inner join Classroom c on mc.classRoom.id = c.id " +
             "where mc.testName like :searchText and s.userProfile.userID = :studentId and s.submittedDate > :dateFrom and s.submittedDate < :dateTo")

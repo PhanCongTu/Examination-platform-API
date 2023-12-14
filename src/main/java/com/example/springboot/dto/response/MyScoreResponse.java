@@ -21,8 +21,9 @@ public class MyScoreResponse {
     private Long classroomId;
     private String className;
     private String classCode;
+    private Double targetScore;
 
-    public MyScoreResponse(Long id, Double totalScore, Boolean isLate, Long submittedDate, Long testId, String testName, Long classroomId, String className, String classCode) {
+    public MyScoreResponse(Long id, Double totalScore, Boolean isLate, Long submittedDate, Long testId, String testName, Long classroomId, String className, String classCode, Double targetScore) {
         this.id = id;
         this.totalScore = totalScore;
         this.isLate = isLate;
@@ -32,5 +33,6 @@ public class MyScoreResponse {
         this.classroomId = classroomId;
         this.className = className;
         this.classCode = classCode;
+        this.targetScore = targetScore;
     }
 }

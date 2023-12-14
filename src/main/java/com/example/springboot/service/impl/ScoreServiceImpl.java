@@ -141,6 +141,7 @@ public class ScoreServiceImpl implements ScoreService {
                 .multipleChoiceTest(multipleChoiceTestOp.get())
                 .userProfile(userProfile)
                 .submittedDate(Timestamp.from(ZonedDateTime.now().toInstant()).getTime())
+                .targetScore(multipleChoiceTestOp.get().getTargetScore())
                 .build();
         score = scoreRepository.save(score);
         List<SubmittedQuestionResponse> submittedQuestionResponses = new ArrayList<>();

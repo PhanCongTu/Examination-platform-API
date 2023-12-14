@@ -33,7 +33,7 @@ public class Score extends AbstractAuditingEntity {
     private static final String TOTAL_CORRECT = "total_correct";
     private static final String SUBMITTED_DATE = "submitted_date";
     private static final String MULTIPLE_CHOICE_TEST_ID = "multiple_choice_test_id";
-
+    private static final String TARGET_SCORE = "target_score";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -49,6 +49,9 @@ public class Score extends AbstractAuditingEntity {
     private Long submittedDate;
 
     private boolean isLate;
+
+    @Column(name = TARGET_SCORE)
+    private Double targetScore;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = MULTIPLE_CHOICE_TEST_ID, referencedColumnName = "id")

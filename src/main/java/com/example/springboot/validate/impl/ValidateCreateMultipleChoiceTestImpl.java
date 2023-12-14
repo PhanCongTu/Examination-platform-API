@@ -33,6 +33,7 @@ public class ValidateCreateMultipleChoiceTestImpl implements ConstraintValidator
     private static final String END_DATE = "endDate";
     private static final String TESTING_TIME = "testingTime";
     private static final String CLASSROOM_ID = "classroomId";
+    private static final String TARGET_SCORE = "targetScore";
     private static final String QUESTION_IDS = "questionIds";
     private static final String RANDOM_QUESTIONS = "randomQuestions";
     private static final Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
@@ -51,6 +52,7 @@ public class ValidateCreateMultipleChoiceTestImpl implements ConstraintValidator
         boolean checkEndDate = validateEndDate(value, context);
         boolean checkTestingTime = validateTestingTime(value, context);
         boolean checkClassroomId = validateClassroomId(value, context);
+        boolean checkTargetScore = validateTargetScore(value, context);
         boolean checkQuestionIds = validateQuestionIds(value, context);
         boolean checkRandomQuestions = validateRandomQuestions(value, context);
         boolean checkDuplicateQuestionResource = validateQuestionResource(value, context);
@@ -61,11 +63,28 @@ public class ValidateCreateMultipleChoiceTestImpl implements ConstraintValidator
                 checkEndDate,
                 checkTestingTime,
                 checkClassroomId,
+                checkTargetScore,
                 checkQuestionIds,
                 checkRandomQuestions,
                 checkDuplicateQuestionResource
 
         ));
+    }
+
+    private boolean validateTargetScore(CreateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {
+        if (Objects.isNull(value.getTargetScore())){
+            context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
+                    .addPropertyNode(TARGET_SCORE)
+                    .addConstraintViolation();
+            return Boolean.FALSE;
+        }
+        if (value.getTargetScore() < 0 || value.getTargetScore() >10){
+            context.buildConstraintViolationWithTemplate(ErrorMessage.MULTIPLE_CHOICE_TARGET_SCORE_INVALID.name())
+                    .addPropertyNode(TARGET_SCORE)
+                    .addConstraintViolation();
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     private boolean validateDescription(CreateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {
