@@ -23,4 +23,6 @@ public interface UserProfileService {
     ResponseEntity<?> getAllVerifiedStudents(String search, int page, String column, int size, String sortType);
 
     ResponseEntity<?> getCurrentLoggedInUser();
+
+    ResponseEntity<?> deleteUser(Long userId);
 }

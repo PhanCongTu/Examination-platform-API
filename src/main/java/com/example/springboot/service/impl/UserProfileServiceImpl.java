@@ -384,4 +384,28 @@ public class UserProfileServiceImpl implements UserProfileService {
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
         return ResponseEntity.ok(CustomBuilder.buildUserProfileResponse(userProfile));
     }
+
+    @Override
+    public ResponseEntity<?> deleteUser(Long userId) {
+        log.warn("Delete user: start");
+        UserProfile userProfile = webUtils.getCurrentLogedInUser();
+        if (!userProfile.getRoles().contains(EnumRole.ROLE_ADMIN.name())) {
+            log.warn("Delete user: Logged-in user do not have permission to delete user");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Logged-in user do not have permission to delete user, id: " + userProfile.getUserID());
+        }
+        Optional<UserProfile> targetUser = userProfileRepository.findById(userId);
+        if (targetUser.isEmpty()){
+            log.warn("Delete user: Not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can not find user with id: " + userId);
+        }
+        if (targetUser.get().getRoles().contains(EnumRole.ROLE_ADMIN.name())) {
+            log.warn("Delete user: Can not delete admin account");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can not delete admin account");
+        }
+        userProfileRepository.delete(targetUser.get());
+        log.warn(String.format("Delete user: User with id %s has been deleted by admin with id %s ",userId, userProfile.getUserID() ));
+        log.warn("Delete user: end");
+        return ResponseEntity.noContent().build();
+    }
 }

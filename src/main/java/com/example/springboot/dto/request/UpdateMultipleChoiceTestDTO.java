@@ -17,6 +17,7 @@ import java.util.List;
 @ValidateUpdateMultipleChoiceTest
 public class UpdateMultipleChoiceTestDTO {
     private String testName;
+    private String description;
     // milliseconds since January 1, 1970
     private Long startDate;
     // milliseconds since January 1, 1970

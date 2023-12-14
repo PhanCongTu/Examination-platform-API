@@ -12,6 +12,8 @@ public class MultipleChoiceTestResponse {
 
     private String testName;
 
+    private String description;
+
     private Long startDate;
 
     private Long endDate;

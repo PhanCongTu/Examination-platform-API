@@ -31,6 +31,7 @@ public class Classroom extends AbstractAuditingEntity {
     private static final String CLASS_ID = "id";
     private static final String CLASS_NAME = "class_name";
     private static final String CLASS_CODE = "class_code";
+    private static final String DESCRIPTION = "description";
     private static final String IS_PRIVATE = "is_private";
 
     @Id
@@ -43,6 +44,9 @@ public class Classroom extends AbstractAuditingEntity {
 
     @Column(name = CLASS_CODE)
     private String classCode;
+
+    @Column(name = DESCRIPTION)
+    private String description;
 
     @Column(name = IS_PRIVATE)
     private Boolean isPrivate;

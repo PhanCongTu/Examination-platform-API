@@ -13,4 +13,5 @@ public class QuestionGroupResponse {
     private String code;
     private Boolean isEnable;
     private Long totalQuestion;
+    private String description;
 }

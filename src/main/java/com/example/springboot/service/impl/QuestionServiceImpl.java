@@ -60,11 +60,11 @@ public class QuestionServiceImpl implements QuestionService {
                 questionGroupRepository.findByIdAndStatus(dto.getQuestionGroupId(), true);
 
         Question question = Question.builder()
-                .content(dto.getContent())
-                .firstAnswer(dto.getFirstAnswer().getAnswerContent())
-                .secondAnswer(dto.getSecondAnswer().getAnswerContent())
-                .thirdAnswer(dto.getThirdAnswer().getAnswerContent())
-                .fourthAnswer(dto.getFourthAnswer().getAnswerContent())
+                .content(dto.getContent().trim())
+                .firstAnswer(dto.getFirstAnswer().getAnswerContent().trim())
+                .secondAnswer(dto.getSecondAnswer().getAnswerContent().trim())
+                .thirdAnswer(dto.getThirdAnswer().getAnswerContent().trim())
+                .fourthAnswer(dto.getFourthAnswer().getAnswerContent().trim())
                 .correctAnswer(getCorrectAnswerCreate(dto))
                 .questionGroup(questionGroupOp.get())
                 .build();
@@ -87,11 +87,11 @@ public class QuestionServiceImpl implements QuestionService {
         String correctAnswer = question.getCorrectAnswer();
 
         if(Objects.nonNull(dto.getContent())) {
-            question.setContent(dto.getContent());
+            question.setContent(dto.getContent().trim());
             modifyUpdateQuestion(question);
         }
         if(Objects.nonNull(dto.getFirstAnswer())) {
-            String answerContent = dto.getFirstAnswer().getAnswerContent();
+            String answerContent = dto.getFirstAnswer().getAnswerContent().trim();
             question.setFirstAnswer(answerContent);
             if(dto.getFirstAnswer().getIsCorrect()) {
                 correctAnswer = answerContent;
@@ -99,7 +99,7 @@ public class QuestionServiceImpl implements QuestionService {
             modifyUpdateQuestion(question);
         }
         if(Objects.nonNull(dto.getSecondAnswer())) {
-            String answerContent = dto.getSecondAnswer().getAnswerContent();
+            String answerContent = dto.getSecondAnswer().getAnswerContent().trim();
             question.setSecondAnswer(answerContent);
             if(dto.getSecondAnswer().getIsCorrect()) {
                 correctAnswer = answerContent;
@@ -107,7 +107,7 @@ public class QuestionServiceImpl implements QuestionService {
             modifyUpdateQuestion(question);
         }
         if(Objects.nonNull(dto.getThirdAnswer())) {
-            String answerContent = dto.getThirdAnswer().getAnswerContent();
+            String answerContent = dto.getThirdAnswer().getAnswerContent().trim();
             question.setThirdAnswer(answerContent);
             if(dto.getThirdAnswer().getIsCorrect()) {
                 correctAnswer = answerContent;
@@ -115,7 +115,7 @@ public class QuestionServiceImpl implements QuestionService {
             modifyUpdateQuestion(question);
         }
         if(Objects.nonNull(dto.getFourthAnswer())) {
-            String answerContent = dto.getFourthAnswer().getAnswerContent();
+            String answerContent = dto.getFourthAnswer().getAnswerContent().trim();
             question.setFourthAnswer(answerContent);
             if(dto.getFourthAnswer().getIsCorrect()) {
                 correctAnswer = answerContent;

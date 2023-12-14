@@ -28,6 +28,7 @@ import java.util.Objects;
 public class ValidateCreateMultipleChoiceTestImpl implements ConstraintValidator<ValidateCreateMultipleChoiceTest, CreateMultipleChoiceTestDTO> {
 
     private static final String TEST_NAME = "testName";
+    private static final String DESCRIPTION = "description";
     private static final String START_DATE = "startDate";
     private static final String END_DATE = "endDate";
     private static final String TESTING_TIME = "testingTime";
@@ -45,6 +46,7 @@ public class ValidateCreateMultipleChoiceTestImpl implements ConstraintValidator
         context.disableDefaultConstraintViolation();
         log.info("Current unix time: " + unixTimeNow);
         boolean checkTestName = validateTestName(value, context);
+        boolean checkDescription = validateDescription(value, context);
         boolean checkStartDate = validateStartDate(value, context);
         boolean checkEndDate = validateEndDate(value, context);
         boolean checkTestingTime = validateTestingTime(value, context);
@@ -54,6 +56,7 @@ public class ValidateCreateMultipleChoiceTestImpl implements ConstraintValidator
         boolean checkDuplicateQuestionResource = validateQuestionResource(value, context);
         return ValidateUtils.isAllTrue(List.of(
                 checkTestName,
+                checkDescription,
                 checkStartDate,
                 checkEndDate,
                 checkTestingTime,
@@ -63,6 +66,18 @@ public class ValidateCreateMultipleChoiceTestImpl implements ConstraintValidator
                 checkDuplicateQuestionResource
 
         ));
+    }
+
+    private boolean validateDescription(CreateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {
+        log.info("Create multiple choice test: Validate Description: Start");
+        if(StringUtils.isBlank(value.getDescription())) {
+            context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
+                    .addPropertyNode(DESCRIPTION)
+                    .addConstraintViolation();
+            return Boolean.FALSE;
+        }
+        log.info("Create multiple choice test: Validate Description: End");
+        return Boolean.TRUE;
     }
 
     private boolean validateQuestionResource(CreateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {

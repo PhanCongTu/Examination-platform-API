@@ -21,6 +21,7 @@ public class ValidateUpdateClassroomImpl implements ConstraintValidator<Validate
     private ClassroomRepository classRoomRepository;
     private static final String CLASS_NAME = "className";
     private static final String CLASS_CODE = "classCode";
+    private static final String DESCRIPTION = "description";
     private static final String IS_PRIVATE = "is_private";
     private static final String CODE_PREFIX = "classroom_";
     @Override

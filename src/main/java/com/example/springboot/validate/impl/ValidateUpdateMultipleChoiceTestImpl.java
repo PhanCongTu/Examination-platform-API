@@ -20,6 +20,8 @@ public class ValidateUpdateMultipleChoiceTestImpl implements ConstraintValidator
 
     private final String TEST_NAME = "testName";
 
+    private static final String DESCRIPTION = "description";
+
     private final String START_DATE = "startDate";
 
     private final String END_DATE = "endDate";
@@ -31,15 +33,29 @@ public class ValidateUpdateMultipleChoiceTestImpl implements ConstraintValidator
     public boolean isValid(UpdateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
         boolean checkTestName = validateTestName(value, context);
+        boolean checkDescription = validateDescription(value, context);
         boolean checkStartDate = validateStartDate(value, context);
         boolean checkEndDate = validateEndDate(value, context);
         boolean checkTestingTime = validateTestingTime(value, context);
         return ValidateUtils.isAllTrue(List.of(
                 checkTestName,
+                checkDescription,
                 checkStartDate,
                 checkEndDate,
                 checkTestingTime
         ));
+    }
+
+    private boolean validateDescription(UpdateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {
+        if(Objects.nonNull(value.getDescription())) {
+            if (value.getDescription().isBlank()) {
+                context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
+                        .addPropertyNode(DESCRIPTION)
+                        .addConstraintViolation();
+                return Boolean.FALSE;
+            }
+        }
+        return Boolean.TRUE;
     }
 
     private boolean validateTestingTime(UpdateMultipleChoiceTestDTO value, ConstraintValidatorContext context) {

@@ -19,4 +19,5 @@ public class CreateQuestionGroupDTO {
     private String code;
     private String name;
     private Long classroomId;
+    private String description;
 }

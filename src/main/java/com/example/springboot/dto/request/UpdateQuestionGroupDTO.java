@@ -16,4 +16,5 @@ import lombok.Setter;
 public class UpdateQuestionGroupDTO {
     private String code;
     private String name;
+    private String description;
 }

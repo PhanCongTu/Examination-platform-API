@@ -21,7 +21,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:5000")
 public class AuthController {
     @Autowired
     private UserProfileService userProfileService;
@@ -38,6 +37,12 @@ public class AuthController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addAdmin(@Valid @RequestBody SignUpDTO signupVM){
         return userProfileService.createUser(signupVM, false, true);
+    }
+
+    @DeleteMapping(value = "/delete/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") Long userId){
+        return userProfileService.deleteUser(userId);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)

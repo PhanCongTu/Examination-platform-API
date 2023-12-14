@@ -33,6 +33,7 @@ public class MultipleChoiceTest extends AbstractAuditingEntity {
     private static final String START_DATE = "start_date";
     private static final String END_DATE = "end_date";
     private static final String TESTING_TIME = "testing_time";
+    private static final String DESCRIPTION = "description";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +42,9 @@ public class MultipleChoiceTest extends AbstractAuditingEntity {
 
     @Column(name = TEST_NAME)
     private String testName;
+
+    @Column(name = DESCRIPTION)
+    private String description;
 
     @Column(name = START_DATE)
     private Long startDate; // milliseconds since January 1, 1970

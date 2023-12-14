@@ -56,8 +56,9 @@ public class ClassroomServiceImpl implements ClassroomService {
         log.info("Start create Classroom");
         UserProfile userProfile = webUtils.getCurrentLogedInUser();
         Classroom classRoom = new Classroom();
-        classRoom.setClassName(DTO.getClassName());
+        classRoom.setClassName(DTO.getClassName().trim());
         classRoom.setClassCode(CODE_PREFIX + DTO.getClassCode().trim());
+        classRoom.setDescription(DTO.getDescription().trim());
         classRoom.setIsPrivate(DTO.getIsPrivate());
         classRoom.setCreatedBy(userProfile.getLoginName());
         Classroom savedClassroom = classRoomRepository.save(classRoom);
@@ -131,7 +132,11 @@ public class ClassroomServiceImpl implements ClassroomService {
             classRoom.setIsPrivate(DTO.getIsPrivate());
         }
         if (StringUtils.isNoneBlank(DTO.getClassName())){
-            classRoom.setClassName(DTO.getClassName());
+            classRoom.setClassName(DTO.getClassName().trim());
+            modifyUpdateClassroom(classRoom);
+        }
+        if (StringUtils.isNoneBlank(DTO.getDescription())){
+            classRoom.setDescription(DTO.getDescription().trim());
             modifyUpdateClassroom(classRoom);
         }
         if(StringUtils.isNoneBlank(DTO.getClassCode())){
@@ -144,7 +149,7 @@ public class ClassroomServiceImpl implements ClassroomService {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(response);
             }
-            classRoom.setClassCode(DTO.getClassCode());
+            classRoom.setClassCode(DTO.getClassCode().trim());
             modifyUpdateClassroom(classRoom);
         }
         classRoom = classRoomRepository.save(classRoom);
@@ -158,6 +163,12 @@ public class ClassroomServiceImpl implements ClassroomService {
         Optional<Classroom> classRoom = classRoomRepository.findById(dto.getClassroomId());
         Optional<UserProfile> userProfile = studentRepositoryRead.findVerifiedStudentByIdAndStatus(dto.getStudentId(), true);
 
+        Optional<ClassroomRegistration> classroomRegistrationExisted =
+                classroomRegistrationRepository
+                        .findByClassRoomIdAndUserProfileUserID(classRoom.get().getId(), userProfile.get().getUserID());
+        if(classroomRegistrationExisted.isPresent()){
+            return ResponseEntity.noContent().build();
+        }
 
         ClassroomRegistration classroomRegistration =
                 ClassroomRegistration.builder()
@@ -171,7 +182,6 @@ public class ClassroomServiceImpl implements ClassroomService {
         classRoomRepository.save(classRoom.get());
         userProfileRepository.save(userProfile.get());
         return ResponseEntity.noContent().build();
-
     }
 
     @Override

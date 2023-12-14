@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class StudentScoreResponse {
     private Long id;
+    private Long testId;
     private Double totalScore;
     private Instant submittedDate;
     private Boolean isLate;
@@ -21,8 +22,9 @@ public class StudentScoreResponse {
     private String studentDisplayName;
     private String studentLoginName;
 
-    public StudentScoreResponse(Long id, Double totalScore, Instant submittedDate, Boolean isLate, Long studentId, String studentDisplayName, String studentLoginName) {
+    public StudentScoreResponse(Long id, Long testId, Double totalScore, Instant submittedDate, Boolean isLate, Long studentId, String studentDisplayName, String studentLoginName) {
         this.id = id;
+        this.testId = testId;
         this.totalScore = totalScore;
         this.submittedDate = submittedDate;
         this.isLate = isLate;

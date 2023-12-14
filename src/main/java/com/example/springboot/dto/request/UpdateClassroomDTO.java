@@ -16,5 +16,6 @@ import lombok.Setter;
 public class UpdateClassroomDTO {
     private String classCode;
     private String className;
+    private String description;
     private Boolean isPrivate;
 }

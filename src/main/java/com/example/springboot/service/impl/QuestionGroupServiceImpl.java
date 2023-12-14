@@ -45,7 +45,8 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
         Optional<Classroom> classRoom =  classroomRepository.findById(dto.getClassroomId());
 
         QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setName(dto.getName());
+        questionGroup.setName(dto.getName().trim());
+        questionGroup.setDescription(dto.getDescription().trim());
         questionGroup.setCode(CODE_PREFIX + dto.getCode().trim());
         questionGroup.setCreatedBy(userProfile.getLoginName());
         questionGroup.setClassRoom(classRoom.get());
@@ -112,6 +113,10 @@ public class QuestionGroupServiceImpl implements QuestionGroupService {
         QuestionGroup questionGroup = questionGroupOp.get();
         if (StringUtils.isNoneBlank(dto.getName())){
             questionGroup.setName(dto.getName());
+            modifyUpdateQuestionGroup(questionGroup);
+        }
+        if (StringUtils.isNoneBlank(dto.getDescription())){
+            questionGroup.setDescription(dto.getDescription());
             modifyUpdateQuestionGroup(questionGroup);
         }
         if (StringUtils.isNoneBlank(dto.getCode())){

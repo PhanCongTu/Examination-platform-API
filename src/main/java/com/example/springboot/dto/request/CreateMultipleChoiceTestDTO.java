@@ -24,6 +24,8 @@ public class CreateMultipleChoiceTestDTO {
     // minutes
     private Long testingTime;
 
+    private String description;
+
     private Long classroomId;
 
     private List<Long> questionIds;

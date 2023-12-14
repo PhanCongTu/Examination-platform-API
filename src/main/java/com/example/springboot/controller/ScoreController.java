@@ -59,7 +59,7 @@ public class ScoreController {
         return scoreService.getAllStudentScoreOfTest(testId, search, page, column, size, sortType);
     }
 
-    @GetMapping(value = "/student", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/student", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getScoreOfStudent(@Valid @RequestBody GetScoreOfStudentDTO dto){
         return scoreService.getScoreOfStudent(dto.getStudentId(), dto.getMultipleChoiceTestId());

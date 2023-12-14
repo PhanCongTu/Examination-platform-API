@@ -16,7 +16,7 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
 
     Optional<Score> findByMultipleChoiceTestIdAndUserProfileUserID(Long testId, Long userId);
 
-    @Query("select new com.example.springboot.dto.response.StudentScoreResponse( s.id, s.totalCore, s.createdDate, s.isLate, u.userID, u.displayName, u.loginName) " +
+    @Query("select new com.example.springboot.dto.response.StudentScoreResponse( s.id,s.multipleChoiceTest.id, s.totalCore, s.createdDate, s.isLate, u.userID, u.displayName, u.loginName) " +
             "FROM Score s inner join UserProfile u on  s.userProfile.userID = u.userID \n" +
             "where s.multipleChoiceTest.id = :testId and (u.displayName like :searchText or u.loginName like :searchText)")
     Page<StudentScoreResponse> findAllScoreOfMultipleChoiceTest(Long testId, String searchText, Pageable pageable);

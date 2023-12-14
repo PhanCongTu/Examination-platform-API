@@ -22,6 +22,7 @@ public class ValidateCreateClassroomImpl implements ConstraintValidator<Validate
     private ClassroomRepository classRoomRepository;
     private static final String CLASS_NAME = "className";
     private static final String CLASS_CODE = "classCode";
+    private static final String DESCRIPTION = "description";
     private static final String IS_PRIVATE = "is_private";
     private static final String CODE_PREFIX = "classroom_";
 
@@ -30,12 +31,24 @@ public class ValidateCreateClassroomImpl implements ConstraintValidator<Validate
         context.disableDefaultConstraintViolation();
         boolean checkClassName = validateClassName(value, context);
         boolean checkClassCode = validateClassCode(value, context);
+        boolean checkDescription = validateDescription(value, context);
         boolean checkIsPrivate = validateIsPrivate(value, context);
         return ValidateUtils.isAllTrue(List.of(
                 checkClassName,
                 checkClassCode,
+                checkDescription,
                 checkIsPrivate
         ));
+    }
+
+    private boolean validateDescription(CreateClassroomDTO value, ConstraintValidatorContext context) {
+        if(Objects.isNull(value.getDescription()) || value.getDescription().isBlank()){
+            context.buildConstraintViolationWithTemplate(ErrorMessage.COMMON_FIELD_REQUIRED.name())
+                    .addPropertyNode(DESCRIPTION)
+                    .addConstraintViolation();
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     private boolean validateIsPrivate(CreateClassroomDTO value, ConstraintValidatorContext context) {

@@ -219,6 +219,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
         Classroom classroom = classroomRepository.findById(dto.getClassroomId()).get();
         MultipleChoiceTest multipleChoiceTest = new MultipleChoiceTest();
         multipleChoiceTest.setTestName(dto.getTestName());
+        multipleChoiceTest.setDescription(dto.getDescription());
         multipleChoiceTest.setStartDate(dto.getStartDate());
         multipleChoiceTest.setEndDate(dto.getEndDate());
         multipleChoiceTest.setTestingTime(dto.getTestingTime());

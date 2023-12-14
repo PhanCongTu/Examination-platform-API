@@ -26,6 +26,7 @@ public class ValidateUpdateQuestionGroupImpl implements ConstraintValidator<Vali
     private static final String NAME = "name";
     private static final String CLASSROOM_ID = "classroomId";
     private static final String CODE_PREFIX = "group_";
+    private static final String DESCRIPTION = "description";
 
     @Override
     public boolean isValid(UpdateQuestionGroupDTO value, ConstraintValidatorContext context) {

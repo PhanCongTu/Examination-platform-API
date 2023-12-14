@@ -57,6 +57,7 @@ public class CustomBuilder {
         return MultipleChoiceTestResponse.builder()
                 .id(multipleChoiceTest.getId())
                 .testName(multipleChoiceTest.getTestName())
+                .description(multipleChoiceTest.getDescription())
                 .startDate(multipleChoiceTest.getStartDate())
                 .endDate(multipleChoiceTest.getEndDate())
                 .testingTime(multipleChoiceTest.getTestingTime())
@@ -67,6 +68,7 @@ public class CustomBuilder {
         return MultipleChoiceTestWithQuestionsResponse.builder()
                 .id(multipleChoiceTest.getId())
                 .testName(multipleChoiceTest.getTestName())
+                .description(multipleChoiceTest.getDescription())
                 .startDate(multipleChoiceTest.getStartDate())
                 .endDate(multipleChoiceTest.getEndDate())
                 .testingTime(multipleChoiceTest.getTestingTime())
@@ -79,6 +81,7 @@ public class CustomBuilder {
                 .id(classRoom.getId())
                 .className(classRoom.getClassName())
                 .classCode(classRoom.getClassCode())
+                .description(classRoom.getDescription())
                 .isPrivate(classRoom.getIsPrivate())
                 .isEnable(classRoom.getIsEnable())
                 .build();
@@ -102,6 +105,7 @@ public class CustomBuilder {
                 .id(questionGroup.getId())
                 .name(questionGroup.getName())
                 .code(questionGroup.getCode())
+                .description(questionGroup.getDescription())
                 .isEnable(questionGroup.getIsEnable())
                 .build();
     }

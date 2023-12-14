@@ -31,6 +31,7 @@ public class QuestionGroup extends AbstractAuditingEntity {
     private static final String ID = "id";
     private static final String CODE = "code";
     private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,9 @@ public class QuestionGroup extends AbstractAuditingEntity {
 
     @Column(name = CODE)
     private String code;
+
+    @Column(name = DESCRIPTION)
+    private String description;
 
     @Column(name = NAME)
     private String name;

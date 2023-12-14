@@ -13,12 +13,14 @@ public class ClassroomResponse {
     private String classCode;
     private Boolean isEnable;
     private Boolean isPrivate;
+    private String description;
 
-    public ClassroomResponse(Long id, String className, String classCode, Boolean isEnable, Boolean isPrivate) {
+    public ClassroomResponse(Long id, String className, String classCode, Boolean isEnable, Boolean isPrivate, String description) {
         this.id = id;
         this.className = className;
         this.classCode = classCode;
         this.isEnable = isEnable;
         this.isPrivate = isPrivate;
+        this.description = description;
     }
 }
