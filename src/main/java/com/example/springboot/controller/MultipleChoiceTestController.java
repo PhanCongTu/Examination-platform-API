@@ -79,6 +79,12 @@ public class MultipleChoiceTestController {
         return multipleChoiceTestService.
                 getMyMultipleChoiceTestsOf2WeeksAround();
     }
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping(value = "/me/next-two-weeks", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMyMultipleChoiceTestsNext2Weeks(){
+        return multipleChoiceTestService.
+                getMyMultipleChoiceTestsNext2Weeks();
+    }
 
     @GetMapping(value = "/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMultipleChoiceTestsOfClassroom(

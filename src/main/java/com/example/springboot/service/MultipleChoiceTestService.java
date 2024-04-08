@@ -19,6 +19,7 @@ public interface MultipleChoiceTestService {
     ResponseEntity<?> getMultipleChoiceTest(Long testId);
 
     ResponseEntity<?> getMyMultipleChoiceTestsOf2WeeksAround();
+    ResponseEntity<?> getMyMultipleChoiceTestsNext2Weeks();
 
     ResponseEntity<?> getInfoMultipleChoiceTest(Long testId);
 }
