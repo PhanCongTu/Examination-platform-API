@@ -52,7 +52,7 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
             "\t\tSELECT crr.classRoom.id FROM ClassroomRegistration crr \n" +
             "\t\t\twhere crr.userProfile.userID = :userId \n" +
             "\t\t\tand crr.isEnable = true\n" +
-            "    ) and mct.startDate > :unixTime2WeeksAgo and mct.startDate <= :unixTime2WeeksLater")
+            "    ) and mct.startDate > :unixTime2WeeksAgo and mct.startDate <= :unixTime2WeeksLater and mct.testName like :searchText")
     List<MyMultipleChoiceTestResponse> find2WeeksAroundMCTest(Long userId, Long unixTime2WeeksAgo , Long unixTime2WeeksLater,String searchText, Pageable pageable);
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName,mct.description, mct.testingTime, \n" +
             "\tmct.classRoom.id , cr.className , cr.classCode , cr.description)\n" +
