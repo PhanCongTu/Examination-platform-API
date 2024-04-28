@@ -37,17 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.event.MailEvent;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.Period;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,16 +73,42 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
                 CustomBuilder.buildMultipleChoiceTestWithQuestionsResponse(multipleChoiceTest, questionsOfTheTest);
         return ResponseEntity.ok(response);
     }
-
     @Override
-    public ResponseEntity<?> getMyMultipleChoiceTestsOf2WeeksAround() {
+    public ResponseEntity<?> getMyMultipleChoiceTestsNext2Weeks(String search, int page, String column, int size, String sortType) {
         Long  myId = webUtils.getCurrentLogedInUser().getUserID();
+//        Long unixTime2WeeksAgo = Date.from(Instant.now()).getTime();
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search.trim() + "%";
+        Long unixTime2WeeksAgo = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli();
+        Long unixTime2WeeksLater = Timestamp.from(ZonedDateTime.now().toInstant().plus(Period.ofWeeks(2))).getTime();
+        List<MyMultipleChoiceTestResponse> response =
+                multipleChoiceTestRepository.find2WeeksAroundMCTest(myId, unixTime2WeeksAgo, unixTime2WeeksLater,searchText,pageable);
+        return ResponseEntity.ok(response);
+    }
+    @Override
+    public ResponseEntity<?> getMyMultipleChoiceTestsOf2WeeksAround(String search, int page, String column, int size, String sortType) {
+        Long  myId = webUtils.getCurrentLogedInUser().getUserID();
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search.trim() + "%";
         Long unixTime2WeeksAgo = Timestamp.from(ZonedDateTime.now().toInstant().minus(Period.ofWeeks(2))).getTime();
         Long unixTime2WeeksLater = Timestamp.from(ZonedDateTime.now().toInstant().plus(Period.ofWeeks(2))).getTime();
         List<MyMultipleChoiceTestResponse> response =
-                multipleChoiceTestRepository.find2WeeksAroundMCTest(myId, unixTime2WeeksAgo, unixTime2WeeksLater);
+                multipleChoiceTestRepository.find2WeeksAroundMCTest(myId, unixTime2WeeksAgo, unixTime2WeeksLater,searchText,pageable);
         return ResponseEntity.ok(response);
     }
+    @Override
+    public ResponseEntity<?> getMyMultipleChoiceTestsToday(Long startOfDate,String search, int page, String column, int size, String sortType) {
+        final Long A_DAY_TO_MILLISECOND = 86400000L;
+        Long  myId = webUtils.getCurrentLogedInUser().getUserID();
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        String searchText = "%" + search.trim() + "%";
+        Long endOfDay = startOfDate + A_DAY_TO_MILLISECOND;
+
+        List<MyMultipleChoiceTestResponse> response =
+                multipleChoiceTestRepository.findMCTestByDay(myId, startOfDate ,endOfDay,searchText,pageable);
+        return ResponseEntity.ok(response);
+    }
+
     @Override
     public ResponseEntity<?> getInfoMultipleChoiceTest(Long testId) {
         Long  myId = webUtils.getCurrentLogedInUser().getUserID();

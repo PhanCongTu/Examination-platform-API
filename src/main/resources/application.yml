@@ -6,7 +6,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${RDS_USERNAME:root}
-    password: ${RDS_PASSWORD:123456}
+    password: ${RDS_PASSWORD:root}
     url: jdbc:mysql://${RDS_HOST_NAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:examination-platform}?useUnicode=yes&characterEncoding=UTF-8&createDatabaseIfNotExist=true&useSSL=true
   jackson:
     serialization:

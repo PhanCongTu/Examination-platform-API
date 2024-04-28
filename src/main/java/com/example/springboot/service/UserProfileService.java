@@ -24,5 +24,5 @@ public interface UserProfileService {
 
     ResponseEntity<?> getCurrentLoggedInUser();
 
-    ResponseEntity<?> deleteUser(Long userId);
+    ResponseEntity<?> deleteUser(Long userID);
 }
