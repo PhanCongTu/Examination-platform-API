@@ -104,7 +104,7 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
         String searchText = "%" + search.trim() + "%";
         Long endOfDay = startOfDate + A_DAY_TO_MILLISECOND;
 
-        List<MyMultipleChoiceTestResponse> response =
+        Page<MyMultipleChoiceTestResponse> response =
                 multipleChoiceTestRepository.findMCTestByDay(myId, startOfDate ,endOfDay,searchText,pageable);
         return ResponseEntity.ok(response);
     }

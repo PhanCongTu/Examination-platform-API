@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hamcrest.core.Is;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,6 +36,7 @@ public class MultipleChoiceTest extends AbstractAuditingEntity {
     private static final String TESTING_TIME = "testing_time";
     private static final String DESCRIPTION = "description";
     private static final String TARGET_SCORE = "target_score";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
