@@ -172,6 +172,34 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     }
 
     @Override
+    public ResponseEntity<?> getMyMultipleChoiceTestsOfClassroom(Long classroomId, boolean isEnded, String search, int page, String column, int size, String sortType) {
+        Long  myId = webUtils.getCurrentLogedInUser().getUserID();
+        Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
+        Optional<Classroom> classRoom =  classroomRepository.findById(classroomId);
+        if (classRoom.isEmpty()){
+            return CustomBuilder.buildClassroomNotFoundResponseEntity();
+        }
+        String searchText = "%" + search.trim() + "%";
+        Long unixTimeNow = Timestamp.from(ZonedDateTime.now().toInstant()).getTime();
+        Page<MultipleChoiceTest> multipleChoiceTests;
+        if (isEnded) {
+            multipleChoiceTests = multipleChoiceTestRepository.
+                    findEndedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
+        } else {
+            multipleChoiceTests = multipleChoiceTestRepository.
+                    findNotEndedMultipleChoiceTestOfClassroomByClassroomId(classroomId,unixTimeNow, searchText, pageable);
+        }
+        Page<MultipleChoiceTestResponse> response = multipleChoiceTests.map(CustomBuilder::buildMultipleChoiceTestResponse);
+
+        response.forEach((item)->{
+            Optional<Score> score = scoreRepository.findByMultipleChoiceTestIdAndUserProfileUserID(item.getId(), myId);
+            item.setIsSubmitted(score.isPresent());
+        });
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
     public ResponseEntity<?> updateMultipleChoiceTest(Long testId, UpdateMultipleChoiceTestDTO dto) {
         Optional<MultipleChoiceTest> multipleChoiceTestOp = multipleChoiceTestRepository.findById(testId);
         if(multipleChoiceTestOp.isEmpty()) {

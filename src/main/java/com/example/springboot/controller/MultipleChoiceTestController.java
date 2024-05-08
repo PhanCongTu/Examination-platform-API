@@ -120,6 +120,21 @@ public class MultipleChoiceTestController {
                 getMultipleChoiceTestsOfClassroom(classroomId, isEnded, search, page, column, size, sortType);
     }
 
+    @GetMapping(value = "/my/classroom/{classroomId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<?> getMyMultipleChoiceTestsOfClassroom(
+            @PathVariable(name = "classroomId") Long classroomId,
+            @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
+            @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType,
+            @RequestParam(defaultValue = "false") boolean isEnded
+    ){
+        return multipleChoiceTestService.
+                getMyMultipleChoiceTestsOfClassroom(classroomId, isEnded, search, page, column, size, sortType);
+    }
+
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<?> createMultipleChoiceTest(@Valid @RequestBody CreateMultipleChoiceTestDTO DTO){
