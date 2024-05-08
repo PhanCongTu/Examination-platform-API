@@ -22,8 +22,9 @@ public class MyMultipleChoiceTestResponse {
     private String className;
     private String classCode;
     private String classDescription;
+    private Boolean isSubmitted;
 
-    public MyMultipleChoiceTestResponse(Long id, String createdBy, Long startDate, Long endDate, String testName, String testDescription, Long testingTime, Long classroomId, String className, String classCode, String classDescription) {
+    public MyMultipleChoiceTestResponse(Long id, String createdBy, Long startDate, Long endDate, String testName, String testDescription, Long testingTime, Long classroomId, String className, String classCode, String classDescription, Boolean isSubmitted) {
         this.id = id;
         this.createdBy = createdBy;
         this.startDate = startDate;
@@ -35,5 +36,6 @@ public class MyMultipleChoiceTestResponse {
         this.className = className;
         this.classCode = classCode;
         this.classDescription = classDescription;
+        this.isSubmitted = isSubmitted;
     }
 }

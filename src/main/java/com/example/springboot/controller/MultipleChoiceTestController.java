@@ -86,13 +86,14 @@ public class MultipleChoiceTestController {
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping(value = "/me/specific-day", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMyMultipleChoiceTestsOfASpecificDay(@RequestParam Long startOfDate,
+                                                                    @RequestParam(required = false) Long endOfDate,
                                                                     @RequestParam(defaultValue = DEFAULT_SEARCH) String search,
                                                                     @RequestParam(defaultValue = DEFAULT_PAGE) int page,
                                                                     @RequestParam(defaultValue = DEFAULT_COLUMN) String column,
                                                                     @RequestParam(defaultValue = DEFAULT_SIZE) int size,
                                                                     @RequestParam(defaultValue = DEFAULT_SORT_INCREASE) String sortType){
         return multipleChoiceTestService.
-                getMyMultipleChoiceTestsToday(startOfDate, search, page, column, size, sortType);
+                getMyMultipleChoiceTestsToday(startOfDate,endOfDate, search, page, column, size, sortType);
     }
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping(value = "/me/next-two-weeks", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -21,4 +21,6 @@ public class MultipleChoiceTestResponse {
     private Long testingTime;
 
     private double targetScore;
+
+    private Boolean isSubmitted;
 }

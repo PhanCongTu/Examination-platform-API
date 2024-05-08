@@ -21,6 +21,6 @@ public interface MultipleChoiceTestService {
     ResponseEntity<?> getMyMultipleChoiceTestsOf2WeeksAround(String search, int page, String column, int size, String sortType);
     ResponseEntity<?> getMyMultipleChoiceTestsNext2Weeks(String search, int page, String column, int size, String sortType);
 
-    ResponseEntity<?> getMyMultipleChoiceTestsToday(Long startOfDate,String search, int page, String column, int size, String sortType);
+    ResponseEntity<?> getMyMultipleChoiceTestsToday(Long startOfDate,Long endOfDate, String search, int page, String column, int size, String sortType);
     ResponseEntity<?> getInfoMultipleChoiceTest(Long testId);
 }

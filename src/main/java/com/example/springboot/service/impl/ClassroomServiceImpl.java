@@ -103,6 +103,10 @@ public class ClassroomServiceImpl implements ClassroomService {
         Page<Classroom> classRooms = classRoomRepository.findAllSearchedClassRoomsByStatus(searchText,isEnable, pageable);
         // Map topic to topic response DTO
         Page<ClassroomResponse> response = classRooms.map(CustomBuilder::buildClassroomResponse);
+        response.forEach((item)->{
+            Long total = classroomRegistrationRepository.countAllByClassRoomId(item.getId());
+            item.setNumberOfStudents(total);
+        });
         log.info("End get all enable Classroom (non-Admin)");
         return ResponseEntity.ok(response);
     }
@@ -208,6 +212,10 @@ public class ClassroomServiceImpl implements ClassroomService {
         String searchText = "%" + search.trim() + "%";
         Page<Classroom> classRooms = classRoomRepository.findAllRegistedClassroomOfUser(userProfile.getUserID(),searchText, pageable);
         Page<ClassroomResponse> response = classRooms.map(CustomBuilder::buildClassroomResponse);
+        response.forEach((item)->{
+            Long total = classroomRegistrationRepository.countAllByClassRoomId(item.getId());
+            item.setNumberOfStudents(total);
+        });
         log.info("Get all my classroom. End. User is: "+userProfile.getUserID());
         return ResponseEntity.ok(response);
     }
@@ -220,6 +228,8 @@ public class ClassroomServiceImpl implements ClassroomService {
             return CustomBuilder.buildClassroomNotFoundResponseEntity();
         }
         ClassroomResponse response = CustomBuilder.buildClassroomResponse(classroom.get());
+        Long total = classroomRegistrationRepository.countAllByClassRoomId(classroom.get().getId());
+        response.setNumberOfStudents(total);
         log.info("Get classroom by id. End");
         return ResponseEntity.ok(response);
     }

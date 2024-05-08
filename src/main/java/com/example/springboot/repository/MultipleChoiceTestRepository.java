@@ -26,7 +26,7 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
     Page<MultipleChoiceTest> findNotEndedMultipleChoiceTestOfClassroomByClassroomId(Long classroomId,Long unixTimeNow, String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName,mct.description, mct.testingTime, \n" +
-            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description)\n" +
+            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description, false)\n" +
             "\tFROM MultipleChoiceTest mct left join Classroom cr on mct.classRoom.id = cr.id\n" +
             "\twhere mct.classRoom.id IN (\n" +
             "\t\tSELECT crr.classRoom.id FROM ClassroomRegistration crr \n" +
@@ -36,7 +36,7 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
     Page<MyMultipleChoiceTestResponse> findMyEndedMultipleChoiceTests(Long myId, Long unixTimeNow, String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName,mct.description, mct.testingTime, \n" +
-            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description)\n" +
+            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description, false)\n" +
             "\tFROM MultipleChoiceTest mct left join Classroom cr on mct.classRoom.id = cr.id\n" +
             "\twhere mct.classRoom.id IN (\n" +
             "\t\tSELECT crr.classRoom.id FROM ClassroomRegistration crr \n" +
@@ -46,7 +46,7 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
     Page<MyMultipleChoiceTestResponse> findMyNotEndedMultipleChoiceTests(Long myId, Long unixTimeNow, String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName,mct.description, mct.testingTime, \n" +
-            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description)\n" +
+            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description, false)\n" +
             "\tFROM MultipleChoiceTest mct left join Classroom cr on mct.classRoom.id = cr.id\n" +
             "\twhere mct.classRoom.id IN (\n" +
             "\t\tSELECT crr.classRoom.id FROM ClassroomRegistration crr \n" +
@@ -55,7 +55,7 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
             "    ) and mct.startDate > :unixTime2WeeksAgo and mct.startDate <= :unixTime2WeeksLater and mct.testName like :searchText")
     List<MyMultipleChoiceTestResponse> find2WeeksAroundMCTest(Long userId, Long unixTime2WeeksAgo , Long unixTime2WeeksLater,String searchText, Pageable pageable);
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName,mct.description, mct.testingTime, \n" +
-            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description)\n" +
+            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description, false)\n" +
             "\tFROM MultipleChoiceTest mct left join Classroom cr on mct.classRoom.id = cr.id\n" +
             "\twhere mct.classRoom.id IN (\n" +
             "\t\tSELECT crr.classRoom.id FROM ClassroomRegistration crr \n" +
@@ -65,7 +65,7 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
     Page<MyMultipleChoiceTestResponse> findMCTestByDay(Long userId,Long startDay, Long endDay,String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName,mct.description, mct.testingTime, \n" +
-            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description)\n" +
+            "\tmct.classRoom.id , cr.className , cr.classCode , cr.description, false)\n" +
             "\tFROM MultipleChoiceTest mct left join Classroom cr on mct.classRoom.id = cr.id\n" +
             "\twhere mct.id = :testId and mct.isEnable = true " +
             "\t and mct.classRoom.id IN (\n" +

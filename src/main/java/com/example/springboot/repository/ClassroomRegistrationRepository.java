@@ -19,4 +19,6 @@ public interface ClassroomRegistrationRepository extends JpaRepository<Classroom
     List<String> findUserEmailOfClassroom(Long classroomId);
 
     Optional<ClassroomRegistration> findByClassRoomIdAndUserProfileUserID(Long classroomId, Long studentID);
+
+    Long countAllByClassRoomId(Long classroomId);
 }

@@ -11,12 +11,14 @@ import com.example.springboot.dto.response.QuestionResponse;
 import com.example.springboot.entity.Classroom;
 import com.example.springboot.entity.MultipleChoiceTest;
 import com.example.springboot.entity.Question;
+import com.example.springboot.entity.Score;
 import com.example.springboot.entity.TestQuestion;
 import com.example.springboot.entity.UserProfile;
 import com.example.springboot.exception.QuestionNotFoundException;
 import com.example.springboot.repository.ClassroomRepository;
 import com.example.springboot.repository.MultipleChoiceTestRepository;
 import com.example.springboot.repository.QuestionRepository;
+import com.example.springboot.repository.ScoreRepository;
 import com.example.springboot.repository.TestQuestionRepository;
 import com.example.springboot.service.MailService;
 import com.example.springboot.service.MultipleChoiceTestService;
@@ -27,7 +29,6 @@ import com.example.springboot.util.WebUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,11 +36,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.event.MailEvent;
 import java.sql.Timestamp;
 import java.time.*;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,9 +53,11 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
     private final QuestionRepository questionRepository;
     private final QuestionService questionService;
     private final MailService mailService;
+    private final ScoreRepository scoreRepository;
 
     @Override
     public ResponseEntity<?> getMultipleChoiceTest(Long testId) {
+        Long  myId = webUtils.getCurrentLogedInUser().getUserID();
         Optional<MultipleChoiceTest> multipleChoiceTestOp = multipleChoiceTestRepository.findById(testId);
         if(multipleChoiceTestOp.isEmpty()) {
             return CustomBuilder.buildMultipleChoiceTestNotFoundResponseEntity();
@@ -71,6 +71,9 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
                         .collect(Collectors.toList());
         MultipleChoiceTestWithQuestionsResponse response =
                 CustomBuilder.buildMultipleChoiceTestWithQuestionsResponse(multipleChoiceTest, questionsOfTheTest);
+        Optional<Score> score = scoreRepository.findByMultipleChoiceTestIdAndUserProfileUserID(response.getId(), myId);
+        response.setIsSubmitted(score.isPresent());
+
         return ResponseEntity.ok(response);
     }
     @Override
@@ -97,15 +100,25 @@ public class MultipleChoiceTestServiceImpl implements MultipleChoiceTestService 
         return ResponseEntity.ok(response);
     }
     @Override
-    public ResponseEntity<?> getMyMultipleChoiceTestsToday(Long startOfDate,String search, int page, String column, int size, String sortType) {
-        final Long A_DAY_TO_MILLISECOND = 86400000L;
+    public ResponseEntity<?> getMyMultipleChoiceTestsToday(Long startOfDate,Long endOfDate, String search, int page, String column, int size, String sortType) {
+
         Long  myId = webUtils.getCurrentLogedInUser().getUserID();
         Pageable pageable = PageUtils.createPageable(page, size, sortType, column);
         String searchText = "%" + search.trim() + "%";
-        Long endOfDay = startOfDate + A_DAY_TO_MILLISECOND;
-
-        Page<MyMultipleChoiceTestResponse> response =
-                multipleChoiceTestRepository.findMCTestByDay(myId, startOfDate ,endOfDay,searchText,pageable);
+        Page<MyMultipleChoiceTestResponse> response ;
+        if(Objects.nonNull(endOfDate)){
+            response =
+                    multipleChoiceTestRepository.findMCTestByDay(myId, startOfDate ,endOfDate,searchText,pageable);
+        } else {
+            response = multipleChoiceTestRepository.
+                    findMyNotEndedMultipleChoiceTests(myId,startOfDate, searchText, pageable);
+        }
+        response.forEach((item)->{
+            Optional<Score> score = scoreRepository.findByMultipleChoiceTestIdAndUserProfileUserID(item.getId(), myId);
+            if (score.isPresent()) {
+                item.setIsSubmitted(Boolean.TRUE);
+            }
+        });
         return ResponseEntity.ok(response);
     }
 
