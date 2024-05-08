@@ -62,7 +62,7 @@ public interface MultipleChoiceTestRepository extends JpaRepository<MultipleChoi
             "\t\t\twhere crr.userProfile.userID = :userId \n" +
             "\t\t\tand crr.isEnable = true\n" +
             "    ) and ( mct.startDate >= :startDay and mct.startDate <= :endDay ) and mct.testName like :searchText")
-    List<MyMultipleChoiceTestResponse> findMCTestByDay(Long userId,Long startDay, Long endDay,String searchText, Pageable pageable);
+    Page<MyMultipleChoiceTestResponse> findMCTestByDay(Long userId,Long startDay, Long endDay,String searchText, Pageable pageable);
 
     @Query("select new com.example.springboot.dto.response.MyMultipleChoiceTestResponse(mct.id, mct.createdBy , mct.startDate , mct.endDate, mct.testName,mct.description, mct.testingTime, \n" +
             "\tmct.classRoom.id , cr.className , cr.classCode , cr.description)\n" +
